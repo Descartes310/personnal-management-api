@@ -215,7 +215,7 @@ return [
         | Please check the docs to see what you need to do in case you have the package already configured.
         |
         */
-        'enabled' => false,
+        'enabled' => true,
 
         /*
         |--------------------------------------------------------------------------
