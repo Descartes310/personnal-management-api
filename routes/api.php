@@ -26,3 +26,10 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+Route::group(['prefix' => 'prosituation'], function() {
+    Route::get('/pagine/{limit?}/{s?}', 'ProSituationController@get');
+    Route::get('/{id}', 'ProSituationController@find');
+    Route::delete('/{id}', 'ProSituationController@delete');
+
+});
