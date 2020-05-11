@@ -26,3 +26,12 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+Route::group(['prefix' => 'contract'], function () {
+    Route::get('{limit?}/{s?}', 'ContractController@get');  
+});
+
+Route::group(['prefix' => 'contracts'],function(){
+    Route::get('/{id}', 'ContractController@find');
+    Route::delete('/{id}', 'ContractController@delete');
+});
