@@ -26,3 +26,8 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], function () {
+    Route::post('/', 'NoteCriteriaController@create');
+    Route::put('/{id}', 'NoteCriteriaController@update');
+});
