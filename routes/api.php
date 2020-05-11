@@ -26,3 +26,10 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+  //Les routes create et update Contracts
+
+  Route::group(['prefix' => 'contracts'], function() {
+    Route::post('add', 'ContractController@create');
+    Route::post('put/{id}', 'ContractController@update');
+});
