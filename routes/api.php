@@ -26,3 +26,9 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+
+Route::group(['prefix' => 'contact'], function () {
+    Route::post('/', 'contactController@saveContact');
+    Route::match(['post', 'put'], '/{id}', 'contactController@updateContact');
+});
