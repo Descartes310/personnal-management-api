@@ -47,3 +47,8 @@ Route::group(['prefix' => 'pro_situations'], function() {
     Route::post('/', 'ProSituationController@create');
     Route::put('/{id}', 'ProSituationController@update');
 });
+
+Route::group(['prefix' => 'contact'], function () {
+    Route::post('/', 'contactController@saveContact');
+    Route::match(['post', 'put'], '/{id}', 'contactController@updateContact');
+});
