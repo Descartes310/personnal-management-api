@@ -26,3 +26,9 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+Route::group(['prefix' =>'assignment_types'], function(){
+    Route::get('/{id}','Assignment_typesController@find');
+    Route::get('/','Assignment_typesController@get');
+    Route::delete('/{id}','Assignment_typesController@delete');
+});
