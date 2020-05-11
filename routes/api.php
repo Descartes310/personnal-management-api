@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Contracts\Support\Jsonable;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,9 +44,12 @@ Route::group(['prefix' => 'pro_situations'], function() {
 Route::group(['prefix' => 'sanctions'], function() {
     Route::post('add', 'SanctionController@create');
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
+    
 });
-
-Route::group(['prefix' => 'contact'], function () {
+Route::group(['prefix'=>'contacts'], function(){
+    Route::get('/{id}','ContactController@find');
+    Route::get('/', 'ContactController@get');
+    Route::delete('/{id}', 'ContactController@delete');
     Route::post('/', 'contactController@saveContact');
     Route::match(['post', 'put'], '/{id}', 'contactController@updateContact');
 });
@@ -76,7 +80,7 @@ Route::group(['prefix' => 'sanctions'], function () {
     Route::get('/', 'ContractController@get');
     Route::delete('/{id}', 'ContractController@delete');
   });
-  
+
 Route::group(['prefix' => 'divisions'], function () {
     Route::post('/', 'DivisionController@create');
     Route::match(['put', 'post'],'/{id}', 'DivisionController@update');
