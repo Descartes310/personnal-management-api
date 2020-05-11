@@ -26,3 +26,10 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+Route::group(['prefix' => 'divisions'], function() {
+    Route::get('/', 'DivisionController@get');
+     Route::get('/{id}', 'DivisionController@find');
+    Route::delete('/{id}', 'DivisionController@delete');
+    Route::get('/{page?}/{limit?}/{s?}', 'DivisionController@get');
+});
