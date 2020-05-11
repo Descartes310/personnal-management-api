@@ -32,3 +32,10 @@ Route::group(['prefix' => 'pro_situations', 'middleware' => 'auth:api'], functio
     Route::post('/', 'ProSituationController@create');
     Route::put('/{id}', 'ProSituationController@update');
 });
+
+//AssignmentType routes
+Route::group(['prefix' => 'assignment_types', 'middleware' => 'auth:api'], function() {
+    Route::post('/', 'AssignmentTypeController@create');
+    Route::put('/{id}', 'AssignmentTypeController@update');
+});
+
