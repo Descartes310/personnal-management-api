@@ -28,8 +28,8 @@ Route::group(['prefix' => 'auth'], function () {
     });
 });
 
-Route::group(['prefix' => 'prosituation'], function() {
-    Route::get('/pagine/{limit?}/{s?}', 'ProSituationController@get');
+Route::group(['prefix' => 'pro_situations'], function() {
+    Route::get('/', 'ProSituationController@get');
     Route::get('/{id}', 'ProSituationController@find');
     Route::delete('/{id}', 'ProSituationController@delete');
 
