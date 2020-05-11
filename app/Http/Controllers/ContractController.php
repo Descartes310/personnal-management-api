@@ -44,7 +44,7 @@ class ContractController extends Controller
             $destinationPath = public_path($relativeDestination);
             $safeName = str_replace(' ', '_', $request->email) . time() . '.' . $extension;
             $file->move($destinationPath, $safeName);
-            $path['file'] = url("/uploads/contracts/file.pdf");
+            $path['file'] = "/uploads/contracts/".$safeName;
         }
 
 
@@ -58,7 +58,7 @@ class ContractController extends Controller
             'free_days' => $request->free_days,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
-            'file' => $path,
+            'file' => $path['file'],
 
         ]);
         return response()->json($contract, 201);
@@ -81,6 +81,18 @@ class ContractController extends Controller
 
         $contract = Contract::find($id);
 
+        $datas = $request->only([
+            'user_id',
+            'type',
+            'name',
+            'title',
+            'terms',
+            'free_days',
+            'start_date',
+            'end_date',
+            'is_active',
+        ]);
+
         if ($contract == null) {
             $apiError = new APIError;
             $apiError->setStatus("404");
@@ -89,7 +101,6 @@ class ContractController extends Controller
             return response()->json($apiError, 400);
         } else {
             $file = $request->file('file');
-            $path = null;
             if ($file != null) {
                 $request->validate(['file' => 'file|mimes:pdf,doc,ppt,xls,rtf']);
                 $extension = $file->getClientOriginalExtension();
@@ -97,7 +108,7 @@ class ContractController extends Controller
                 $destinationPath = public_path($relativeDestination);
                 $safeName = str_replace(' ', '_', $request->email) . time() . '.' . $extension;
                 $file->move($destinationPath, $safeName);
-                $path['file'] = url("/uploads/contracts/file.pdf");
+                $datas['file'] = "/uploads/contracts/".$safeName;
                 //Delete old contract file if exist
                 if ($contract->file) {
                     $oldFilePath = str_replace(url('/'), public_path(), $contract->file);
@@ -108,18 +119,8 @@ class ContractController extends Controller
             }
 
             // les données de la requête sont valides
-            $contract->update($request->only([
-                'user_id',
-                'type',
-                'name',
-                'title',
-                'terms',
-                'free_days',
-                'start_date',
-                'end_date',
-                'is_active',
-                'file',
-            ]));
+            
+            $contract->update($datas);
 
             return response()->json($contract, 200);
         }
