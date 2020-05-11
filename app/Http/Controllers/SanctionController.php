@@ -14,6 +14,10 @@ use \Carbon\Carbon;
 use App\Http\Controllers\Controller;
 
 class SanctionController extends Controller{
+    /**
+     * 
+     * @Autor jiozangtheophane@gmail.com
+     */
     public function get(Request $req){
         $limit = $req->limit;
         $s = $req->s; 
@@ -21,7 +25,10 @@ class SanctionController extends Controller{
         $sanction = Sanction::where('id','LIKE','%'.$s.'%')->paginate($limit);
         return response() ->json($sanction); 
     }
- 
+    /**
+     * 
+     * @Autor jiozangtheophane@gmail.com
+     */
     public function find($id){
      
         $sanction = Sanction::find($id);
@@ -36,7 +43,10 @@ class SanctionController extends Controller{
         }
         return response()->json($sanction);
     }
-
+    /**
+     * 
+     * @Autor jiozangtheophane@gmail.com
+     */
     public function delete($id){
 
         $sanction = Sanction::find($id);
