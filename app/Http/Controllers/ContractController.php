@@ -53,7 +53,7 @@ class ContractController extends Controller
 
         if($limit != null && $s != null && $page != null){
       
-            $Contract = Groupes::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
+            $Contract = Contract::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
             $pagenumber=$Contract->lastPage();
     
             if($pagenumber > $page) {
@@ -68,7 +68,7 @@ class ContractController extends Controller
     
           if($limit != null && $s == null && $page != null){
             
-            $Contract = Groupes::paginate($limit);
+            $Contract = Contract::paginate($limit);
             $pagenumber=$Contract->lastPage();
     
             if($pagenumber > $page) {
@@ -84,14 +84,14 @@ class ContractController extends Controller
     
           if($limit != null && $s != null && $page == null){
             
-            $Contract = Groupes::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
+            $Contract = Contract::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
             return response()->json($Contract);
           
           }
     
           if($limit != null && $s == null && $page == null){
             
-            $Contract = Groupes::paginate($limit);
+            $Contract = Contract::paginate($limit);
             return response()->json($Contract);
           
           }
@@ -99,7 +99,7 @@ class ContractController extends Controller
           if($limit == null && $s != null && $page == null){
             
             $limit=2;
-            $Contract = Groupes::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
+            $Contract = Contract::where('name', 'LIKE','%'.$s.'%')->get();
             return response()->json($Contract);
           
           }
@@ -107,7 +107,7 @@ class ContractController extends Controller
           if($limit == null && $s != null && $page != null){
             
             $limit=2;
-            $Contract = Groupes::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
+            $Contract = Contract::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
             $pagenumber=$Contract->lastPage();
             
             if($pagenumber < $page) {
@@ -122,15 +122,14 @@ class ContractController extends Controller
     
           if($limit == null && $s == null && $page == null){
             
-            $Contract = Groupes::all();
+            $Contract = Contract::all();
             return response()->json($Contract);
           
           }
     
           if($limit == null && $s == null && $page != null){
             
-            $limit=2;
-            $Contract = Groupes::all();
+            $Contract = Contract::all();
             return response()->json($Contract);
           
           }
