@@ -26,6 +26,7 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
 
     });
+
 });
 
 Route::group(['prefix' => 'pro_situations'], function() {
@@ -74,4 +75,9 @@ Route::group(['prefix' => 'sanctions'], function () {
     Route::get('/{id}', 'ContractController@find');
     Route::get('/', 'ContractController@get');
     Route::delete('/{id}', 'ContractController@delete');
+  });
+  
+Route::group(['prefix' => 'divisions'], function () {
+    Route::post('/', 'DivisionController@create');
+    Route::match(['put', 'post'],'/{id}', 'DivisionController@update');
 });
