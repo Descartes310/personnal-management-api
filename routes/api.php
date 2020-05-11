@@ -17,12 +17,21 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'auth'], function () {
 
     Route::post('token', 'AuthController@login');
-
+    
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'AuthController@user');
         Route::delete('token', 'AuthController@logout');
         Route::get('permissions', 'AuthController@permissions');
         Route::get('roles', 'AuthController@roles');
         Route::get('teams', 'AuthController@teams');
+
     });
 });
+
+        //il s'agit ici des routes pour la gestion gestion du create-update sanction
+
+Route::group(['prefix' => 'sanctions'], function() {
+    Route::post('add', 'SanctionController@create');
+    Route::match(['put','patch'],'/{id}', 'SanctionController@update');
+});
+
