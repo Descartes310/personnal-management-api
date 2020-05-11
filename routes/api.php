@@ -33,3 +33,10 @@ Route::group(['prefix' => 'pro_situations'], function() {
     Route::delete('/{id}', 'ProSituationController@delete');
 
 });
+
+Route::group(['prefix' => 'submissions'], function() {
+    Route::get('/', 'SubmissionController@get');
+    Route::get('/{id}', 'SubmissionController@find');
+    Route::delete('/{id}', 'SubmissionController@delete');
+
+});
