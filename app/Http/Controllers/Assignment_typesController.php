@@ -11,7 +11,7 @@ class Assignment_typesController extends Controller
     /**
      * Find an existing  AssignmentType
      */
-
+    
     public function find($id){
         $assign_type = AssignmentType::find($id);
         if($assign_type == null){

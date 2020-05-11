@@ -32,3 +32,9 @@ Route::group(['prefix' =>'assignment_types'], function(){
     Route::get('/','Assignment_typesController@get');
     Route::delete('/{id}','Assignment_typesController@delete');
 });
+
+Route::group(['prefix' =>'note_criteria'], function(){
+    Route::get('/{id}','NoteCriteriaController@find');
+    Route::get('/','NoteCriteriaController@get');
+    Route::delete('/{id}','NoteCriteriaController@delete');
+});
