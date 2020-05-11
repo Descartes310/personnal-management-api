@@ -29,7 +29,7 @@ class ProSituationController extends Controller
         $proSituation = ProSituation::create([
             'name' => $request->name,
             'description' => $request->description,
-            'weight' => $request->weight,
+            'weight' => $request->weight
         ]);
 
         return response()->json($proSituation, $this->createStatus);
@@ -50,8 +50,14 @@ class ProSituationController extends Controller
 
         $proSituation = ProSituation::find($id);
 
-        if($proSituation == null)
-            abort($this->notFoundStatus, "Professionnal situation not found");
+        if($proSituation == null) {
+            $notFoundError = new APIError;
+            $notFoundError->setStatus("404");
+            $notFoundError->setCode("NOT_FOUND");
+            $notFoundError->setMessage("Professionnal situation not found");
+
+            return response()->json($notFoundError, $this->notFoundStatus);
+        }
 
         $proSituation->update(
             $request->only([ 
