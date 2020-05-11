@@ -10,17 +10,6 @@ use App\User;
 class ContractController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-    }
-
-
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -64,39 +53,6 @@ class ContractController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -129,13 +85,43 @@ class ContractController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Delete Contract
      */
-    public function destroy($id)
-    {
-        //
+    public function delete(Request $request, $id){
+        $Contract = Contract::find($id);
+        if($Contract==null){
+            $apiError = new APIError;
+            $apiError->setStatus("404");
+            $apiError->setCode("CONTRACT_NOT_FOUND"); 
+            $apiError->setMessage("Contract does not exist"); 
+            return response()->json($apiError, 404);       
+        }
+        $Contract = Contract::findOrFail($id);
+        $Contract->delete();
+        return 200;
+    }
+
+    public function get(Request $request){
+        $limit = $request->limit;
+        $s = $request->s; 
+        $page = $request->page; 
+        $prosituations = Contract::where('name','LIKE','%'.$s.'%')
+                                       ->paginate($limit); 
+        return response()->json($prosituations);
+    }
+  
+    /**
+     * Show contract
+     */
+    public function find($id){
+        $Contract= Contract::find($id); 
+        if($Contract==null){
+            $apiError = new APIError;
+            $apiError->setStatus("404");
+            $apiError->setCode("CONTRACT_NOT_FOUND"); 
+            $apiError->setMessage("Contract does not exist"); 
+            return response()->json($apiError, 404); 
+        }           
+        return $Contract ;
     }
 }
