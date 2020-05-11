@@ -26,3 +26,9 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+Route::group(['prefix' => 'sanction'], function () {
+    Route::get('/', 'SanctionController@get');
+    Route::get('/{id}', 'SanctionController@find');
+    Route::delete('/{id}', 'SanctionController@delete');
+});
