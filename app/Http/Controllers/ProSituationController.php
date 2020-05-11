@@ -14,12 +14,16 @@ class ProSituationController extends Controller
     protected $createStatus = 201;
     protected $notFoundStatus = 404;
 
+    /**
+     * find one pro situation with id
+     * @author adamu aliyu
+     */
     public function find($id){
         $prosituation = ProSituation::find($id);
         if($prosituation == null) {
             $unauthorized = new APIError;
             $unauthorized->setStatus("404");
-            $unauthorized->setCode("PRO_SITUATION_FIND");
+            $unauthorized->setCode("PRO_SITUATION__NOT_FOUND");
             $unauthorized->setMessage("pro_situation id not found");
 
             return response()->json($unauthorized, 404); 
@@ -27,6 +31,10 @@ class ProSituationController extends Controller
         return response()->json($prosituation);
     }
 
+    /**
+     * get all pro situations with specific parameters
+     * @author adamu aliyu
+     */
     public function get(Request $request){
       $limit = $request->limit;
       $s = $request->s; 
@@ -36,6 +44,10 @@ class ProSituationController extends Controller
       return response()->json($prosituations);
     }
 
+    /**
+     * delete one  submission with id
+     * @author adamu aliyu
+     */
     public function delete($id){
         $prosituation = ProSituation::find($id);
         if($prosituation == null) {

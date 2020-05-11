@@ -29,6 +29,8 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['prefix' => 'pro_situations'], function() {
+    Route::post('/', 'ProSituationController@create');
+    Route::put('/{id}', 'ProSituationController@update');
     Route::get('/', 'ProSituationController@get');
     Route::get('/{id}', 'ProSituationController@find');
     Route::delete('/{id}', 'ProSituationController@delete');
@@ -42,13 +44,14 @@ Route::group(['prefix' => 'sanctions'], function() {
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
 });
 
-//ProSituation routes
-Route::group(['prefix' => 'pro_situations'], function() {
-    Route::post('/', 'ProSituationController@create');
-    Route::put('/{id}', 'ProSituationController@update');
-});
-
 Route::group(['prefix' => 'contact'], function () {
     Route::post('/', 'contactController@saveContact');
     Route::match(['post', 'put'], '/{id}', 'contactController@updateContact');
+});
+
+Route::group(['prefix' => 'submissions'], function() {
+    Route::get('/', 'SubmissionController@get');
+    Route::get('/{id}', 'SubmissionController@find');
+    Route::delete('/{id}', 'SubmissionController@delete');
+
 });
