@@ -75,7 +75,7 @@ class ProSituationController extends Controller
         if($proSituation == null) {
             $notFoundError = new APIError;
             $notFoundError->setStatus("404");
-            $notFoundError->setCode("NOT_FOUND");
+            $notFoundError->setCode("NOT_FOUND_USER_ID");
             $notFoundError->setMessage("Professionnal situation not found");
 
             return response()->json($notFoundError, $this->notFoundStatus);
