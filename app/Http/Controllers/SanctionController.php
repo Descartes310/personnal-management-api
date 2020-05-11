@@ -85,16 +85,22 @@ class SanctionController extends Controller
 
         $data = $request->all();
         $sanctions = Sanction::find($id);
-
+        
         if($sanctions == null) {
             $apiError = new APIError;
-            $apiError->setStatus("404"); 
-            $apiError->setCode("404"); 
+            $apiError->setStatus("400"); 
+            $apiError->setCode("UNKNOW SANTION"); 
             $apiError->setMessage("no sanction foun with id ");
+            return response()->json($apiError, 400);
         }
 
         if(User::find($request->user_id) == null) {
-            abort(404, "No user found with id $request->user_id");
+            $apiError = new APIError;
+            $apiError->setStatus("400"); 
+            $apiError->setCode("SANCTION_USER"); 
+            $apiError->setMessage("no user foun with id $request->user_id");
+            $apiError->setErrors(['user_id' => ["this value is not exist"]]);
+            return response()->json($apiError, 406);
         }
         
         $sanctions->update($data);
