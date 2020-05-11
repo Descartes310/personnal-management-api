@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use DB;
 use App\APIError;
 use App\Sanction;
 use App\User;
@@ -26,7 +25,7 @@ class SanctionController extends Controller
         if($user==null) {
             $apiError = new APIError;
             $apiError->setStatus("400"); 
-            $apiError->setCode("SANCTION_USER"); 
+            $apiError->setCode("USER_NOT_FOUND"); 
             $apiError->setMessage("no user foun with id $request->user_id");
             $apiError->setErrors(['user_id' => ["this value is not exist"]]);
             return response()->json($apiError, 400);
@@ -38,7 +37,7 @@ class SanctionController extends Controller
             if(!$this->istheTable($table)){
                 $apiError = new APIError;
                 $apiError->setStatus("400"); 
-                $apiError->setCode("SANCTION_SUBJECT"); 
+                $apiError->setCode("SANCTION_SUBJECT_NOT_FOUND"); 
                 $apiError->setMessage("no subject found  with subject name $table ");
                 $apiError->setErrors(['subject' => ["this subject it is not a name of table in the database"]]);
                 return response()->json($apiError, 400);
@@ -51,7 +50,7 @@ class SanctionController extends Controller
                 if($subject==null){
                     $apiError = new APIError;
                     $apiError->setStatus("406"); 
-                    $apiError->setCode("NO SUBJECT ID VALUE"); 
+                    $apiError->setCode("SUBJECT_NOT_FOUND"); 
                     $apiError->setMessage("no subject_id ($request->subject_id)  was found  with subject name $table ");
                     $apiError->setErrors(['subject_id' => [" subject_id ($request->subject_id)  does not exist in $table in the database"]]);
                     return response()->json($apiError, 406);
@@ -82,7 +81,7 @@ class SanctionController extends Controller
         if($sanctions == null) {
             $apiError = new APIError;
             $apiError->setStatus("400"); 
-            $apiError->setCode("UNKNOW SANTION"); 
+            $apiError->setCode("SANCTION_NOT_FOUND"); 
             $apiError->setMessage("no sanction foun with id ");
             return response()->json($apiError, 400);
         }
@@ -90,7 +89,7 @@ class SanctionController extends Controller
         if(User::find($request->user_id) == null) {
             $apiError = new APIError;
             $apiError->setStatus("400"); 
-            $apiError->setCode("SANCTION_USER"); 
+            $apiError->setCode("USER_NOT_FOUND"); 
             $apiError->setMessage("no user foun with id $request->user_id");
             $apiError->setErrors(['user_id' => ["this value is not exist"]]);
             return response()->json($apiError, 406);
@@ -98,6 +97,57 @@ class SanctionController extends Controller
         
         $sanctions->update($data);
         return response()->json($data);
+    }
+
+    /**
+     * 
+     * @author jiozangtheophane@gmail.com
+     */
+    public function get(Request $req){
+        $limit = $req->limit;
+        $s = $req->s; 
+        $page = $req->page; 
+        $sanction = Sanction::where('id','LIKE','%'.$s.'%')->paginate($limit);
+        return response() ->json($sanction); 
+    }
+    /**
+     * 
+     * @author jiozangtheophane@gmail.com
+     */
+    public function find($id){
+     
+        $sanction = Sanction::find($id);
+        if($sanction == null){
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("404");
+            $unauthorized->setCode("SANCTION_NOT_FOUND");
+            $unauthorized->setMessage("not found id.");
+
+            return response()->json($unauthorized, 404);
+            
+        }
+        return response()->json($sanction);
+    }
+    /**
+     * 
+     * @author jiozangtheophane@gmail.com
+     */
+    public function delete($id){
+
+        $sanction = Sanction::find($id);
+        if($sanction == null){
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("404");
+            $unauthorized->setCode("SANCTION_NOT_FOUND");
+            $unauthorized->setMessage("not found id.");
+
+            return response()->json($unauthorized, 404);
+        }
+        else{
+            $sanction->delete($sanction);
+        }
+        $sanction = Sanction::get();
+        return response()->json($sanction);
     }
 
     //on verifie si la subject passe existe

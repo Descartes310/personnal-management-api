@@ -61,3 +61,8 @@ Route::group(['prefix' => 'assignment_types'], function() {
     Route::put('/{id}', 'AssignmentTypeController@update');
 });
 
+Route::group(['prefix' => 'sanctions'], function () {
+    Route::get('/', 'SanctionController@get');
+    Route::get('/{id}', 'SanctionController@find');
+    Route::delete('/{id}', 'SanctionController@delete');
+});
