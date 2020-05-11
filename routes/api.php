@@ -26,3 +26,9 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+
+Route::get('/license}','LicenseController@get');
+Route::delete('license/{id}','LicenseController@delete');
+Route::get('license/{id}','LicenseController@find');
+Route::delete('license/archive/{id}','LicenseController@archive');
