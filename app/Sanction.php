@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sanction extends Model
 {
-    protected $guarded = ['id','user_id'];
+    protected $guarded = [];
     
 }
