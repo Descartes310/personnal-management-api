@@ -26,3 +26,9 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+//ProSituation routes
+Route::group(['prefix' => 'pro_situations', 'middleware' => 'auth:api'], function() {
+    Route::post('/', 'ProSituationController@create');
+    Route::put('/{id}', 'ProSituationController@update');
+});
