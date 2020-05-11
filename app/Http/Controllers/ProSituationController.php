@@ -7,7 +7,7 @@ use App\ProSituation;
 
 class ProSituationController extends Controller
 {
-    //
+    
     public function find($id){
         $prosituation = ProSituation::find($id);
         if($prosituation == null) {
@@ -17,14 +17,10 @@ class ProSituationController extends Controller
     }
 
     public function get($limit=null , $s=null){
-       
         $prosituations = ProSituation::where('name','LIKE','%'.$s.'%')->paginate($limit); 
         return response()->json($prosituations);
     }
     
-   
-
-
     public function delete($id){
         $prosituation = ProSituation::find($id);
         if($prosituation == null) {
