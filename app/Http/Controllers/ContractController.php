@@ -45,25 +45,96 @@ class ContractController extends Controller
     /**
      * Afshow all contracts
      */
-    public function get($limit=null,$page=null , $s=null){
-        $contracte=Contract::where('name', 'LIKE','%'.$s.'%'); 
-        if($contract['data']==null){
-            $apiError = new APIError;
-            $apiError->setStatus("404");
-            $apiError->setCode("Reverify  your id"); 
-            $apiError->setMessage("Contract does not exist"); 
-            return response()->json($apiError, 404); 
-        }
-        $contract= $contracte->paginate($limit);
-          $pagenumber=$contract->lastPage();
-          if($pagenumber<$page){
-            return response()->json([
-              'La page que vous voulez affichez n\'existe pas'
-              ], 404);
-          }         
-        return response()->json($contract);    
-    } 
+    public function get(Request $request) {
 
+        $limit = $request->limit;
+        $page = $request->page;
+        $s = $request->s;
+
+        if($limit != null && $s != null && $page != null){
+      
+            $Contract = Groupes::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
+            $pagenumber=$Contract->lastPage();
     
-
-}
+            if($pagenumber > $page) {
+                $apiError = new APIError;
+                $apiError->setStatus("404");
+                $apiError->setCode("CONTRACT_PAGE_NOT_FOUND"); 
+                $apiError->setMessage("page does not exist"); 
+                return response()->json($apiError, 404);
+            }
+            return response()->json($Contract);     
+          }
+    
+          if($limit != null && $s == null && $page != null){
+            
+            $Contract = Groupes::paginate($limit);
+            $pagenumber=$Contract->lastPage();
+    
+            if($pagenumber > $page) {
+                $apiError = new APIError;
+                $apiError->setStatus("404");
+                $apiError->setCode("CONTRACT_PAGE_NOT_FOUND"); 
+                $apiError->setMessage("page does not exist"); 
+                return response()->json($apiError, 404);
+            }
+            return response()->json($Contract); 
+          
+          }
+    
+          if($limit != null && $s != null && $page == null){
+            
+            $Contract = Groupes::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
+            return response()->json($Contract);
+          
+          }
+    
+          if($limit != null && $s == null && $page == null){
+            
+            $Contract = Groupes::paginate($limit);
+            return response()->json($Contract);
+          
+          }
+    
+          if($limit == null && $s != null && $page == null){
+            
+            $limit=2;
+            $Contract = Groupes::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
+            return response()->json($Contract);
+          
+          }
+    
+          if($limit == null && $s != null && $page != null){
+            
+            $limit=2;
+            $Contract = Groupes::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
+            $pagenumber=$Contract->lastPage();
+            
+            if($pagenumber < $page) {
+                $apiError = new APIError;
+                $apiError->setStatus("404");
+                $apiError->setCode("CONTRACT_PAGE_NOT_FOUND"); 
+                $apiError->setMessage("page does not exist"); 
+                return response()->json($apiError, 404);
+            }
+            return response()->json($Contract);     
+          }
+    
+          if($limit == null && $s == null && $page == null){
+            
+            $Contract = Groupes::all();
+            return response()->json($Contract);
+          
+          }
+    
+          if($limit == null && $s == null && $page != null){
+            
+            $limit=2;
+            $Contract = Groupes::all();
+            return response()->json($Contract);
+          
+          }
+       
+          
+        } 
+    }
