@@ -17,8 +17,8 @@ class ContractController extends Controller
         if($Contract==null){
             $apiError = new APIError;
             $apiError->setStatus("404");
-            $apiError->setCode("Reverify  your id"); 
-            $apiError->setMessage("Contract does not exist"); 
+            $apiError->setCode("CONTRACT_PAGE_NOT_FOUND"); 
+            $apiError->setMessage("page does not exist"); 
             return response()->json($apiError, 404);       
         }
         $Contract = Contract::findOrFail($id);
@@ -35,8 +35,8 @@ class ContractController extends Controller
         if($Contract==null){
             $apiError = new APIError;
             $apiError->setStatus("404");
-            $apiError->setCode("Reverify  your id"); 
-            $apiError->setMessage("Contract does not exist"); 
+            $apiError->setCode("CONTRACT_PAGE_NOT_FOUND"); 
+            $apiError->setMessage("page does not exist"); 
             return response()->json($apiError, 404); 
         }           
         return $Contract ;
