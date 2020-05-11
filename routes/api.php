@@ -66,3 +66,9 @@ Route::group(['prefix' => 'sanctions'], function () {
     Route::get('/{id}', 'SanctionController@find');
     Route::delete('/{id}', 'SanctionController@delete');
 });
+  //Les routes create et update Contracts
+
+  Route::group(['prefix' => 'contracts'], function() {
+    Route::post('/', 'ContractController@create');
+    Route::post('/{id}', 'ContractController@update');
+});
