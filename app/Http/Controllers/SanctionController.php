@@ -16,7 +16,7 @@ use App\Http\Controllers\Controller;
 class SanctionController extends Controller{
     /**
      * 
-     * @Autor jiozangtheophane@gmail.com
+     * @author jiozangtheophane@gmail.com
      */
     public function get(Request $req){
         $limit = $req->limit;
@@ -27,7 +27,7 @@ class SanctionController extends Controller{
     }
     /**
      * 
-     * @Autor jiozangtheophane@gmail.com
+     * @author jiozangtheophane@gmail.com
      */
     public function find($id){
      
@@ -45,7 +45,7 @@ class SanctionController extends Controller{
     }
     /**
      * 
-     * @Autor jiozangtheophane@gmail.com
+     * @author jiozangtheophane@gmail.com
      */
     public function delete($id){
 
