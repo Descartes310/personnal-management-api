@@ -8,6 +8,10 @@ use App\APIError;
 
 class ProSituationController extends Controller
 {
+    /**
+     * find one submission with id
+     * @author adamu aliyu
+     */
     public function find($id){
         $prosituation = ProSituation::find($id);
         if($prosituation == null) {
@@ -21,6 +25,10 @@ class ProSituationController extends Controller
         return response()->json($prosituation);
     }
 
+    /**
+     * get all submissions with specific parameters
+     * @author adamu aliyu
+     */
     public function get(Request $request){
       $limit = $request->limit;
       $s = $request->s; 
@@ -30,6 +38,10 @@ class ProSituationController extends Controller
       return response()->json($prosituations);
     }
 
+    /**
+     * delete one  submission with id
+     * @author adamu aliyu
+     */
     public function delete($id){
         $prosituation = ProSituation::find($id);
         if($prosituation == null) {

@@ -7,7 +7,11 @@ use App\Submission;
 use App\APIError;
 
 class SubmissionController extends Controller
-{
+{   
+    /**
+     * find one submission with id 
+     * @author adamu aliyu
+     */
     public function find($id){
         $submission = Submission::find($id);
         if($submission == null) {
@@ -20,16 +24,24 @@ class SubmissionController extends Controller
         }
         return response()->json($submission);
     }
-
+    
+    /**
+     * get all  submissions with specific parameters
+     * @author adamu aliyu
+     */
     public function get(Request $request){
       $limit = $request->limit;
       $s = $request->s; 
       $page = $request->page; 
       $submissions = Submission::where('subject','LIKE','%'.$s.'%')
-                                     ->paginate($limit); 
+                                 ->paginate($limit); 
       return response()->json($submissions);
     }
 
+    /**
+     * delete one  submission with id
+     * @author adamu aliyu
+     */
     public function delete($id){
         $submission = Submission::find($id);
         if($submission == null) {
