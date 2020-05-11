@@ -55,3 +55,9 @@ Route::group(['prefix' => 'submissions'], function() {
     Route::delete('/{id}', 'SubmissionController@delete');
 
 });
+//AssignmentType routes
+Route::group(['prefix' => 'assignment_types'], function() {
+    Route::post('/', 'AssignmentTypeController@create');
+    Route::put('/{id}', 'AssignmentTypeController@update');
+});
+

@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 
 use App\APIError;
 use App\ProSituation;
-
-class ProSituationController extends Controller
-{
     
+class ProSituationController extends Controller {
+
     protected $successStatus = 200;
     protected $createStatus = 201;
     protected $notFoundStatus = 404;
@@ -65,6 +64,7 @@ class ProSituationController extends Controller
     /**
      * Create a pro_situation with name, description and weight
      * @author Arléon Zemtsop
+     * @email arleonzemtsop@gmail.com
      */
     public function create(Request $request) {
 
@@ -87,6 +87,7 @@ class ProSituationController extends Controller
     /**
      * Update a pro_situation with name, description or weight
      * @author Arléon Zemtsop
+     * @email arleonzemtsop@gmail.com
      */
     public function update(Request $request, $id) {
 
@@ -102,7 +103,7 @@ class ProSituationController extends Controller
             $notFoundError = new APIError;
             $notFoundError->setStatus("404");
             $notFoundError->setCode("NOT_FOUND_USER_ID");
-            $notFoundError->setMessage("Professionnal situation not found");
+            $notFoundError->setMessage("Professionnal situation with id " . $id . " not found");
 
             return response()->json($notFoundError, $this->notFoundStatus);
         }
