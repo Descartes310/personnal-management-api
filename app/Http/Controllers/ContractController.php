@@ -29,26 +29,38 @@ class ContractController extends Controller
         if ($user == null) {
             $apiError = new APIError;
             $apiError->setStatus("400");
-            $apiError->setCode("NF_User");
+            $apiError->setCode("USER_NOT_FOUND");
             $apiError->setMessage("Something wrong with your request! None user found");
             return response()->json($apiError, 400);
         }
 
         //    Enregistrement du chemin du Fichier file
-        if ($file = $request->file('file')) {
+        $file = $request->file('file');
+        $path = null;
+        if ($file != null) {
             $request->validate(['file' => 'file|mimes:pdf,doc,ppt,xls,rtf']);
             $extension = $file->getClientOriginalExtension();
             $relativeDestination = "uploads/contracts";
             $destinationPath = public_path($relativeDestination);
             $safeName = str_replace(' ', '_', $request->email) . time() . '.' . $extension;
             $file->move($destinationPath, $safeName);
-            $data['file'] = url("$relativeDestination/$safeName");
+            $path['file'] = url("/uploads/contracts/file.pdf");
         }
 
 
         // les données de la requête sont valides
-        $input = $request->all();
-        $contract = Contract::create($input);
+        $contract = Contract::create([
+            'user_id' => $request->user_id,
+            'type' => $request->type,
+            'name' => $request->name,
+            'title' => $request->title,
+            'terms' => $request->terms,
+            'free_days' => $request->free_days,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'file' => $path,
+
+        ]);
         return response()->json($contract, 201);
     }
 
@@ -72,56 +84,88 @@ class ContractController extends Controller
         if ($contract == null) {
             $apiError = new APIError;
             $apiError->setStatus("404");
-            $apiError->setCode("NF_ContractId");
+            $apiError->setCode("CONTRACT_NOT_FOUND");
             $apiError->setMessage("Something wrong with your request! None Contract found");
             return response()->json($apiError, 400);
-        }
+        } else {
+            $file = $request->file('file');
+            $path = null;
+            if ($file != null) {
+                $request->validate(['file' => 'file|mimes:pdf,doc,ppt,xls,rtf']);
+                $extension = $file->getClientOriginalExtension();
+                $relativeDestination = "uploads/contracts";
+                $destinationPath = public_path($relativeDestination);
+                $safeName = str_replace(' ', '_', $request->email) . time() . '.' . $extension;
+                $file->move($destinationPath, $safeName);
+                $path['file'] = url("/uploads/contracts/file.pdf");
+                //Delete old contract file if exist
+                if ($contract->file) {
+                    $oldFilePath = str_replace(url('/'), public_path(), $contract->file);
+                    if (file_exists($oldFilePath)) {
+                        @unlink($oldFilePath);
+                    }
+                }
+            }
 
-        // les données de la requête sont valides
-        $request->all();
-        $contract = Contract::findOrFail($id);
-        $contract->update($request->all());
-        return response()->json($contract, 200);
+            // les données de la requête sont valides
+            $contract->update($request->only([
+                'user_id',
+                'type',
+                'name',
+                'title',
+                'terms',
+                'free_days',
+                'start_date',
+                'end_date',
+                'is_active',
+                'file',
+            ]));
+
+            return response()->json($contract, 200);
+        }
     }
 
     /**
      * Delete Contract
      */
-    public function delete(Request $request, $id){
+    public function delete(Request $request, $id)
+    {
         $Contract = Contract::find($id);
-        if($Contract==null){
+        if ($Contract == null) {
             $apiError = new APIError;
             $apiError->setStatus("404");
-            $apiError->setCode("CONTRACT_NOT_FOUND"); 
-            $apiError->setMessage("Contract does not exist"); 
-            return response()->json($apiError, 404);       
+            $apiError->setCode("CONTRACT_NOT_FOUND");
+            $apiError->setMessage("Contract does not exist");
+            return response()->json($apiError, 404);
         }
         $Contract = Contract::findOrFail($id);
         $Contract->delete();
         return 200;
     }
 
-    public function get(Request $request){
+    public function get(Request $request)
+    {
         $limit = $request->limit;
-        $s = $request->s; 
-        $page = $request->page; 
-        $prosituations = Contract::where('name','LIKE','%'.$s.'%')
-                                       ->paginate($limit); 
+        $s = $request->s;
+        $page = $request->page;
+        $prosituations = Contract::where('name', 'LIKE', '%' . $s . '%')
+            ->paginate($limit);
         return response()->json($prosituations);
     }
-  
+
     /**
      * Show contract
      */
-    public function find($id){
-        $Contract= Contract::find($id); 
-        if($Contract==null){
+    public function find($id)
+    {
+        $Contract = Contract::find($id);
+        if ($Contract == null) {
             $apiError = new APIError;
             $apiError->setStatus("404");
-            $apiError->setCode("CONTRACT_NOT_FOUND"); 
-            $apiError->setMessage("Contract does not exist"); 
-            return response()->json($apiError, 404); 
-        }           
-        return $Contract ;
+            $apiError->setCode("CONTRACT_NOT_FOUND");
+            $apiError->setMessage("Contract does not exist");
+            return response()->json($apiError, 404);
+        }
+        return $Contract;
     }
 }
