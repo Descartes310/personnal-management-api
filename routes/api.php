@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['prefix' => 'assignments'], function(){
+
+    Route::delete('/{id}', 'AssignmentController@delete');
+    // Route::post('/', 'AssignmentController@create');
+    Route::get('/{id}', 'AssignmentController@find');
+    Route::get('/', 'AssignmentController@get');
+});
+
+
 Route::group(['prefix' => 'auth'], function () {
 
     Route::post('token', 'AuthController@login');
