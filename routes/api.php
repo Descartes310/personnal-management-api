@@ -42,3 +42,8 @@ Route::group(['prefix' => 'sanctions'], function() {
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
 });
 
+//ProSituation routes
+Route::group(['prefix' => 'pro_situations'], function() {
+    Route::post('/', 'ProSituationController@create');
+    Route::put('/{id}', 'ProSituationController@update');
+});
