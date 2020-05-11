@@ -25,4 +25,10 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('roles', 'AuthController@roles');
         Route::get('teams', 'AuthController@teams');
     });
+
+});
+
+Route::group(['prefix' => 'divisions'], function () {
+    Route::post('/', 'DivisionController@create');
+    Route::match(['put', 'post'],'/{id}', 'DivisionController@update');
 });
