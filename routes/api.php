@@ -110,7 +110,7 @@ Route::group(['prefix' => 'divisions'], function () {
     Route::post('/', 'DivisionController@create');
     Route::match(['put', 'post'],'/{id}', 'DivisionController@update');
     Route::get('/', 'DivisionController@get');
-     Route::get('/{id}', 'DivisionController@find');
+    Route::get('/{id}', 'DivisionController@find');
     Route::delete('/{id}', 'DivisionController@delete');
 });
 
@@ -119,11 +119,14 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
     Route::put('/{id}', 'NoteCriteriaController@update');
 });
 
-Route::group(['prefix' => 'vacationtype'], function () {
-    Route::get('', 'VacationTypeController@get');  
-});
-
 Route::group(['prefix' => 'vacationtypes'],function(){
+    Route::get('', 'VacationTypeController@get'); 
     Route::get('/{id}', 'VacationTypeController@find');
     Route::delete('/{id}', 'VacationTypeController@delete');
+});
+
+Route::group(['prefix' => 'disciplinary_boards'], function () {
+    Route::get('/', 'DisciplinaryBoardController@get');
+    Route::get('/{id}', 'DisciplinaryBoardController@find');
+    Route::delete('/{id}', 'DisciplinaryBoardController@delete');
 });
