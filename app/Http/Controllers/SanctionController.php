@@ -22,7 +22,7 @@ class SanctionController extends Controller
         //test of user where user_id is...
         $user=User::find($request->user_id);
         //initialisation of subject
-        $motif_table=null;
+        $motif_table = null;
 
         if(!$user) {
             $apiError = new APIError;
