@@ -17,23 +17,41 @@ class LicenseController extends Controller{
         
         $s=$request->s;
         $limit=$request->limit;
-        //return $request->all();
+        $page=$request->page;
 
         if ($s) {
-            if($limit){
-                return License::where('raison', 'like', $s)->paginate($limit);
-            }
+             if($limit){
+                if ( $page) {
+                    $license=License::where('raison', 'like', $s)->paginate($limit);
+                    $pagenumber=$license->lastPage();
+            
+                    abort_if($pagenumber < $page, 404, "license page not founded.");
+                    return License::where('raison', 'like', $s)->paginate($limit);
+                }
 
-            if($limit){
-                return License::where('raison', 'like', $s)->paginate($limit);
+                $license=License::where('raison', 'like', $s)->paginate($limit);
+                return $license;
             }
-
-            return License::where('raison', 'like', $s);
+            if ($page) {
+                return License::where('raison', 'like', $s)->paginate(10);
+            }
+            return License::where('raison', 'like', $s)->get();
         }
 
-        if ($limit) {
-            return License::paginate($limit);
-        }
+        if($limit){
+
+                if ( $page) {
+
+                    $licence=License::paginate($limit);
+                    $pagenumber=$license->lastPage();
+                    abort_if($pagenumber < $page, 404, "license page not founded.");
+                    return $license;
+                }
+                
+                $license=License::paginate($limit);
+                return $license->lastPage();
+            }
+
         if ($page) {
            return License::paginate(15);
         }
@@ -44,65 +62,27 @@ class LicenseController extends Controller{
 
 
     public function find($id){
+
         $license = License::find($id);
-
-        if ($license == null) {
-            $notFound = new APIError;
-            $notFound->setStatus("404");
-            $notFound->setCode("NOT FOUND");
-            $notFound->setMessage("licnse not founded.");
-
-            return response()->json($notFound, 404);
-        }
-
+        abort_if($license == null, 404, "license not founded.");
         return response()->json($license);
     }
 
 
-    public function archive($id){
-        $license = License::find($id);
+    public function changeStatus($id){
 
-        if ($license == null) {
-            $notFound = new APIError;
-            $notFound->setStatus("404");
-            $notFound->setCode("NOT FOUND");
-            $notFound->setMessage("licnse not founded.");
-
-            return response()->json($notFound, 404);
-        }
-
-        $update=[
-            'user_id'=>$license->user_id,
-            'license_type_id'=>$license->license_type_id,
-            'raison'=>$license->raison,
-            'description'=>$license->description,
-            'requested_start_date'=>$license->requested_start_date,
-            'accorded_start_date'=>$license->accorded_start_date,
-            'requested_days'=>$license->requested_days,
-            'accorded_days'=>$license->accorded_days,
-            'is_active'=>false,
-            'file'=>$license->file,
-            'status'=>$license->status,
-            'created_at'=>$license->created_at
-        ];
-
-        $license->update($update);
+        $license = License::find($id)->first();
+        abort_if($license == null, 404, "license not founded.");
+        $license->update(['is_active' => !$license->is_active]);
         return $license;
     }
 
 
     public function delete($id){
+
         $license = License::find($id);
-        if ($license == null) {
-            $notFound = new APIError;
-            $notFound->setStatus("404");
-            $notFound->setCode("NOT FOUND");
-            $notFound->setMessage("licnse not founded.");
-
-            return response()->json($notFound, 404);
-        }
-
+        abort_if($license == null, 404, "license not founded.");
         $license->delete($license);
-        return response()->json('status=200', 200);
+        return response()->json([]);
     }
 }
