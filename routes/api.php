@@ -66,14 +66,13 @@ Route::group(['prefix' => 'assignment_types'], function() {
     Route::put('/{id}', 'AssignmentTypeController@update');
 });
 
-Route::group(['prefix' => 'contract'], function () {
-    Route::get('', 'ContractController@get');  
+ 
 Route::group(['prefix' => 'sanctions'], function () {
     Route::get('/', 'SanctionController@get');
     Route::get('/{id}', 'SanctionController@find');
     Route::delete('/{id}', 'SanctionController@delete');
 });
-  //Les routes create et update Contracts
+
 
   Route::group(['prefix' => 'contracts'], function() {
     Route::post('/', 'ContractController@create');
@@ -83,15 +82,13 @@ Route::group(['prefix' => 'sanctions'], function () {
     Route::delete('/{id}', 'ContractController@delete');
 });
 
-Route::group(['prefix' => 'template'], function () {
-    Route::get('', 'TemplateController@get');  
-});
 
 Route::group(['prefix' => 'templates'],function(){
+    Route::get('', 'TemplateController@get'); 
     Route::get('/{id}', 'TemplateController@find');
     Route::delete('/{id}', 'TemplateController@delete');
 });
-  });
+
 
 Route::group(['prefix' => 'divisions'], function () {
     Route::post('/', 'DivisionController@create');
@@ -105,11 +102,10 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
     Route::post('/', 'NoteCriteriaController@create');
     Route::put('/{id}', 'NoteCriteriaController@update');
 });
-Route::group(['prefix' => 'vacationtype'], function () {
-    Route::get('', 'VacationTypeController@get');  
-});
+
 
 Route::group(['prefix' => 'vacationtypes'],function(){
+    Route::get('', 'VacationTypeController@get');
     Route::get('/{id}', 'VacationTypeController@find');
     Route::delete('/{id}', 'VacationTypeController@delete');
 });
