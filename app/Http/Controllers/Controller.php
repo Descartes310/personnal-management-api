@@ -30,7 +30,7 @@ class Controller extends BaseController
 
         if ($validator->fails()) {
             $errors = (new ValidationException($validator))->errors();
-            $apiError = APIError::validationError($errors);
+            $apiError = APIError::validationError('VALIDATION_ERROR', $errors);
             throw new HttpResponseException(response()->json($apiError, 400));
         }
     }
