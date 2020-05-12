@@ -32,7 +32,7 @@ Route::group(['prefix' => 'auth'], function () {
 
 
 //sanctions
-Route::group(['prefix' => 'sanctions'], function() {
+Route::group(['prefix' => 'sanctions','middleware' => 'auth:api'], function() {
     Route::post('/', 'SanctionController@create');
     Route::put('/{id}', 'SanctionController@update');
 });
