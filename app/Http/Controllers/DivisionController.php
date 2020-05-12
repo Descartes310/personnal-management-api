@@ -5,12 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Division;
 use Illuminate\Support\Facades\DB;
+use App\APIError;
+
 
 class DivisionController extends Controller
 {
     public function get(Request $request){
         $divisions = Division::get();
-        abort_if($divisions == null,"No division found", 404);
+        if($divisions ==null){
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("404");
+            $unauthorized->setCode("DIVISION_NOT_FOUND");
+            $unauthorized->setMessage("any division not found in your database");
+            return response()->json($unauthorized, 404); 
+        }
         $page = $request->get('page');
         $limit =$request->get('limit');
         $s = $request->get('s');
@@ -57,13 +65,25 @@ class DivisionController extends Controller
 
     public function find($id){
         $division = Division::find($id);
-        abort_if($division == null,"No division found with id $id", 404);
+        if($division ==null){
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("404");
+            $unauthorized->setCode("DIVISION_NOT_FOUND");
+            $unauthorized->setMessage("No division found with id $id");
+            return response()->json($unauthorized, 404); 
+        }
         return response()->json($division);
     }
 
     public function delete($id){
         $division = Division::find($id);
-        abort_if($division == null,"No division found with id $id", 404);
+        if($division ==null){
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("404");
+            $unauthorized->setCode("DIVISION_NOT_FOUND");
+            $unauthorized->setMessage("No division found with id $id");
+            return response()->json($unauthorized, 404); 
+        }
         $division->delete($division);
         return null;
     }      
