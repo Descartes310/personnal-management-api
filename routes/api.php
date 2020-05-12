@@ -37,7 +37,7 @@ Route::group(['prefix' => 'sanctions','middleware' => 'auth:api'], function() {
     Route::put('/{id}', 'SanctionController@update');
 });
 //career read and delete
-Route::group(['prefix' => 'career'], function() {
+Route::group(['prefix' => 'careers'], function() {
     Route::get('/', 'CareerController@get');
     Route::get('/{id}', 'CareerController@find');
     Route::delete('/{id}', 'CareerController@delete');

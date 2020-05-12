@@ -24,16 +24,17 @@ class SanctionController extends Controller
         //initialisation of subject
         $motif_table = null;
 
-        if(!$user) {
+        if(!$user){
             $apiError = new APIError;
             $apiError->setStatus("400"); 
             $apiError->setCode("SANCTION_USER"); 
-            $apiError->setMessage("no user foun with id $request->user_id");
+            $apiError->setMessage("no user found with id $request->user_id");
             $apiError->setErrors(['user_id' => ["this value is not exist"]]);
         
         
             return response()->json($apiError, 400);
         }
+
         if($request->subject){
 
            // $table=strtoupper($request->subject);
@@ -49,8 +50,8 @@ class SanctionController extends Controller
             else{
                 
                 $lien="\\App\\".($table);
-                $table_class=new $lien();
-                $motif_table=$table_class->find($request->subject_id);
+                $table_class = new $lien();
+                $motif_table = $table_class->find($request->subject_id);
                 if(!$motif_table){
                     $apiError = new APIError;
                     $apiError->setStatus("406"); 
@@ -108,7 +109,7 @@ class SanctionController extends Controller
     //on verifie si la subject passe existe
     public function istheTable($subject){
         //all the table witch can be able to make a sanction
-        $tables=["AssignmentType","Career","DisciplinaryBoard","DisciplinaryTeam","License","ProSituation","NoteCriteria"];
+        $tables = ["Career","DisciplinaryBoard","DisciplinaryTeam","License","Vacation","Training","NoteCriteria"];
         
         foreach($tables as $table){
             if($subject==$table){
