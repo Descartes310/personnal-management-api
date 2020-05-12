@@ -95,7 +95,17 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
 });
 
 
-Route::get('/licenses/{limit?}','LicenseController@get');
-Route::delete('licenses/{id}','LicenseController@delete');
-Route::get('licenses/{id}','LicenseController@find');
-Route::delete('licenses/changeStatus/{id}','LicenseController@changeStatus');
+
+Route::group(['prefix' => 'licenses/'], function () {
+    Route::get('{limit?}','LicenseController@get');
+	Route::delete('{id}','LicenseController@delete');
+	Route::get('{id}','LicenseController@find');
+	Route::delete('lchangeStatus/{id}','LicenseController@changeStatus');
+});
+
+
+Route::group(['prefix' => 'blogposts'], function () {
+    Route::get('{limit?}','BlogPostController@get');
+	Route::delete('{id}','BlogPostController@delete');
+	Route::get('{id}','BlogPostController@find');
+});
