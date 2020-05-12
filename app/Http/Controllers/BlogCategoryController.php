@@ -30,12 +30,12 @@ class BlogCategoryController extends Controller
         }
 
         $blogCategory->delete();
-        $unauthorized = new APIError;
-        $unauthorized->setStatus("200");
-        $unauthorized->setCode("BLOG_CATEGORY_DELETED");
-        $unauthorized->setMessage("blogCategory deleted succesfully in database.");
+        // $unauthorized = new APIError;
+        // $unauthorized->setStatus("200");
+        // $unauthorized->setCode("BLOG_CATEGORY_DELETED");
+        // $unauthorized->setMessage("blogCategory deleted succesfully in database.");
 
-        return response()->json($unauthorized, 404);
+        return response()->json(null);
     }
 
     /**
