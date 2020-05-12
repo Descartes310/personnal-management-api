@@ -12,8 +12,6 @@ class contactController extends Controller
     public function saveContact(Request $request){
         $request->validate([
             'name' => 'required',
-            'type' => 'required',
-            'nature' => 'required',
             'email' => 'email',
             'gender' => 'in:M,F',
             'type' => 'in:INTERNAL,EXTERNAL',
