@@ -94,6 +94,7 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
     Route::put('/{id}', 'NoteCriteriaController@update');
 });
 
+
 //roads for the blogcategory
 Route::group(['prefix' => 'blogcategory'], function () {
     Route::post('/', 'BlogCatController@create');

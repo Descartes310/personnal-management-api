@@ -20,11 +20,11 @@ class contactController extends Controller
         $file = $request->file('picture');
         $path = null;
         if($file != null){
-            $request->validate(['picture'=>'image|mimes: jpeg,jpg,png,svg']);
+            //$request->validate(['picture'=>'image|mimes: jpeg,jpg,png,svg']);
             $extension = $file->getClientOriginalExtension();
             $relativeDestination = "uploads/contacts";
             $destinationPath = public_path($relativeDestination);
-            $safeName = str_replace(' ','_',$request->email).time().'.'.$extension;
+            $safeName = str_replace(' ','_',$request->name).time().'.'.$extension;
             $file->move($destinationPath, $safeName);
             $path = url("$relativeDestination/$safeName");
         }
@@ -69,11 +69,11 @@ class contactController extends Controller
             $file = $request->file('picture');
             $path = null;
             if($file != null){
-                $request->validate(['picture'=>'image|mimes: jpeg,jpg,png,svg']);
+                // $request->validate(['picture'=>'image|mimes:jpeg,jpg,png,svg']);
                 $extension = $file->getClientOriginalExtension();
                 $relativeDestination = "uploads/contacts";
                 $destinationPath = public_path($relativeDestination);
-                $safeName = str_replace(' ','_',$request->email).time().'.'.$extension;
+                $safeName = str_replace(' ','_',$request->name).time().'.'.$extension;
                 $file->move($destinationPath, $safeName);
                 $path = url("$relativeDestination/$safeName");
                 //Delete old contact image if exxists
@@ -83,6 +83,7 @@ class contactController extends Controller
                         @unlink($oldImagePath);
                     }
                 }
+                $contact->picture = $path;
             }
           
             $contact->update($request->only([
@@ -91,7 +92,6 @@ class contactController extends Controller
                 'nature',
                 'email',
                 'gender',
-                'picture',
                 'phone1',
                 'phone2',
                 'phone3',
