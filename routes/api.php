@@ -105,3 +105,9 @@ Route::group(['prefix' =>'note_criteria'], function(){
     Route::get('/','NoteCriteriaController@get');
     Route::delete('/{id}','NoteCriteriaController@delete');
 });
+
+Route::group(['prefix'=>'disciplinary_teams'], function(){
+    Route::get('/{id}','DisciplinaryTeamController@find');
+    Route::get('/','DisciplinaryTeamController@get');
+    Route::delete('/{id}','DisciplinaryTeamController@delete');
+});
