@@ -15,6 +15,22 @@ use Illuminate\Contracts\Support\Jsonable;
 |
 */
 
+Route::group(['prefix' => 'blog_categories'], function(){
+
+    Route::delete('/{id}', 'BlogCategoryController@delete');
+    Route::get('/{id}', 'BlogCategoryController@find');
+    Route::get('/', 'BlogCategoryController@get');
+});
+
+Route::group(['prefix' => 'assignments'], function(){
+
+    Route::delete('/{id}', 'AssignmentController@delete');
+    // Route::post('/', 'AssignmentController@create');
+    Route::get('/{id}', 'AssignmentController@find');
+    Route::get('/', 'AssignmentController@get');
+});
+
+
 Route::group(['prefix' => 'auth'], function () {
 
     Route::post('token', 'AuthController@login');
