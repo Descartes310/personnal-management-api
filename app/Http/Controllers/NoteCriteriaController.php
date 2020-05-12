@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use App\APIError;
 use App\NoteCriteria;
@@ -16,8 +17,7 @@ class NoteCriteriaController extends Controller {
 
     public function create(Request $request) {
         $request->validate([
-            'name' => 'string',
-            'slug' => 'required|unique:note_criterias',
+            'name' => 'string|required',
             'max_rate' => 'required|integer',
             'min_rate' => 'required|integer',
             'weight' => 'required|integer',
@@ -26,7 +26,7 @@ class NoteCriteriaController extends Controller {
 
         $noteCriteria = NoteCriteria::create([
             'name' => $request->name,
-            'slug' => $request->slug,
+            'slug' => Str::slug($request->name) . '_' .time(),
             'max_rate' =>$request ->max_rate,
             'min_rate' => $request->min_rate,
             'weight' => $request->weight,
@@ -41,7 +41,6 @@ class NoteCriteriaController extends Controller {
 
         $this->validate($request->all(), [
             'name' => 'string',
-            'slug' => 'string',
             'max_rate' => 'integer',
             'min_rate' => 'integer',
             'weight' => 'integer',
@@ -53,39 +52,26 @@ class NoteCriteriaController extends Controller {
         if($noteCriteria == null) {
             $notFoundError = new APIError;
             $notFoundError->setStatus("404");
-            $notFoundError->setCode("NOT_FOUND_USER_ID");
+            $notFoundError->setCode("NOT_FOUND_NOTE_CRITERIA_ID");
             $notFoundError->setMessage("note criteria with id " . $id . " not found");
 
             return response()->json($notFoundError, $this->notFoundStatus);
         }
 
-        $slug = $request->slug;
-        $noteCriteriaFound = NoteCriteria::whereSlug($slug)->first();
-
-        if($noteCriteriaFound != null && $noteCriteriaFound != $noteCriteria) {
-            $badRequestError = new APIError;
-            $badRequestError->setStatus("400");
-            $badRequestError->setCode("NOTE_CRITERIA_SLUG_ALREADY_EXIST");
-            $badRequestError->setMessage("note criteria with slug " . $slug . " already exist");
-
-            return response()->json($badRequestError, $this->badRequestStatus);
-        }
-
         $noteCriteria->update(
-            $request->only([ 
-                'name', 
-                'slug',
+            $request->only([
+                'name',
                 'max_rate',
                 'min_rate',
                 'weight',
-                'description'  
+                'description'
             ])
         );
 
         return response()->json($noteCriteria, $this->successStatus);
 
     }
-    
+
 
 }
 
