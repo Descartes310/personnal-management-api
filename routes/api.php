@@ -82,6 +82,8 @@ Route::group(['prefix' => 'assignment_types'], function() {
     Route::put('/{id}', 'AssignmentTypeController@update');
 });
 
+Route::group(['prefix' => 'contract'], function () {
+    Route::get('', 'ContractController@get');  
 Route::group(['prefix' => 'sanctions'], function () {
     Route::get('/', 'SanctionController@get');
     Route::get('/{id}', 'SanctionController@find');
@@ -95,6 +97,16 @@ Route::group(['prefix' => 'sanctions'], function () {
     Route::get('/{id}', 'ContractController@find');
     Route::get('/', 'ContractController@get');
     Route::delete('/{id}', 'ContractController@delete');
+});
+
+Route::group(['prefix' => 'template'], function () {
+    Route::get('', 'TemplateController@get');  
+});
+
+Route::group(['prefix' => 'templates'],function(){
+    Route::get('/{id}', 'TemplateController@find');
+    Route::delete('/{id}', 'TemplateController@delete');
+});
   });
 
 Route::group(['prefix' => 'divisions'], function () {
@@ -104,3 +116,17 @@ Route::group(['prefix' => 'divisions'], function () {
      Route::get('/{id}', 'DivisionController@find');
     Route::delete('/{id}', 'DivisionController@delete');
 });
+
+Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], function () {
+    Route::post('/', 'NoteCriteriaController@create');
+    Route::put('/{id}', 'NoteCriteriaController@update');
+});
+Route::group(['prefix' => 'vacationtype'], function () {
+    Route::get('', 'VacationTypeController@get');  
+});
+
+Route::group(['prefix' => 'vacationtypes'],function(){
+    Route::get('/{id}', 'VacationTypeController@find');
+    Route::delete('/{id}', 'VacationTypeController@delete');
+});
+ 
