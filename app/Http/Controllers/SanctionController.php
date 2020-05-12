@@ -8,23 +8,23 @@ use DB;
 use App\APIError;
 use App\Sanction;
 use App\User;
+use App\Http\Requests\SanctionRequest;
 
 class SanctionController extends Controller
 {
     //methode create
 
-    public function create(Request $request)
+    public function create(SanctionRequest $request)
     {
-        $this->validate($request->all(), [
-            
-            'user_id' => 'required',
-        ]);
+       //les validations ce sont effectuees dans la classe SanctionRequest
+
+
         //test of user where user_id is...
         $user=User::find($request->user_id);
         //initialisation of subject
-        $subject=null;
+        $motif_table=null;
 
-        if($user==null) {
+        if(!$user) {
             $apiError = new APIError;
             $apiError->setStatus("400"); 
             $apiError->setCode("SANCTION_USER"); 
@@ -34,7 +34,7 @@ class SanctionController extends Controller
         
             return response()->json($apiError, 400);
         }
-        if($request->subject!=null){
+        if($request->subject){
 
            // $table=strtoupper($request->subject);
             $table=$request->subject;
@@ -49,9 +49,9 @@ class SanctionController extends Controller
             else{
                 
                 $lien="\\App\\".($table);
-                $subject=new $lien();
-                $subject=$subject->find($request->subject_id);
-                if($subject==null){
+                $table_class=new $lien();
+                $motif_table=$table_class->find($request->subject_id);
+                if(!$motif_table){
                     $apiError = new APIError;
                     $apiError->setStatus("406"); 
                     $apiError->setCode("NO SUBJECT ID VALUE"); 
@@ -66,22 +66,20 @@ class SanctionController extends Controller
         
 
         $data=$request->all();
-       
+        
         $sanction = Sanction::create($data);
         return response()->json(
             ["sanctions"=>$sanction,
             "user"=>$user,
-            "raison"=>$subject]);
+            "raison"=>$motif_table]);
     }
 
     
-    public function update(Request $request,$id)
+    public function update(SanctionRequest $request,$id)
     {
-        
-        $request->validate([
-            
-            'user_id' => 'required'
-        ]);
+        //
+        //les validations ce sont effectuees dans la classe SanctionRequest
+
 
         $data = $request->all();
         $sanctions = Sanction::find($id);

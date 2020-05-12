@@ -30,8 +30,10 @@ Route::group(['prefix' => 'auth'], function () {
 
         //il s'agit ici des routes pour la gestion gestion du create-update sanction
 
+
+//sanctions
 Route::group(['prefix' => 'sanctions'], function() {
-    Route::post('add', 'SanctionController@create');
-    Route::match(['put','patch'],'/{id}', 'SanctionController@update');
+    Route::post('/', 'SanctionController@create');
+    Route::put('/{id}', 'SanctionController@update');
 });
 
