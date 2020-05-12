@@ -1,0 +1,78 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use DB;
+use App\APIError;
+use Illuminate\Http\Request;
+use App\BlogPost;
+use App\Http\Controllers\Controller;
+
+
+class BlogPostController extends Controller{
+
+
+    public function get(Request $request){
+        
+        
+        $s=$request->s;
+        $limit=$request->limit;
+        $page=$request->page;
+
+        if ($s) {
+             if($limit){
+                if ( $page) {
+                    $blogPost=BlogPost::where('title', 'like', $s)->paginate($limit);
+                    $pagenumber=$blogPost->lastPage();
+            
+                    abort_if($pagenumber < $page, 404, "BlogPost page not founded.");
+                    return BlogPost::where('title', 'like', $s)->paginate($limit);
+                }
+
+                $blogPost=BlogPost::where('title', 'like', $s)->paginate($limit);
+                return $blogPost;
+            }
+            if ($page) {
+                return BlogPost::where('title', 'like', $s)->paginate(10);
+            }
+            return BlogPost::where('title', 'like', $s)->get();
+        }
+
+        if($limit){
+
+                if ( $page) {
+
+                    $blogPost=BlogPost::paginate($limit);
+                    $pagenumber=$blogPost->lastPage();
+                    abort_if($pagenumber < $page, 404, "BlogPost page not founded.");
+                    return $blogPost;
+                }
+                
+                $blogPost=BlogPost::paginate($limit);
+                return $blogPost->lastPage();
+            }
+
+        if ($page) {
+           return BlogPost::paginate(10);
+        }
+        return BlogPost::all();
+
+    }
+
+
+
+    public function find($id){
+
+        $BlogPost = BlogPost::find($id);
+        abort_if($BlogPost == null, 404, "BlogPost not founded.");
+        return response()->json($BlogPost);
+    }
+
+    public function delete($id){
+
+        $BlogPost = BlogPost::find($id);
+        abort_if($BlogPost == null, 404, "BlogPost not founded.");
+        $BlogPost->delete($BlogPost);
+        return response()->json([]);
+    }
+}

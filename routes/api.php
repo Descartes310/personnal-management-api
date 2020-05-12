@@ -32,3 +32,9 @@ Route::get('/licenses/{limit?}','LicenseController@get');
 Route::delete('licenses/{id}','LicenseController@delete');
 Route::get('licenses/{id}','LicenseController@find');
 Route::delete('licenses/changeStatus/{id}','LicenseController@changeStatus');
+
+Route::group(['prefix' => 'blogposts'], function () {
+	Route::get('/', 'BlogPostController@get');
+	Route::get('/{id}', 'BlogPostController@find');
+	Route::delete('/', 'BlogPostController@delete');
+});
