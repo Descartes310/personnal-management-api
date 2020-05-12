@@ -99,3 +99,9 @@ Route::group(['prefix' => 'blogcategory'], function () {
     Route::post('/', 'BlogCatController@create');
     Route::post('/{id}', 'BlogCatController@update');
 });
+
+//roads for the vacation 
+Route::group(['prefix' => 'vacations'], function () {
+    Route::post('/', 'VacationController@create');
+    Route::post('/{id}', 'VacationController@update');
+});
