@@ -148,14 +148,15 @@ class APIError implements \JsonSerializable
 
     /**
      * Build API Error instance for VALIDATION ERROR
+     * @param string $errorCode
      * @param mixed $errors
      * @return App\APIError
      */
-    public static function validationError($errors) {
+    public static function validationError(string $errorCode, $errors) {
         $apiError = new self();
-        $apiError->setCode(VALIDATION_ERROR);
+        $apiError->setCode($errorCode);
         $apiError->setStatus("400");
-        $apiError->setMessage(error_text(VALIDATION_ERROR));
+        $apiError->setMessage("Validation error");
         $apiError->setErrors($errors);
         return $apiError;
     }
@@ -163,11 +164,12 @@ class APIError implements \JsonSerializable
 
     /**
      * Throw new 400 error (validation error)
+     * @param string $errorCode
      * @param mixed $errors
      * @throws Illuminate\Http\Exceptions\HttpResponseException
      */
-    public static function throwValidationError($errors) {
-        $apiError = self::validationError($errors);
+    public static function throwValidationError(string $errorCode, $errors) {
+        $apiError = self::validationError($errorCode, $errors);
         throw new HttpResponseException(response()->json($apiError, 400));
     }
 }

@@ -13,50 +13,28 @@ class LicenseController extends Controller{
 
 
     public function get(Request $request){
-        
-        
-        $s=$request->s;
-        $limit=$request->limit;
-        $page=$request->page;
+
+
+        $s = $request->s;
+        $limit = null;
+
+        if ($request->limit && $request->limit > 0) {
+            $limit = $request->limit;
+        }
 
         if ($s) {
-             if($limit){
-                if ( $page) {
-                    $license=License::where('raison', 'like', $s)->paginate($limit);
-                    $pagenumber=$license->lastPage();
-            
-                    abort_if($pagenumber < $page, 404, "license page not founded.");
-                    return License::where('raison', 'like', $s)->paginate($limit);
-                }
-
-                $license=License::where('raison', 'like', $s)->paginate($limit);
-                return $license;
+            if ($limit) {
+                return License::where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->paginate($limit);
+            } else {
+                return License::where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->get();
             }
-            if ($page) {
-                return License::where('raison', 'like', $s)->paginate(10);
+        } else {
+            if ($limit) {
+                return License::paginate($limit);
+            } else {
+                return License::all();
             }
-            return License::where('raison', 'like', $s)->get();
         }
-
-        if($limit){
-
-                if ( $page) {
-
-                    $licence=License::paginate($limit);
-                    $pagenumber=$license->lastPage();
-                    abort_if($pagenumber < $page, 404, "license page not founded.");
-                    return $license;
-                }
-                
-                $license=License::paginate($limit);
-                return $license->lastPage();
-            }
-
-        if ($page) {
-           return License::paginate(15);
-        }
-        return License::all();
-
     }
 
 
