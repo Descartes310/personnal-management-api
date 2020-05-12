@@ -59,11 +59,21 @@ class AssignmentController extends Controller
     public function delete ($id){
         $assignment = Assignment::find($id);
         if(!$assignment){
-            return response()->json("Assignment not found in bd", $this->notFoundStatus);
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("404");
+            $unauthorized->setCode("ASSIGNMENT_NOT_FOUND");
+            $unauthorized->setMessage("Assignment id not found in database.");
+
+            return response()->json($unauthorized, 404);
         }
 
         $assignment->delete();
-        return response()->json($assignment, $this->succesStatus);
+        $unauthorized = new APIError;
+        $unauthorized->setStatus("200");
+        $unauthorized->setCode("ASSIGNMENT_DELETED");
+        $unauthorized->setMessage("Assignment deleted succesfully in database.");
+
+        return response()->json($unauthorized, 404);
     }
 
     /**
