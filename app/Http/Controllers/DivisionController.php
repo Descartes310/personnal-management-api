@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Division;
+use Illuminate\Support\Facades\DB;
 use App\APIError;
 
 
@@ -82,4 +82,38 @@ class DivisionController extends Controller
         $division->update($data);
         return response()->json($division);
     }
+
+    public function get(Request $request){
+        $limit = $request->limit;
+        $s = $request->s; 
+        $page = $request->page; 
+        $divisions = Division::where('name','LIKE','%'.$s.'%')
+                                       ->paginate($limit); 
+        return response()->json($divisions);
+      }
+
+    public function find($id){
+        $division = Division::find($id);
+        if($division ==null){
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("404");
+            $unauthorized->setCode("DIVISION_NOT_FOUND");
+            $unauthorized->setMessage("No division found with id $id");
+            return response()->json($unauthorized, 404); 
+        }
+        return response()->json($division);
+    }
+
+    public function delete($id){
+        $division = Division::find($id);
+        if($division ==null){
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("404");
+            $unauthorized->setCode("DIVISION_NOT_FOUND");
+            $unauthorized->setMessage("No division found with id $id");
+            return response()->json($unauthorized, 404); 
+        }
+        $division->delete($division);
+        return null;
+    }   
 }

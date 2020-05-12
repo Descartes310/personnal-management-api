@@ -84,4 +84,7 @@ Route::group(['prefix' => 'sanctions'], function () {
 Route::group(['prefix' => 'divisions'], function () {
     Route::post('/', 'DivisionController@create');
     Route::match(['put', 'post'],'/{id}', 'DivisionController@update');
+    Route::get('/', 'DivisionController@get');
+     Route::get('/{id}', 'DivisionController@find');
+    Route::delete('/{id}', 'DivisionController@delete');
 });
