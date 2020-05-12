@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['prefix' => 'blog_categories'], function(){
+
+    Route::delete('/{id}', 'BlogCategoryController@delete');
+    Route::get('/{id}', 'BlogCategoryController@find');
+    Route::get('/', 'BlogCategoryController@get');
+});
+
 Route::group(['prefix' => 'assignments'], function(){
 
     Route::delete('/{id}', 'AssignmentController@delete');
