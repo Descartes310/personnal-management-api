@@ -27,8 +27,9 @@ Route::group(['prefix' => 'auth'], function () {
     });
 });
 
-
-Route::get('/licenses','LicenseController@get');
-Route::delete('licenses/{id}','LicenseController@delete');
-Route::get('licenses/{id}','LicenseController@find');
-Route::patch('licenses/{id}/changeStatus','LicenseController@changeStatus');
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/licenses', 'LicenseController@get');
+    Route::delete('licenses/{id}', 'LicenseController@delete');
+    Route::get('licenses/{id}', 'LicenseController@find');
+    Route::patch('licenses/{id}/changeStatus', 'LicenseController@changeStatus');
+});
