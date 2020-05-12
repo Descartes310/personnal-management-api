@@ -93,3 +93,9 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
     Route::post('/', 'NoteCriteriaController@create');
     Route::put('/{id}', 'NoteCriteriaController@update');
 });
+
+
+Route::group(['prefix' => 'disciplinary_teams'], function() {
+    Route::post('/', 'DisciplinaryTeamController@create');
+    Route::match(['put', 'post'],'/{id}', 'DisciplinaryTeamController@update');
+});
