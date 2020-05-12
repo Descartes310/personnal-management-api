@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Career;
 use App\APIError;
 
 class CareerController extends Controller
 {
-    //
+    //create the career in controller
      
     public function create (Request $request){
         $request->validate([
@@ -30,7 +31,7 @@ class CareerController extends Controller
         }
 
         $data = $request->all();
-        $data['slug'] = str_replace(' ', '_', $request->name) . time();
+        $data['slug'] = str_replace(' ', '_', $request->user_id) . time();
         $career = Career::create($data);
         return response()->json($career);
     }
@@ -66,7 +67,7 @@ class CareerController extends Controller
         }
 
         $data = $request->all();
-        $data['slug'] = str_replace(' ', '_', $request->name) . time();
+        $data['slug'] = str_replace(' ', '_', $request->user_id) . time();
         $career->update($data);
         return response()->json($career);
     }
