@@ -15,7 +15,7 @@ class LicenseController extends Controller{
     public function get(Request $request){
         
         
-        $s=$request['s'];
+        $s=$request->s;
         $limit=$request->limit;
         //return $request->all();
 

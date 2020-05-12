@@ -28,7 +28,7 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 
-Route::get('/license}','LicenseController@get');
-Route::delete('license/{id}','LicenseController@delete');
-Route::get('license/{id}','LicenseController@find');
-Route::delete('license/archive/{id}','LicenseController@archive');
+Route::get('/licenses/{limit?}','LicenseController@get');
+Route::delete('licenses/{id}','LicenseController@delete');
+Route::get('licenses/{id}','LicenseController@find');
+Route::delete('licenses/archive/{id}','LicenseController@archive');
