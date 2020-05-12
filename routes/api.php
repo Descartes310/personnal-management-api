@@ -99,13 +99,10 @@ Route::group(['prefix' => 'sanctions'], function () {
     Route::delete('/{id}', 'ContractController@delete');
 });
 
-Route::group(['prefix' => 'template'], function () {
-    Route::get('', 'TemplateController@get');  
-});
-
 Route::group(['prefix' => 'templates'],function(){
     Route::get('/{id}', 'TemplateController@find');
     Route::delete('/{id}', 'TemplateController@delete');
+    Route::get('', 'TemplateController@get');  
 });
   });
 

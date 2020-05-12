@@ -53,88 +53,10 @@ class TemplateController extends Controller
         $limit = $request->limit;
         $page = $request->page;
         $s = $request->s;
-
-        if($limit != null && $s != null && $page != null){
+        $templates = Template::where('name','LIKE','%'.$s.'%')
+                               ->paginate($limit); 
+        return response()->json($templates);
       
-            $template = Template::where('title', 'LIKE','%'.$s.'%')->paginate($limit);
-            $pagenumber=$template->lastPage();
-            if($pagenumber < $page) {
-                $apiError = new APIError;
-                $apiError->setStatus("404");
-                $apiError->setCode("TEMPLATE_PAGE_NOT_FOUND"); 
-                $apiError->setMessage("page does not exist"); 
-                return response()->json($apiError, 404);
-            }
-            return response()->json($template);     
-          }
-    
-          if($limit != null && $s == null && $page != null){
-            
-            $template = Template::paginate($limit);
-            $pagenumber=$template->lastPage();
-    
-            if($pagenumber < $page) {
-                $apiError = new APIError;
-                $apiError->setStatus("404");
-                $apiError->setCode("TEMPLATE_PAGE_NOT_FOUND"); 
-                $apiError->setMessage("page does not exist"); 
-                return response()->json($apiError, 404);
-            }
-            return response()->json($template); 
-          
-          }
-    
-          if($limit != null && $s != null && $page == null){
-            
-            $template = Template::where('title', 'LIKE','%'.$s.'%')->paginate($limit);
-            return response()->json($template);
-          
-          }
-    
-          if($limit != null && $s == null && $page == null){
-            
-            $template = Template::paginate($limit);
-            return response()->json($template);
-          
-          }
-    
-          if($limit == null && $s != null && $page == null){
-            
-            $limit=2;
-            $template = Template::where('title', 'LIKE','%'.$s.'%')->get();
-            return response()->json($template);
-          
-          }
-    
-          if($limit == null && $s != null && $page != null){
-            
-            $limit=2;
-            $template = Template::where('title', 'LIKE','%'.$s.'%')->paginate($limit);
-            $pagenumber=$template->lastPage();
-            
-            if($pagenumber < $page) {
-                $apiError = new APIError;
-                $apiError->setStatus("404");
-                $apiError->setCode("TEMPLATE_PAGE_NOT_FOUND"); 
-                $apiError->setMessage("page does not exist"); 
-                return response()->json($apiError, 404);
-            }
-            return response()->json($template);     
-          }
-    
-          if($limit == null && $s == null && $page == null){
-            
-            $template = Template::all();
-            return response()->json($template);
-          
-          }
-    
-          if($limit == null && $s == null && $page != null){
-            
-            $template = Template::all();
-            return response()->json($template);
-          
-          }  
     }
      
 }
