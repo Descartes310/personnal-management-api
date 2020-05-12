@@ -28,10 +28,19 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['prefix' => 'contract'], function () {
-    Route::get('{limit?}/{s?}', 'ContractController@get');  
+    Route::get('', 'ContractController@get');  
 });
 
 Route::group(['prefix' => 'contracts'],function(){
     Route::get('/{id}', 'ContractController@find');
     Route::delete('/{id}', 'ContractController@delete');
+});
+
+Route::group(['prefix' => 'template'], function () {
+    Route::get('', 'TemplateController@get');  
+});
+
+Route::group(['prefix' => 'templates'],function(){
+    Route::get('/{id}', 'TemplateController@find');
+    Route::delete('/{id}', 'TemplateController@delete');
 });
