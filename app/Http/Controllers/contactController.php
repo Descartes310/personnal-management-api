@@ -20,7 +20,6 @@ class contactController extends Controller
         $file = $request->file('picture');
         $path = null;
         if($file != null){
-            //$request->validate(['picture'=>'image|mimes: jpeg,jpg,png,svg']);
             $extension = $file->getClientOriginalExtension();
             $relativeDestination = "uploads/contacts";
             $destinationPath = public_path($relativeDestination);
@@ -69,7 +68,6 @@ class contactController extends Controller
             $file = $request->file('picture');
             $path = null;
             if($file != null){
-                // $request->validate(['picture'=>'image|mimes:jpeg,jpg,png,svg']);
                 $extension = $file->getClientOriginalExtension();
                 $relativeDestination = "uploads/contacts";
                 $destinationPath = public_path($relativeDestination);
