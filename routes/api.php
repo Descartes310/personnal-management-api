@@ -23,11 +23,11 @@ Route::group(['prefix' => 'blog_categories'], function(){
 });
 
 Route::group(['prefix' => 'assignments'], function(){
-
     Route::delete('/{id}', 'AssignmentController@delete');
-    // Route::post('/', 'AssignmentController@create');
     Route::get('/{id}', 'AssignmentController@find');
     Route::get('/', 'AssignmentController@get');
+    Route::post('/', 'AssignmentController@create');
+    Route::put('/{id}', 'AssignmentController@update');
 });
 
 
@@ -118,6 +118,7 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
     Route::post('/', 'NoteCriteriaController@create');
     Route::put('/{id}', 'NoteCriteriaController@update');
 });
+
 Route::group(['prefix' => 'vacationtype'], function () {
     Route::get('', 'VacationTypeController@get');  
 });
@@ -126,4 +127,3 @@ Route::group(['prefix' => 'vacationtypes'],function(){
     Route::get('/{id}', 'VacationTypeController@find');
     Route::delete('/{id}', 'VacationTypeController@delete');
 });
- 
