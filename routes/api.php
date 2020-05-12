@@ -88,3 +88,8 @@ Route::group(['prefix' => 'divisions'], function () {
      Route::get('/{id}', 'DivisionController@find');
     Route::delete('/{id}', 'DivisionController@delete');
 });
+
+Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], function () {
+    Route::post('/', 'NoteCriteriaController@create');
+    Route::put('/{id}', 'NoteCriteriaController@update');
+});
