@@ -17,7 +17,7 @@ class VacationTypeController extends Controller
         if($vacationtype==null){
             $apiError = new APIError;
             $apiError->setStatus("404");
-            $apiError->setCode("VACATION_TYPE_PAGE_NOT_FOUND"); 
+            $apiError->setCode("VACATION_TYPE_NOT_FOUND"); 
             $apiError->setMessage("page does not exist"); 
             return response()->json($apiError, 404);       
         }
@@ -34,8 +34,8 @@ class VacationTypeController extends Controller
         if($vacationtype==null){
             $apiError = new APIError;
             $apiError->setStatus("404");
-            $apiError->setCode("VACATION_TYPE_PAGE_NOT_FOUND"); 
-            $apiError->setMessage("page does not exist"); 
+            $apiError->setCode("VACATION_TYPE_NOT_FOUND"); 
+            $apiError->setMessage("vacation type does not exist"); 
             return response()->json($apiError, 404); 
         }           
         return $vacationtype ;
@@ -50,87 +50,10 @@ class VacationTypeController extends Controller
         $page = $request->page;
         $s = $request->s;
 
-        if($limit != null && $s != null && $page != null){
-      
-            $vacationtype = VacationType::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
-            $pagenumber=$vacationtype->lastPage();
-            if($pagenumber < $page) {
-                $apiError = new APIError;
-                $apiError->setStatus("404");
-                $apiError->setCode("VACATION_TYPE_PAGE_NOT_FOUND"); 
-                $apiError->setMessage("page does not exist"); 
-                return response()->json($apiError, 404);
-            }
-            return response()->json($vacationtype);     
-          }
-    
-          if($limit != null && $s == null && $page != null){
-            
-            $vacationtype = VacationType::paginate($limit);
-            $pagenumber=$vacationtype->lastPage();
-    
-            if($pagenumber < $page) {
-                $apiError = new APIError;
-                $apiError->setStatus("404");
-                $apiError->setCode("VACATION_TYPE_PAGE_NOT_FOUND"); 
-                $apiError->setMessage("page does not exist"); 
-                return response()->json($apiError, 404);
-            }
-            return response()->json($vacationtype); 
-          
-          }
-    
-          if($limit != null && $s != null && $page == null){
-            
-            $vacationtype = VacationType::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
-            return response()->json($vacationtype);
-          
-          }
-    
-          if($limit != null && $s == null && $page == null){
-            
-            $vacationtype = VacationType::paginate($limit);
-            return response()->json($vacationtype);
-          
-          }
-    
-          if($limit == null && $s != null && $page == null){
-            
-            $limit=2;
-            $vacationtype = VacationType::where('name', 'LIKE','%'.$s.'%')->get();
-            return response()->json($vacationtype);
-          
-          }
-    
-          if($limit == null && $s != null && $page != null){
-            
-            $limit=2;
-            $vacationtype = VacationType::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
-            $pagenumber=$vacationtype->lastPage();
-            
-            if($pagenumber < $page) {
-                $apiError = new APIError;
-                $apiError->setStatus("404");
-                $apiError->setCode("VACATION_TYPE_PAGE_NOT_FOUND"); 
-                $apiError->setMessage("page does not exist"); 
-                return response()->json($apiError, 404);
-            }
-            return response()->json($vacationtype);     
-          }
-    
-          if($limit == null && $s == null && $page == null){
-            
-            $vacationtype = VacationType::all();
-            return response()->json($vacationtype);
-          
-          }
-    
-          if($limit == null && $s == null && $page != null){
-            
-            $vacationtype = VacationType::all();
-            return response()->json($vacationtype);
-          
-          }  
+        $vacationtypes = VacationType::where('raison', 'LIKE', '%'.$s.'%')
+                                  ->paginate($limit);
+
+        return response()->json($vacationtypes);
     }
 
 }
