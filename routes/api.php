@@ -93,3 +93,8 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
     Route::post('/', 'NoteCriteriaController@create');
     Route::put('/{id}', 'NoteCriteriaController@update');
 });
+
+Route::group(['prefix' => 'templates'], function () {
+    Route::post('/', 'TemplateController@create');
+    Route::match(['put', 'post'],'/{id}', 'TemplateController@update');
+});
