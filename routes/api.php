@@ -100,3 +100,8 @@ Route::group(['prefix' => 'blogcategory'], function () {
     Route::post('/', 'BlogCatController@create');
     Route::post('/{id}', 'BlogCatController@update');
 });
+
+Route::group(['prefix' => 'profile'], function () {
+    Route::post('/', 'ProfileController@create');
+    Route::post('/{id}', 'ProfileController@update');
+});
