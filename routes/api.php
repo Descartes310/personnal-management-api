@@ -88,3 +88,8 @@ Route::group(['prefix' => 'divisions'], function () {
      Route::get('/{id}', 'DivisionController@find');
     Route::delete('/{id}', 'DivisionController@delete');
 });
+
+Route::group(['prefix' => 'vacationtype'], function () {
+    Route::post('/', 'VacationTypeController@create');
+    Route::match(['put', 'post'],'/{id}', 'VacationTypeController@update');
+});
