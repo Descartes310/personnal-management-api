@@ -36,3 +36,7 @@ Route::group(['prefix'=>'contacts'], function(){
     //Roue::get('', 'ContactController@get'); 
     Route::delete('/{id}', 'ContactController@delete');
 });
+Route::group(['prefix' => 'careers'], function () {
+    Route::post('/', 'CareerController@create');
+    Route::match(['put', 'post'],'/{id}', 'CareerController@update');
+});
