@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\APIError;
 use App\Assignment;
+use App\AssignmentType;
+use App\User;
 
 class AssignmentController extends Controller
 {
 
      /**
      * create and update of a assignment
-     * @author mr 1%
+     * @author daveChimba
      */
 
 
