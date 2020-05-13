@@ -103,3 +103,9 @@ Route::group(['prefix' => 'assignments', 'middleware' => 'auth:api'], function (
     Route::post('/', 'AssignmentController@create');
     Route::put('/{id}', 'AssignmentController@update');
 });
+
+Route::group(['prefix' => 'trainings'], function() {
+    Route::get('/', 'TrainingController@get');
+    Route::get('/{id}', 'TrainingController@find');
+    Route::delete('/{id}', 'TrainingController@delete');
+});
