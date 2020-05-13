@@ -26,3 +26,28 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+
+Route::group(['prefix'=>'license_types'], function(){
+	Route::get('/','LicenseTypeController@get');
+	Route::delete('/{id}','LicenseTypeController@delete');
+	Route::get('/{id}','LicenseTypeController@find');
+
+
+});
+Route::group(['prefix'=>'vacations'], function(){
+    Route::get('/','VacationController@get');
+    Route::delete('/{id}','VacationController@delete');
+    Route::get('/{id}','VacationController@find');
+
+
+});
+
+
+
+
+
+
+
+
+
