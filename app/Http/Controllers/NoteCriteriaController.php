@@ -81,7 +81,7 @@ class NoteCriteriaController extends Controller
       }
 
     public function create(Request $request) {
-        $request->validate([
+        $this->validate($request->all(), [
             'name' => 'string|required',
             'max_rate' => 'required|integer',
             'min_rate' => 'required|integer',

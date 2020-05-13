@@ -77,7 +77,7 @@ class DisciplinaryBoardController extends Controller
      */
     public function create(Request $request)
     {
-        $request->validate([
+        $this->validate($request->all(), [
             'user_id' => 'required|numeric',
             'disciplinary_team_id' => 'required|numeric',
             'effective_date' => 'required',
@@ -130,7 +130,7 @@ class DisciplinaryBoardController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $this->validate($request->all(), [
             'user_id' => 'required|numeric|exists:App\User,id',
             'disciplinary_team_id' => 'required|numeric|exists:App\DisciplinaryTeam,id',
             'effective_date' => 'required|date',
