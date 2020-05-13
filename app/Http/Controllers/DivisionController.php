@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Division;
 use App\APIError;
+use Illuminate\Support\Str;
 
 
 class DivisionController extends Controller

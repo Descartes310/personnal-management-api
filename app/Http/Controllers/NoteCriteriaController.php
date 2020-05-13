@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\APIError;
 use App\NoteCriteria;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class NoteCriteriaController extends Controller
