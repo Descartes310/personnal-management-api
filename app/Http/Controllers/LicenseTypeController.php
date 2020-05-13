@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use DB;
-use App\APIError;
 use Illuminate\Http\Request;
 use App\LicenseType;
 use App\Http\Controllers\Controller;
@@ -11,54 +9,33 @@ class LicenseTypeController extends Controller
 {
     public function find($id){
 		$licensetype = LicenseType::find($id);
-        abort_if($licensetype == null, 404, "license  type not founded.");
+        abort_if($licensetype == null, 404, "license type not found.");
         return response()->json($licensetype);
 	}
 
 
 	public function get(Request $request){
-		$s=$request->s;
-        $limit=$request->limit;
-        $page=$request->page;
+        $s = $request->s;
+        $page = $request->page;
+        $limit = null;
+
+        if ($request->limit && $request->limit > 0) {
+            $limit = $request->limit;
+        }
 
         if ($s) {
-             if($limit){
-                if ( $page) {
-                    $licensetype=LicenseType::where('name', 'like', $s)->paginate($limit);
-                    $pagenumber=$licensetype->lastPage();
-            
-                    abort_if($pagenumber < $page, 404, "license  type page not founded.");
-                    return LicenseType::where('name', 'like', $s)->paginate($limit);
-                }
-
-                $licensetype=LicenseType::where('name', 'like', $s)->paginate($limit);
-                return $licensetype;
+            if ($limit || $page) {
+                return LicenseType::where('name', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->paginate($limit);
+            } else {
+                return LicenseType::where('name', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->get();
             }
-            if ($page) {
-                return LicenseType::where('name', 'like', $s)->paginate(5);
+        } else {
+            if ($limit || $page) {
+                return LicenseType::paginate($limit);
+            } else {
+                return LicenseType::all();
             }
-            return LicenseType::where('name', 'like', $s)->get();
         }
-
-        if($limit){
-
-                if ( $page) {
-
-                    $licensetype=LicenseType::paginate($limit);
-                    $pagenumber=$licensetype->lastPage();
-                    abort_if($pagenumber < $page, 404, "license  type page not founded.");
-                    return $licensetype;
-                }
-                
-                $licensetype=LicenseType::paginate($limit);
-                return $licensetype->lastPage();
-            }
-
-        if ($page) {
-           return LicenseType::paginate(15);
-        }
-        return LicenseType::all();
-
     }
 
 
@@ -68,7 +45,7 @@ class LicenseTypeController extends Controller
 	public function delete($id){
 		$licensetype = LicenseType::find($id);
         abort_if($licensetype == null, 404, "license type not founded.");
-        $licensetype->delete($licensetype);
+        $licensetype->delete();
         return response()->json([]);
     }
 

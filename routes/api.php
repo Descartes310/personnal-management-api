@@ -18,7 +18,7 @@ use Illuminate\Contracts\Support\Jsonable;
 Route::group(['prefix' => 'auth'], function () {
 
     Route::post('token', 'AuthController@login');
-    
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'AuthController@user');
         Route::delete('token', 'AuthController@logout');
@@ -44,7 +44,7 @@ Route::group(['prefix' => 'pro_situations'], function() {
 Route::group(['prefix' => 'sanctions'], function() {
     Route::post('add', 'SanctionController@create');
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
-    
+
 });
 Route::group(['prefix'=>'contacts'], function(){
     Route::get('/{id}','ContactController@find');
@@ -95,19 +95,17 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
 });
 
 
-Route::group(['prefix'=>'license_types'], function(){
+Route::group(['prefix' => 'license_types'], function(){
 	Route::get('/','LicenseTypeController@get');
 	Route::delete('/{id}','LicenseTypeController@delete');
 	Route::get('/{id}','LicenseTypeController@find');
 
 
 });
-Route::group(['prefix'=>'vacations'], function(){
+Route::group(['prefix' => 'vacations'], function(){
     Route::get('/','VacationController@get');
     Route::delete('/{id}','VacationController@delete');
     Route::get('/{id}','VacationController@find');
-
-
 });
 
 
