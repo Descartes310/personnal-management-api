@@ -13,7 +13,7 @@ class AssignmentTypeController extends Controller {
     protected $createStatus = 201;
     protected $notFoundStatus = 404;
     protected $badRequestStatus = 400;
-    
+
     /**
      * Create an assignment type with name, slug and description
      * @author Arléon Zemtsop
@@ -64,7 +64,7 @@ class AssignmentTypeController extends Controller {
         $slug = $request->slug;
 
         $foundAssignmentType = AssignmentType::whereSlug($slug)->first();
-        
+
 		if($foundAssignmentType != null && $foundAssignmentType != $assignmentType) {
 			$badRequestError = new APIError;
             $badRequestError->setStatus("400");
@@ -75,14 +75,81 @@ class AssignmentTypeController extends Controller {
 		}
 
         $assignmentType->update(
-            $request->only([ 
-                'name', 
-                'slug', 
+            $request->only([
+                'name',
+                'slug',
                 'description'
             ])
         );
 
         return response()->json($assignmentType, $this->successStatus);
+    }
 
+
+
+    /**
+     * Find an existing  AssignmentType
+     */
+    public function find($id)
+    {
+        $assign_type = AssignmentType::find($id);
+        if ($assign_type == null) {
+            $notexist = new APIError;
+            $notexist->setStatus("404");
+            $notexist->setCode("ASSIGNMENT_TYPE_NOT_EXIST");
+            $notexist->setMessage("No AssignmentType with id $id.");
+
+            return response()->json($notexist, 404);
+        }
+        return response()->json($assign_type);
+    }
+
+
+    /**
+     * Get All the AssignmentType
+     */
+    public function get(Request $req)
+    {
+        $s = $req->s;
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($s) {
+            if ($limit || $page) {
+                $assignTypes = AssignmentType::where('name', 'LIKE', '%' . $s . '%')->paginate($limit);
+            } else {
+                $assignTypes = AssignmentType::where('name', 'LIKE', '%' . $s . '%')->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $assignTypes = AssignmentType::paginate($limit);
+            } else {
+                $assignTypes = AssignmentType::all();
+            }
+        }
+
+        return response()->json($assignTypes);
+    }
+
+    /**
+     * Delete the choosen AssignmentType
+     */
+    public function delete($id)
+    {
+        $assign_type = AssignmentType::find($id);
+        if ($assign_type == null) {
+            $notexist = new APIError;
+            $notexist->setStatus("404");
+            $notexist->setCode("ASSIGNMENT_TYPE_NOT_EXIST");
+            $notexist->setMessage("AssignmentType id not found");
+
+            return response()->json($notexist, 404);
+        }
+        $assign_type->delete();
+        return response(null);
     }
 }
