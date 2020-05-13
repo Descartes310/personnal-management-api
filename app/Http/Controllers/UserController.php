@@ -12,13 +12,16 @@ use App\User;
 
 class UserController extends Controller
 {
+    /**
+     * @author Armel Nya
+     */
     public function create(Request $request) {
         $profiles = Profile::get();
         $rules = [
             'login' => ['required', 'alpha_num', 'unique:App\User'],
             'password' => ['required'],
         ];
-        // Validation loop
+        // La boucle de validation
         foreach ($profiles as $profile) {
             $rule = [];
             if ($profile->is_required) {
@@ -73,7 +76,7 @@ class UserController extends Controller
         }
          
         $this->validate($request->all(), $rules);
-       
+        // si la validation est ok on cree le user 
         $user = User::create([
             'login' => $request->login,
             'password' => bcrypt($request->password)
@@ -112,12 +115,18 @@ class UserController extends Controller
     
     public function update(Request $request, $id) {
         $user = User::find($id);
-        abort_unless($user, "no existant", 404);
+        if($user == null){
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("404");
+            $unauthorized->setCode("USER_NOT_FOUND");
+            $unauthorized->setMessage("No user found with id $id");
+                return response()->json($unauthorized, 404); 
+        }
         $profiles = Profile::get();
         $rules = [
             'login' => ['required', 'alpha_num', Rule::unique('users')->ignore($id,'id')],
         ];
-        // Validation loop
+        // boucle de validation
         foreach ($profiles as $profile) {
             $rule = [];
             if ($profile->is_required) {
@@ -176,7 +185,7 @@ class UserController extends Controller
          
         $this->validate($request->all(), $rules);
         
-        // Insertion loop
+        // Insertion or update
         foreach ($profiles as $profile) {
             $userProfile = UserProfile::where('user_id', $user->id)->where('profile_id', $profile->id)->first();
             $value = (null != $userProfile) ? $userProfile->value : null;
