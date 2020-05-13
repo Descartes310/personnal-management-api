@@ -7,6 +7,7 @@ use DB;
 use App\User;
 use App\UserProfile;
 use App\APIError;
+use App\Profile;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -23,10 +24,19 @@ class UserController extends Controller
         $user_infos = UserProfile::whereUserId($id)->with('profile')->get();
         foreach ($user_infos as $user_info) {
             if($user_info->profile->type == 'file')
-                $user[$user_info->profile->name] = url($user_info->value);
+                $user[$user_info->profile->slug] = url($user_info->value);
             else
-                $user[$user_info->profile->name] = $user_info->value;
+                $user[$user_info->profile->slug] = $user_info->value;
         }
+
+        // The empty user field must be present in response, with null value
+        $profiles = Profile::all();
+        foreach ($profiles as $profile) {
+            if ( ! isset($user[$profile->slug]) ) {
+                $user[$profile->slug] = null;
+            }
+        }
+
         return response()->json($user);
     }
 }
