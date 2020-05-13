@@ -16,12 +16,12 @@ class TrainingController extends Controller
     public function find($id){
         $training = Training::find($id);
         if($training == null) {
-            $unauthorized = new APIError;
-            $unauthorized->setStatus("404");
-            $unauthorized->setCode("TRAINING_NOT_FOUND");
-            $unauthorized->setMessage("training id not found");
+            $notFound = new APIError;
+            $notFound->setStatus("404");
+            $notFound->setCode("TRAINING_NOT_FOUND");
+            $notFound->setMessage("training id not found");
 
-            return response()->json($unauthorized, 404); 
+            return response()->json($notFound, 404);
         }
         return response()->json($training);
     }
@@ -30,12 +30,34 @@ class TrainingController extends Controller
      * get all trainings with specific parameters
      * @author aubin soh
      */
-    public function get(Request $request){
-        $limit = $request->limit;
-        $s = $request->s; 
-        $page = $request->page; 
-        $trainings = Training::where('name','LIKE','%'.$s.'%')
-                                       ->paginate($limit); 
+    public function get(Request $request) {
+
+        $s = $request->s;
+        $page = $request->page;
+        $limit = null;
+
+        if ($request->limit && $request->limit > 0) {
+            $limit = $request->limit;
+        }
+
+        if ($s) {
+            if ($limit || $page) {
+                $trainings = Training::where('name', 'LIKE', '%' . $s . '%')
+                    ->orWhere('description', 'LIKE', '%' . $s . '%')
+                    ->paginate($limit);
+            } else {
+                $trainings = Training::where('name', 'LIKE', '%' . $s . '%')
+                    ->orWhere('description', 'LIKE', '%' . $s . '%')
+                    ->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $trainings = Training::paginate($limit);
+            } else {
+                $trainings = Training::all();
+            }
+        }
+
         return response()->json($trainings);
       }
 
@@ -46,14 +68,14 @@ class TrainingController extends Controller
     public function delete($id){
         $training = Training::find($id);
         if($training == null) {
-            $unauthorized = new APIError;
-            $unauthorized->setStatus("404");
-            $unauthorized->setCode("TRAINING_NOT_FOUND");
-            $unauthorized->setMessage("training id not found");
+            $notFound = new APIError;
+            $notFound->setStatus("404");
+            $notFound->setCode("TRAINING_NOT_FOUND");
+            $notFound->setMessage("training id not found");
 
-            return response()->json($unauthorized, 404); 
+            return response()->json($notFound, 404);
         }
-        $training->delete($training);
+        $training->delete();
         return response(null);
     }
 

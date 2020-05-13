@@ -192,10 +192,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'CareerController@delete');
     });
 
-});
 
-Route::group(['prefix' => 'trainings'], function() {
-    Route::get('/', 'TrainingController@get');
-    Route::get('/{id}', 'TrainingController@find');
-    Route::delete('/{id}', 'TrainingController@delete');
+    Route::group(['prefix' => 'trainings'], function () {
+        Route::get('/', 'TrainingController@get');
+        Route::get('/{id}', 'TrainingController@find');
+        Route::delete('/{id}', 'TrainingController@delete');
+    });
+
 });
