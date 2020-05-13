@@ -2,18 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use App\APIError;
-use App\Role;
-use App\User;
-use App\Sanction;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Auth;
-use \Carbon\Carbon;
-use App\Http\Controllers\Controller;
+use App\Profile;
+use Illuminate\Support\Facades\DB;
+use App\APIError;
 
-class SanctionController extends Controller{
+
+class ProfileController extends Controller{
     /**
      * 
      * @author jiozangtheophane@gmail.com
@@ -22,8 +17,8 @@ class SanctionController extends Controller{
         $limit = $req->limit;
         $s = $req->s; 
         $page = $req->page; 
-        $sanction = Sanction::where('id','LIKE','%'.$s.'%')->paginate($limit);
-        return response() ->json($sanction); 
+        $profile = Profile::where('name','LIKE','%'.$s.'%')->paginate($limit);
+        return response() ->json($profile); 
     }
     /**
      * 
@@ -31,17 +26,17 @@ class SanctionController extends Controller{
      */
     public function find($id){
      
-        $sanction = Sanction::find($id);
-        if($sanction == null){
+        $profile = Profile::find($id);
+        if($profile == null){
             $unauthorized = new APIError;
             $unauthorized->setStatus("404");
-            $unauthorized->setCode("FIND_SANCTION");
+            $unauthorized->setCode("FIND_PROFILE");
             $unauthorized->setMessage("not found id.");
 
             return response()->json($unauthorized, 404);
             
         }
-        return response()->json($sanction);
+        return response()->json($profile);
     }
     /**
      * 
@@ -49,19 +44,19 @@ class SanctionController extends Controller{
      */
     public function delete($id){
 
-        $sanction = Sanction::find($id);
-        if($sanction == null){
+        $profile = Profile::find($id);
+        if($profile == null){
             $unauthorized = new APIError;
             $unauthorized->setStatus("404");
-            $unauthorized->setCode("DELETE_SANCTION");
+            $unauthorized->setCode("DELETE_PROFILE");
             $unauthorized->setMessage("not found id.");
 
             return response()->json($unauthorized, 404);
         }
         else{
-            $sanction->delete($sanction);
+            $profile->delete($profile);
         }
-        $sanction = Sanction::get();
-        return response()->json($sanction);
+        $profile = Profile::get();
+        return response()->json($profile);
     }
 }

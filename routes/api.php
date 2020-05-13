@@ -128,7 +128,7 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
     Route::put('/{id}', 'NoteCriteriaController@update');
 });
 
-Route::group(['prefix' => 'vacationtypes'], function() {
+Route::group(['prefix' => 'vacation_types'], function() {
     Route::get('', 'VacationTypeController@get');
     Route::get('/{id}', 'VacationTypeController@find');
     Route::delete('/{id}', 'VacationTypeController@delete');
@@ -176,8 +176,20 @@ Route::group(['prefix' => 'note_criterias'], function(){
     Route::delete('/{id}','NoteCriteriaController@delete');
 });
 
-Route::group(['prefix' => 'disciplinary_teams'], function(){
-    Route::get('/{id}','DisciplinaryTeamController@find');
-    Route::get('/','DisciplinaryTeamController@get');
-    Route::delete('/{id}','DisciplinaryTeamController@delete');
+Route::group(['prefix' => 'disciplinary_teams'], function() {
+    Route::get('/{id}', 'DisciplinaryTeamController@find');
+    Route::get('/', 'DisciplinaryTeamController@get');
+    Route::delete('/{id}', 'DisciplinaryTeamController@delete');
+});
+
+Route::group(['prefix' => 'templates'], function () {
+    Route::post('/', 'TemplateController@create');
+    Route::put('/{id}', 'TemplateController@update');
+});
+
+//il s'agit des routes pour read et delete profile
+Route::group(['prefix' => 'profiles'], function () {
+    Route::get('/', 'ProfileController@get');
+    Route::get('/{id}', 'ProfileController@find');
+    Route::delete('/{id}', 'ProfileController@delete');
 });
