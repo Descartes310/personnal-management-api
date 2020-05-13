@@ -18,7 +18,7 @@ use Illuminate\Contracts\Support\Jsonable;
 Route::group(['prefix' => 'auth'], function () {
 
     Route::post('token', 'AuthController@login');
-    
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'AuthController@user');
         Route::delete('token', 'AuthController@logout');
@@ -44,7 +44,7 @@ Route::group(['prefix' => 'pro_situations'], function() {
 Route::group(['prefix' => 'sanctions'], function() {
     Route::post('add', 'SanctionController@create');
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
-    
+
 });
 Route::group(['prefix'=>'contacts'], function(){
     Route::get('/{id}','ContactController@find');
@@ -97,15 +97,15 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
 
 
 Route::group(['prefix' => 'licenses/'], function () {
-    Route::get('{limit?}','LicenseController@get');
+    Route::get('/','LicenseController@get');
 	Route::delete('{id}','LicenseController@delete');
 	Route::get('{id}','LicenseController@find');
 	Route::delete('lchangeStatus/{id}','LicenseController@changeStatus');
 });
 
 
-Route::group(['prefix' => 'blogposts'], function () {
-    Route::get('{limit?}','BlogPostController@get');
+Route::group(['prefix' => 'blog_posts'], function () {
+    Route::get('/','BlogPostController@get');
 	Route::delete('{id}','BlogPostController@delete');
 	Route::get('{id}','BlogPostController@find');
 });
