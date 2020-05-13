@@ -159,12 +159,15 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'CareerController@delete');
     });
 
-});
+    //profile_updates
     Route::group(['prefix' => 'profile_updates'], function () {
         Route::get('/', 'ProfileUpdateController@get');
         Route::get('{id}', 'ProfileUpdateController@find');
         Route::delete('{id}', 'ProfileUpdateController@delete');
     });
+
+});
+    
 
 
 
