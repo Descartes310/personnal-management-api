@@ -93,3 +93,9 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
     Route::post('/', 'NoteCriteriaController@create');
     Route::put('/{id}', 'NoteCriteriaController@update');
 });
+
+Route::group(['prefix' => 'blog_posts', 'middleware' => 'auth:api'], function () {
+    Route::post('/', 'BlogPostController@create');
+    Route::put('/{id}', 'BlogpostController@update');
+});
+
