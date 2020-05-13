@@ -96,12 +96,12 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
 
 Route::group(['prefix' => 'disciplinary_teams'], function() {
     Route::post('/', 'DisciplinaryTeamController@create');
-    Route::match(['put', 'post'],'/{id}', 'DisciplinaryTeamController@update');
+    Route::put('/{id}', 'DisciplinaryTeamController@update');
 });
 
 Route::group(['prefix' => 'disciplinary_boards'], function() {
     Route::post('/', 'DisciplinaryBoardController@create');
-    Route::match(['put', 'post'],'/{id}', 'DisciplinaryBoardController@update');
+    Route::put('/{id}', 'DisciplinaryBoardController@update');
 });
 
 Route::group(['prefix' => 'assignments', 'middleware' => 'auth:api'], function () {

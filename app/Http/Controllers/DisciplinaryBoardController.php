@@ -51,7 +51,7 @@ class DisciplinaryBoardController extends Controller
         if ($team == null) {
             $apiError = new APIError;
             $apiError->setStatus("400");
-            $apiError->setCode("DISCIPLINARY-TEAM_NOT_FOUND");
+            $apiError->setCode("DISCIPLINARY_TEAM_NOT_FOUND");
             $apiError->setMessage("Something wrong with your request! None disciplinary team found");
             return response()->json($apiError, 400);
         }
@@ -112,9 +112,9 @@ class DisciplinaryBoardController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'user_id' => 'required|numeric',
-            'disciplinary_team_id' => 'required|numeric',
-            'effective_date' => 'required',
+            'user_id' => 'required|numeric|exists:App\User,id',
+            'disciplinary_team_id' => 'required|numeric|exists:App\DisciplinaryTeam,id',
+            'effective_date' => 'required|date',
             'raison' => 'required',
             'location' => 'required',
             'decision' => 'required',
@@ -134,11 +134,11 @@ class DisciplinaryBoardController extends Controller
         if ($board == null) {
             $apiError = new APIError;
             $apiError->setStatus("404");
-            $apiError->setCode("DISCIPLINARY-BOARD_NOT_FOUND");
+            $apiError->setCode("DISCIPLINARY_BOARD_NOT_FOUND");
             $apiError->setMessage("Something wrong with your request! None Disciplinary board found");
             return response()->json($apiError, 400);
         }
-        // les données de la requête sont valides         
+        // les données de la requête sont valides
         $board->update($datas);
         return response()->json($board, 200);
     }
