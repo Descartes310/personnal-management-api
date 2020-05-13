@@ -175,6 +175,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'ProfileController@delete');
     });
 
+    //Create-update ProfileUpdate
+    Route::group(['prefix' => 'profile_updates'], function () {
+        Route::post('/', 'ProfileUpdateController@create');
+        Route::post('/{id}', 'ProfileUpdateController@update');
+    });
+
     //sanctions
     Route::group(['prefix' => 'sanctions'], function () {
         Route::post('/', 'SanctionController@create');
