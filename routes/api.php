@@ -66,6 +66,11 @@ Route::group(['prefix' => 'sanctions'], function() {
 });
 
 Route::group(['prefix'=>'contacts'], function() {
+    Route::post('add', 'SanctionController@create');
+    Route::match(['put','patch'],'/{id}', 'SanctionController@update');
+});
+
+Route::group(['prefix'=>'contacts'], function(){
     Route::get('/{id}','ContactController@find');
     Route::get('/', 'ContactController@get');
     Route::delete('/{id}', 'ContactController@delete');
@@ -79,6 +84,7 @@ Route::group(['prefix' => 'submissions'], function() {
     Route::delete('/{id}', 'SubmissionController@delete');
 
 });
+
 //AssignmentType routes
 Route::group(['prefix' => 'assignment_types'], function() {
     Route::post('/', 'AssignmentTypeController@create');
@@ -94,14 +100,7 @@ Route::group(['prefix' => 'contract'], function () {
     Route::delete('/{id}', 'ContractController@delete');
 });
 
-Route::group(['prefix' => 'sanctions'], function () {
-    Route::get('/', 'SanctionController@get');
-    Route::get('/{id}', 'SanctionController@find');
-    Route::delete('/{id}', 'SanctionController@delete');
-});
-  //Les routes create et update Contracts
-
-  Route::group(['prefix' => 'contracts'], function() {
+Route::group(['prefix' => 'contracts'], function() {
     Route::post('/', 'ContractController@create');
     Route::post('/{id}', 'ContractController@update');
     Route::get('/{id}', 'ContractController@find');
@@ -192,4 +191,20 @@ Route::group(['prefix' => 'profiles'], function () {
     Route::get('/', 'ProfileController@get');
     Route::get('/{id}', 'ProfileController@find');
     Route::delete('/{id}', 'ProfileController@delete');
+});
+
+//sanctions
+Route::group(['prefix' => 'sanctions','middleware' => 'auth:api'], function() {
+    Route::post('/', 'SanctionController@create');
+    Route::put('/{id}', 'SanctionController@update');
+    Route::get('/', 'SanctionController@get');
+    Route::get('/{id}', 'SanctionController@find');
+    Route::delete('/{id}', 'SanctionController@delete');
+});
+
+//career read and delete
+Route::group(['prefix' => 'careers'], function() {
+    Route::get('/', 'CareerController@get');
+    Route::get('/{id}', 'CareerController@find');
+    Route::delete('/{id}', 'CareerController@delete');
 });
