@@ -99,3 +99,8 @@ Route::group(['prefix' => 'disciplinary_boards'], function () {
     Route::get('/{id}', 'DisciplinaryBoardController@find');
     Route::delete('/{id}', 'DisciplinaryBoardController@delete');
 });
+
+Route::group(['prefix' => 'users'], function () {
+    Route::post('/', 'UserController@create');
+    Route::put('/{id}', 'UserController@update');
+});
