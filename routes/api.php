@@ -18,7 +18,7 @@ use Illuminate\Contracts\Support\Jsonable;
 Route::group(['prefix' => 'auth'], function () {
 
     Route::post('token', 'AuthController@login');
-    
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'AuthController@user');
         Route::delete('token', 'AuthController@logout');
@@ -44,7 +44,7 @@ Route::group(['prefix' => 'pro_situations'], function() {
 Route::group(['prefix' => 'sanctions'], function() {
     Route::post('add', 'SanctionController@create');
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
-    
+
 });
 Route::group(['prefix'=>'contacts'], function(){
     Route::get('/{id}','ContactController@find');
@@ -64,6 +64,9 @@ Route::group(['prefix' => 'submissions'], function() {
 Route::group(['prefix' => 'assignment_types'], function() {
     Route::post('/', 'AssignmentTypeController@create');
     Route::put('/{id}', 'AssignmentTypeController@update');
+    Route::get('/{id}', 'AssignmentTypeController@find');
+    Route::get('/', 'AssignmentTypeController@get');
+    Route::delete('/{id}', 'AssignmentTypeController@delete');
 });
 
 Route::group(['prefix' => 'sanctions'], function () {
@@ -94,19 +97,14 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
     Route::put('/{id}', 'NoteCriteriaController@update');
 });
 
-Route::group(['prefix' =>'assignment_types'], function(){
-    Route::get('/{id}','Assignment_typesController@find');
-    Route::get('/','Assignment_typesController@get');
-    Route::delete('/{id}','Assignment_typesController@delete');
-});
 
-Route::group(['prefix' =>'note_criteria'], function(){
+Route::group(['prefix' => 'note_criterias'], function(){
     Route::get('/{id}','NoteCriteriaController@find');
     Route::get('/','NoteCriteriaController@get');
     Route::delete('/{id}','NoteCriteriaController@delete');
 });
 
-Route::group(['prefix'=>'disciplinary_teams'], function(){
+Route::group(['prefix' => 'disciplinary_teams'], function(){
     Route::get('/{id}','DisciplinaryTeamController@find');
     Route::get('/','DisciplinaryTeamController@get');
     Route::delete('/{id}','DisciplinaryTeamController@delete');
