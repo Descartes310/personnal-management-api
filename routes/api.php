@@ -44,6 +44,20 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'BlogCategoryController@get');
     });
 
+Route::group(['prefix' => 'sanctions'], function() {
+    Route::post('add', 'SanctionController@create');
+    Route::match(['put','patch'],'/{id}', 'SanctionController@update');
+
+});
+Route::group(['prefix'=>'contacts'], function(){
+    Route::get('/{id}','ContactController@find');
+    Route::get('/', 'ContactController@get');
+    Route::delete('/{id}', 'ContactController@delete');
+    Route::post('/', 'contactController@saveContact');
+    Route::match(['post', 'put'], '/{id}', 'contactController@updateContact');
+});
+
+
 
     Route::group(['prefix' => 'assignments'], function () {
         Route::delete('/{id}', 'AssignmentController@delete');
@@ -195,19 +209,17 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 
-Route::group(['prefix'=>'license_types'], function(){
+Route::group(['prefix' => 'license_types'], function(){
 	Route::get('/','LicenseTypeController@get');
 	Route::delete('/{id}','LicenseTypeController@delete');
 	Route::get('/{id}','LicenseTypeController@find');
 
 
 });
-Route::group(['prefix'=>'vacations'], function(){
+Route::group(['prefix' => 'vacations'], function(){
     Route::get('/','VacationController@get');
     Route::delete('/{id}','VacationController@delete');
     Route::get('/{id}','VacationController@find');
-
-
 });
 
 
