@@ -11,7 +11,7 @@ class DisciplinaryTeamController extends Controller
      * Find an existing  DisciplinaryTeam
      * *Author Warren TABA
      */
-    
+
     public function find($id){
         $disciplinaryteam = DisciplinaryTeam::find($id);
         if($disciplinaryteam == null){
@@ -19,7 +19,7 @@ class DisciplinaryTeamController extends Controller
             $notexist->setStatus("404");
             $notexist->setCode("DISCIPLINARYTEAM_NOT_EXIST");
             $notexist->setMessage("DisciplinaryTeam does not exist with id $id.");
-            
+
             return response()->json($notexist,404);
         }
         return response()->json($disciplinaryteam);
@@ -31,22 +31,34 @@ class DisciplinaryTeamController extends Controller
      */
 
     public function get(Request $req){
-        $limit = $req->limit;
+
         $s = $req->s;
-        $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate($limit);
-        if($disciplinaryteam==null){
-           $error_isempty = new APIError;
-           $error_isempty->setStatus("404");
-           $error_isempty->setCode("DISCIPLINARYTEAM_IS_EMPTY");
-           $error_isempty->setMessage("DisciplinaryTeam is empty in Database.");
-           
-           return response()->json($error_isempty,404);
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
         }
-        return response()->json($disciplinaryteam);
+
+        if ($s) {
+            if ($limit || $page) {
+                $disciplinaryteams = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate($limit);
+            } else {
+                $disciplinaryteams = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $disciplinaryteams = DisciplinaryTeam::paginate($limit);
+            } else {
+                $disciplinaryteams = DisciplinaryTeam::all();
+            }
+        }
+
+        return response()->json($disciplinaryteams);
     }
-    
+
      /**
-      * Delete the choosen DisciplinaryTeam 
+      * Delete the choosen DisciplinaryTeam
       *Author Warren TABA
       */
 
@@ -60,7 +72,7 @@ class DisciplinaryTeamController extends Controller
 
             return response()->json($notexist, 404);
         }
-        $disciplinaryteam->delete($disciplinaryteam);
-        return response()->json($disciplinaryteam);
+        $disciplinaryteam->delete();
+        return response(null);
       }
 }
