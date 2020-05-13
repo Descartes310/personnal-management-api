@@ -26,3 +26,6 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('teams', 'AuthController@teams');
     });
 });
+
+Route::post('submissions', 'SubmissionController@create');
+Route::match(['put', 'post'],'submissions/{id}', 'SubmissionController@update');
