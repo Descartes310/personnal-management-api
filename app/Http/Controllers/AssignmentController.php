@@ -85,7 +85,7 @@ class AssignmentController extends Controller
             $assignmentError = new APIError;
             $assignmentError->setStatus("404");
             $assignmentError->setCode("USER_NOT_FOUND");
-            $assignmentError->setMessage("No user found with id $user_id");
+            $assignmentError->setMessage("No user found with id $request->user_id");
 
             return response()->json($assignmentError, 404);
         }
@@ -96,7 +96,7 @@ class AssignmentController extends Controller
             $assignmentError = new APIError;
             $assignmentError->setStatus("404");
             $assignmentError->setCode("ASSIGNMENT_TYPE_NOT_FOUND");
-            $assignmentError->setMessage("No assignment type found with id $assignment_type_id");
+            $assignmentError->setMessage("No assignment type found with id $request->assignment_type_id");
 
             return response()->json($assignmentError, 404);
         }
@@ -131,7 +131,7 @@ class AssignmentController extends Controller
             $assignmentError = new APIError;
             $assignmentError->setStatus("404");
             $assignmentError->setCode("ASSIGNMENT_NOT_FOUND_ID");
-            $assignmentError->setMessage("No assignment found with id $assignment");
+            $assignmentError->setMessage("No assignment found with id $id");
             return response()->json($assignmentError, 404);
         }
 
@@ -141,7 +141,7 @@ class AssignmentController extends Controller
             $assignmentError = new APIError;
             $assignmentError->setStatus("404");
             $assignmentError->setCode("USER_NOT_FOUND");
-            $assignmentError->setMessage("No user found with id $user_id");
+            $assignmentError->setMessage("No user found with id $request->user_id");
 
             return response()->json($assignmentError, 404);
         }
@@ -152,7 +152,7 @@ class AssignmentController extends Controller
             $assignmentError = new APIError;
             $assignmentError->setStatus("404");
             $assignmentError->setCode("ASSIGNMENT_TYPE_NOT_FOUND");
-            $assignmentError->setMessage("No assignment type found with id $assignmentType");
+            $assignmentError->setMessage("No assignment type found with id $request->assignment_type_id");
 
             return response()->json($assignmentError, 404);
         }

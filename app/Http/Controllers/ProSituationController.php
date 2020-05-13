@@ -16,16 +16,17 @@ class ProSituationController extends Controller {
     /**
      * find one submission with id
      * @author adamu aliyu
+     * adamualiyu199@gmail.com
      */
     public function find($id){
         $prosituation = ProSituation::find($id);
         if($prosituation == null) {
-            $unauthorized = new APIError;
-            $unauthorized->setStatus("404");
-            $unauthorized->setCode("PRO_SITUATION_NOT_FOUND");
-            $unauthorized->setMessage("pro_situation id not found");
+            $notFoundError = new APIError;
+            $notFoundError->setStatus("404");
+            $notFoundError->setCode("PRO_SITUATION_NOT_FOUND");
+            $notFoundError->setMessage("pro_situation id not found");
 
-            return response()->json($unauthorized, 404); 
+            return response()->json($notFoundError, 404); 
         }
         return response()->json($prosituation);
     }
@@ -33,6 +34,7 @@ class ProSituationController extends Controller {
     /**
      * get all pro situations with specific parameters
      * @author adamu aliyu
+     * adamualiyu199@gmail.com
      */
     public function get(Request $request){
       $limit = $request->limit;
@@ -46,16 +48,17 @@ class ProSituationController extends Controller {
     /**
      * delete one pro situation with id
      * @author adamu aliyu
+     * adamualiyu199@gmail.com
      */
     public function delete($id){
         $prosituation = ProSituation::find($id);
         if($prosituation == null) {
-            $unauthorized = new APIError;
-            $unauthorized->setStatus("404");
-            $unauthorized->setCode("PRO_SITUATION_NOT_FOUND");
-            $unauthorized->setMessage("pro_situation id not found");
+            $notFoundError = new APIError;
+            $notFoundError->setStatus("404");
+            $notFoundError->setCode("PRO_SITUATION_NOT_FOUND");
+            $notFoundError->setMessage("pro_situation id not found");
 
-            return response()->json($unauthorized, 404); 
+            return response()->json($notFoundError, 404); 
         }
         $prosituation->delete($prosituation);
         return response(null);
