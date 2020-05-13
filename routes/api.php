@@ -18,7 +18,7 @@ use Illuminate\Contracts\Support\Jsonable;
 Route::group(['prefix' => 'auth'], function () {
 
     Route::post('token', 'AuthController@login');
-    
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'AuthController@user');
         Route::delete('token', 'AuthController@logout');
@@ -44,8 +44,8 @@ Route::group(['prefix' => 'pro_situations'], function() {
 Route::group(['prefix' => 'sanctions'], function() {
     Route::post('add', 'SanctionController@create');
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
-    
 });
+
 Route::group(['prefix'=>'contacts'], function(){
     Route::get('/{id}','ContactController@find');
     Route::get('/', 'ContactController@get');
@@ -60,6 +60,7 @@ Route::group(['prefix' => 'submissions'], function() {
     Route::delete('/{id}', 'SubmissionController@delete');
 
 });
+
 //AssignmentType routes
 Route::group(['prefix' => 'assignment_types'], function() {
     Route::post('/', 'AssignmentTypeController@create');
@@ -73,23 +74,36 @@ Route::group(['prefix' => 'sanctions'], function () {
 });
   //Les routes create et update Contracts
 
-  Route::group(['prefix' => 'contracts'], function() {
+Route::group(['prefix' => 'contracts'], function() {
     Route::post('/', 'ContractController@create');
     Route::post('/{id}', 'ContractController@update');
     Route::get('/{id}', 'ContractController@find');
     Route::get('/', 'ContractController@get');
     Route::delete('/{id}', 'ContractController@delete');
-  });
+});
 
 Route::group(['prefix' => 'divisions'], function () {
     Route::post('/', 'DivisionController@create');
     Route::match(['put', 'post'],'/{id}', 'DivisionController@update');
     Route::get('/', 'DivisionController@get');
-     Route::get('/{id}', 'DivisionController@find');
+    Route::get('/{id}', 'DivisionController@find');
     Route::delete('/{id}', 'DivisionController@delete');
 });
 
 Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], function () {
     Route::post('/', 'NoteCriteriaController@create');
     Route::put('/{id}', 'NoteCriteriaController@update');
+});
+
+//sanctions
+Route::group(['prefix' => 'sanctions','middleware' => 'auth:api'], function() {
+    Route::post('/', 'SanctionController@create');
+    Route::put('/{id}', 'SanctionController@update');
+});
+
+//career read and delete
+Route::group(['prefix' => 'careers'], function() {
+    Route::get('/', 'CareerController@get');
+    Route::get('/{id}', 'CareerController@find');
+    Route::delete('/{id}', 'CareerController@delete');
 });
