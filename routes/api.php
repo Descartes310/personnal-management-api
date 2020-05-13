@@ -22,6 +22,10 @@ Route::group(['prefix' => 'blog_categories'], function(){
     Route::get('/', 'BlogCategoryController@get');
 });
 
+Route::group(['prefix' => 'users'], function(){
+    Route::get('/{id}', 'UserController@getUserInfo');
+});
+
 Route::group(['prefix' => 'assignments'], function(){
     Route::delete('/{id}', 'AssignmentController@delete');
     Route::get('/{id}', 'AssignmentController@find');
