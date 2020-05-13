@@ -9,7 +9,7 @@ class DisciplinaryTeamController extends Controller
 {
      /**
      * Find an existing  DisciplinaryTeam
-     * *Author Warren TABA
+     * @author Warren TABA
      */
 
     public function find($id){
@@ -27,13 +27,13 @@ class DisciplinaryTeamController extends Controller
 
     /**
      * Get All the DisciplinaryTeam
-     * *Author Warren TABA
+     * @author Warren TABA
+     * @email fotiewarren50@gmail.com
      */
 
     public function get(Request $req){
 
         $s = $req->s;
-<<<<<<< HEAD
         $page = $req->page; 
         $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate($limit);
         if($disciplinaryteam==null){
@@ -43,13 +43,12 @@ class DisciplinaryTeamController extends Controller
            $error_isempty->setMessage("DisciplinaryTeam is empty in Database.");
            
            return response()->json($error_isempty,404);
-=======
+        }
         $page = $req->page;
         $limit = null;
 
         if ($req->limit && $req->limit > 0) {
             $limit = $req->limit;
->>>>>>> c5527919731ae4c2263ffccea175338d0e53ae3e
         }
 
         if ($s) {
@@ -71,10 +70,11 @@ class DisciplinaryTeamController extends Controller
 
      /**
       * Delete the choosen DisciplinaryTeam
-      *Author Warren TABA
+      *@author Warren TABA
+      * @email fotiewarren50@gmail.com
       */
 
-      public function delete($id){
+    public function delete($id){
         $disciplinaryteam = DisciplinaryTeam:: find($id);
         if($disciplinaryteam == null){
             $notexist = new APIError;
@@ -86,5 +86,6 @@ class DisciplinaryTeamController extends Controller
         }
         $disciplinaryteam->delete();
         return response(null);
-      }
+    }
 }
+

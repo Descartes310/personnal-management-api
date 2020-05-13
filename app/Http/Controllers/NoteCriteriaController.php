@@ -14,7 +14,8 @@ class NoteCriteriaController extends Controller
     protected $badRequestStatus = 400;
      /**
      * Find an existing  NoteCriteria
-     * *Author Warren TABA
+     * @author Warren TABA
+     * @email fotiewarren50@gmail.com
      */
     
     public function find($id){
@@ -32,7 +33,8 @@ class NoteCriteriaController extends Controller
 
     /**
      * Get All the NoteCriteria
-     * *Author Warren TABA
+     * @author Warren TABA
+     * @email fotiewarren50@gmail.com
      */
 
     public function get(Request $req){
@@ -52,7 +54,8 @@ class NoteCriteriaController extends Controller
     
      /**
       * Delete the choosen NoteCriteria 
-      *Author Warren TABA
+      * @author Warren TABA
+      * @email fotiewarren50@gmail.com
       */
 
       public function delete($id){
