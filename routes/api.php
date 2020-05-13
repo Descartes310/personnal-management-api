@@ -61,7 +61,7 @@ Route::group(['prefix' => 'pro_situations'], function() {
 //il s'agit ici des routes pour la gestion gestion du create-update sanction
 
 Route::group(['prefix' => 'sanctions'], function() {
-    Route::post('add', 'SanctionController@create');
+    Route::post('/', 'SanctionController@create');
     Route::put('/{id}', 'SanctionController@update');
 });
 
@@ -83,6 +83,9 @@ Route::group(['prefix' => 'submissions'], function() {
 Route::group(['prefix' => 'assignment_types'], function() {
     Route::post('/', 'AssignmentTypeController@create');
     Route::put('/{id}', 'AssignmentTypeController@update');
+    Route::get('/{id}', 'AssignmentTypeController@find');
+    Route::get('/', 'AssignmentTypeController@get');
+    Route::delete('/{id}', 'AssignmentTypeController@delete');
 });
 
 Route::group(['prefix' => 'contract'], function () {
@@ -162,7 +165,19 @@ Route::group(['prefix' => 'licenses/'], function () {
 
 
 Route::group(['prefix' => 'blog_posts'], function () {
-    Route::get('/','BlogPostController@get');
-	Route::delete('{id}','BlogPostController@delete');
-	Route::get('{id}','BlogPostController@find');
+    Route::get('/', 'BlogPostController@get');
+    Route::delete('{id}', 'BlogPostController@delete');
+    Route::get('{id}', 'BlogPostController@find');
+});
+
+Route::group(['prefix' => 'note_criterias'], function(){
+    Route::get('/{id}','NoteCriteriaController@find');
+    Route::get('/','NoteCriteriaController@get');
+    Route::delete('/{id}','NoteCriteriaController@delete');
+});
+
+Route::group(['prefix' => 'disciplinary_teams'], function(){
+    Route::get('/{id}','DisciplinaryTeamController@find');
+    Route::get('/','DisciplinaryTeamController@get');
+    Route::delete('/{id}','DisciplinaryTeamController@delete');
 });
