@@ -76,7 +76,6 @@ class TemplateController extends Controller
         }
 
         return response()->json($templates);
-
     }
 
 
