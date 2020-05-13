@@ -3,47 +3,50 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Contract;
+use App\Template;
 use App\APIError;
 
-class ContractController extends Controller
+
+class TemplateController extends Controller
 {
-    
+    //
+
+      
     /**
-     * Delete Contract
+     * Delete template
      */
     public function delete(Request $request, $id){
-        $Contract = Contract::find($id);
-        if($Contract==null){
+        $template = Template::find($id);
+        if($template==null){
             $apiError = new APIError;
             $apiError->setStatus("404");
-            $apiError->setCode("CONTRACT_PAGE_NOT_FOUND"); 
+            $apiError->setCode("TEMPLATE_PAGE_NOT_FOUND"); 
             $apiError->setMessage("page does not exist"); 
             return response()->json($apiError, 404);       
         }
-        $Contract = Contract::findOrFail($id);
-        $Contract->delete();
+        $template = Template::findOrFail($id);
+        $template->delete();
         return 200;
     }
 
   
     /**
-     * Show contract
+     * Show template
      */
     public function find($id){
-        $Contract= Contract::find($id); 
-        if($Contract==null){
+        $template= Template::find($id); 
+        if($template==null){
             $apiError = new APIError;
             $apiError->setStatus("404");
-            $apiError->setCode("CONTRACT_PAGE_NOT_FOUND"); 
+            $apiError->setCode("TEMPLATE_PAGE_NOT_FOUND"); 
             $apiError->setMessage("page does not exist"); 
             return response()->json($apiError, 404); 
         }           
-        return $Contract ;
+        return $template ;
     }
    
     /**
-     * Afshow all contracts
+     * show all Templates
      */
     public function get(Request $request) {
 
@@ -53,87 +56,86 @@ class ContractController extends Controller
 
         if($limit != null && $s != null && $page != null){
       
-            $Contract = Contract::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
-            $pagenumber=$Contract->lastPage();
-    
-            if($pagenumber > $page) {
+            $template = Template::where('title', 'LIKE','%'.$s.'%')->paginate($limit);
+            $pagenumber=$template->lastPage();
+            if($pagenumber < $page) {
                 $apiError = new APIError;
                 $apiError->setStatus("404");
-                $apiError->setCode("CONTRACT_PAGE_NOT_FOUND"); 
+                $apiError->setCode("TEMPLATE_PAGE_NOT_FOUND"); 
                 $apiError->setMessage("page does not exist"); 
                 return response()->json($apiError, 404);
             }
-            return response()->json($Contract);     
+            return response()->json($template);     
           }
     
           if($limit != null && $s == null && $page != null){
             
-            $Contract = Contract::paginate($limit);
-            $pagenumber=$Contract->lastPage();
+            $template = Template::paginate($limit);
+            $pagenumber=$template->lastPage();
     
-            if($pagenumber > $page) {
+            if($pagenumber < $page) {
                 $apiError = new APIError;
                 $apiError->setStatus("404");
-                $apiError->setCode("CONTRACT_PAGE_NOT_FOUND"); 
+                $apiError->setCode("TEMPLATE_PAGE_NOT_FOUND"); 
                 $apiError->setMessage("page does not exist"); 
                 return response()->json($apiError, 404);
             }
-            return response()->json($Contract); 
+            return response()->json($template); 
           
           }
     
           if($limit != null && $s != null && $page == null){
             
-            $Contract = Contract::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
-            return response()->json($Contract);
+            $template = Template::where('title', 'LIKE','%'.$s.'%')->paginate($limit);
+            return response()->json($template);
           
           }
     
           if($limit != null && $s == null && $page == null){
             
-            $Contract = Contract::paginate($limit);
-            return response()->json($Contract);
+            $template = Template::paginate($limit);
+            return response()->json($template);
           
           }
     
           if($limit == null && $s != null && $page == null){
             
             $limit=2;
-            $Contract = Contract::where('name', 'LIKE','%'.$s.'%')->get();
-            return response()->json($Contract);
+            $template = Template::where('title', 'LIKE','%'.$s.'%')->get();
+            return response()->json($template);
           
           }
     
           if($limit == null && $s != null && $page != null){
             
             $limit=2;
-            $Contract = Contract::where('name', 'LIKE','%'.$s.'%')->paginate($limit);
-            $pagenumber=$Contract->lastPage();
+            $template = Template::where('title', 'LIKE','%'.$s.'%')->paginate($limit);
+            $pagenumber=$template->lastPage();
             
             if($pagenumber < $page) {
                 $apiError = new APIError;
                 $apiError->setStatus("404");
-                $apiError->setCode("CONTRACT_PAGE_NOT_FOUND"); 
+                $apiError->setCode("TEMPLATE_PAGE_NOT_FOUND"); 
                 $apiError->setMessage("page does not exist"); 
                 return response()->json($apiError, 404);
             }
-            return response()->json($Contract);     
+            return response()->json($template);     
           }
     
           if($limit == null && $s == null && $page == null){
             
-            $Contract = Contract::all();
-            return response()->json($Contract);
+            $template = Template::all();
+            return response()->json($template);
           
           }
     
           if($limit == null && $s == null && $page != null){
             
-            $Contract = Contract::all();
-            return response()->json($Contract);
+            $template = Template::all();
+            return response()->json($template);
           
-          }
-       
-          
-        } 
+          }  
     }
+     
+}
+
