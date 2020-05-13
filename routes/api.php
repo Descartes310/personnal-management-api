@@ -37,6 +37,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'UserController@getUserInfo');
     });
 
+
     Route::group(['prefix' => 'blog_categories'], function () {
 
         Route::delete('/{id}', 'BlogCategoryController@delete');
@@ -52,11 +53,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/', 'AssignmentController@create');
         Route::put('/{id}', 'AssignmentController@update');
     });
-
-
-
-
-
 
 
 
@@ -164,4 +160,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
 });
+    Route::group(['prefix' => 'profile_updates'], function () {
+        Route::get('/', 'ProfileUpdateController@get');
+        Route::get('{id}', 'ProfileUpdateController@find');
+        Route::delete('{id}', 'ProfileUpdateController@delete');
+    });
+
+
 
