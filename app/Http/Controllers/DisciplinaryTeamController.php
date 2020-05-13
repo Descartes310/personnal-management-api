@@ -1,12 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-<<<<<<< HEAD
-
-use Illuminate\Http\Request;
 
 use App\APIError;
 use App\DisciplinaryTeam;
+use Illuminate\Http\Request;
 
 class DisciplinaryTeamController extends Controller
 {
@@ -20,11 +18,11 @@ class DisciplinaryTeamController extends Controller
      * @author adamu aliyu
      * adamualiyu199@gmail.com
      */
-    public function create(Request $request) {     
+    public function create(Request $request) {
         $this->validate($request->all(), [
             'name' => 'required|string'
         ]);
-        
+
         $disciplinaryTeam1= DisciplinaryTeam::whereName($request['name'])->first();
         if ($disciplinaryTeam1 != null) {
             $existError = new APIError;
@@ -48,11 +46,11 @@ class DisciplinaryTeamController extends Controller
      * @author adamu aliyu
      * adamualiyu199@gmail.com
      */
-    public function update(Request $request, $id) {  
+    public function update(Request $request, $id) {
         $this->validate($request->all(), [
             'name' => 'required|string'
         ]);
-               
+
         $disciplinaryTeam  = DisciplinaryTeam::find($id);
 
         if($disciplinaryTeam == null) {
@@ -63,7 +61,7 @@ class DisciplinaryTeamController extends Controller
 
             return response()->json($notFoundError, $this->notFoundStatus);
         }
-        
+
         if ($request['name']!=$disciplinaryTeam->name){
           $disciplinaryTeam1= DisciplinaryTeam::whereName($request['name'])->first();
           if ($disciplinaryTeam1 != null) {
@@ -75,11 +73,11 @@ class DisciplinaryTeamController extends Controller
             return response()->json($existError, $this->badRequestStatus);
           }
         }
-        
-        
-   
+
+
+
         $disciplinaryTeam->update(
-            $request->only([ 
+            $request->only([
                 'name'
             ])
         );
@@ -87,19 +85,12 @@ class DisciplinaryTeamController extends Controller
         return response()->json($disciplinaryTeam, $this->successStatus);
 
     }
-    
-=======
-use App\APIError;
-use App\DisciplinaryTeam;
-use Illuminate\Http\Request;
 
-class DisciplinaryTeamController extends Controller
-{
+
      /**
      * Find an existing  DisciplinaryTeam
      * *Author Warren TABA
      */
-
     public function find($id){
         $disciplinaryteam = DisciplinaryTeam::find($id);
         if($disciplinaryteam == null){
@@ -163,5 +154,4 @@ class DisciplinaryTeamController extends Controller
         $disciplinaryteam->delete();
         return response(null);
       }
->>>>>>> warren
 }
