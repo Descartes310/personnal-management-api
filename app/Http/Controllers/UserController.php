@@ -109,7 +109,112 @@ class UserController extends Controller
        
         return response()->json($user);
     }    
+    
+    public function update(Request $request, $id) {
+        $user = User::find($id);
+        abort_unless($user, "no existant", 404);
+        $profiles = Profile::get();
+        $rules = [
+            'login' => ['required', 'alpha_num', Rule::unique('users')->ignore($id,'id')],
+        ];
+        // Validation loop
+        foreach ($profiles as $profile) {
+            $rule = [];
+            if ($profile->is_required) {
+                $rule[] = 'required';
+            } else {
+                $rule[] = 'nullable';
+            }
+            
+            if ($profile->is_unique) {
+                $rule[] = function ($attribute, $value, $fail) use ($profile, $user) {
+                    $count = UserProfile::where('profile_id', $profile->id)
+                                ->where('user_id', '<>', $user->id)
+                                ->where('value', $value)
+                                ->count();
+                    if ($count > 0) {
+                        $fail($attribute . ' must be unique');
+                    }
+                };
+            }
 
+            if ($profile->min) {
+                $rule[] = 'min:' . $profile->min;
+            }
 
+            if ($profile->max) {
+                $rule[] = 'max:' . $profile->max;
+            }
 
+            if (strtolower($profile->type) == 'select') {
+                $options = SelectOption::where('profile_id', $profile->id)->pluck('key');
+                $rule[] = Rule::in($options);
+            }
+
+            if (strtolower($profile->type) == 'email') {
+                $rule[] = 'email';
+            }
+            
+            if (strtolower($profile->type) == 'file') {
+                $rule[] = 'file';
+            }
+            
+            if (strtolower($profile->type) == 'number') {
+                $rule[] = 'numeric';
+            }
+            
+            if (strtolower($profile->type) == 'date') {
+                $rule[] = 'date';
+            }
+            
+            if (strtolower($profile->type) == 'url') {
+                $rule[] = 'url';
+            }
+
+            $rules[ $profile->slug ] = $rule;
+        }
+         
+        $this->validate($request->all(), $rules);
+        
+        // Insertion loop
+        foreach ($profiles as $profile) {
+            $userProfile = UserProfile::where('user_id', $user->id)->where('profile_id', $profile->id)->first();
+            $value = (null != $userProfile) ? $userProfile->value : null;
+            if ($request->has($profile->slug)) {
+                if (strtolower($profile->type) == 'file') {
+                    if ($file = $request->file($profile->slug)) {
+                        $extension = $file->getClientOriginalExtension();
+                        $relativeDestination = "uploads/users";
+                        $destinationPath = public_path($relativeDestination);
+                        $safeName = Str::slug($user->login) . time() . '.' . $extension;
+                        $file->move($destinationPath, $safeName);
+                        $value = "$relativeDestination/$safeName";
+                    } 
+                } else {
+                    $value = $request[ $profile->slug ];
+                }
+
+                if ($value) {
+                    if ($userProfile) {
+                        $userProfile->value = $value;
+                        $userProfile->save();
+                    } else {
+                        UserProfile::create([
+                            'user_id' => $user->id,
+                            'profile_id' => $profile->id,
+                            'value' => $value
+                        ]);
+                    }
+                }
+            } else {
+                if ($userProfile) {
+                    $userProfile->delete();
+                }        
+                $value = null;
+            }
+            $user[ $profile->slug ] = $value;
+        }
+    
+        return response()->json($user);
+    }    
 }

@@ -102,5 +102,5 @@ Route::group(['prefix' => 'disciplinary_boards'], function () {
 
 Route::group(['prefix' => 'users'], function () {
     Route::post('/', 'UserController@create');
-    Route::put('/{id}', 'UserController@update');
+    Route::match(['post', 'put'], '/{id}', 'UserController@update');
 });
