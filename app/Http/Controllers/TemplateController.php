@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Template;
-use Illuminate\Support\Facades\DB;
 use App\APIError;
 
 
@@ -17,8 +16,8 @@ class TemplateController extends Controller{
             'title' => 'required',
             'content' => 'required'
         ]);
-        
-        $data = $request->only([ 
+
+        $data = $request->only([
             'title',
             'content',
             'type'
@@ -40,13 +39,13 @@ class TemplateController extends Controller{
 
             return response()->json($apiError, 404);
         }
-        
+
         $request->validate([
             'title' => 'required',
             'content' => 'required'
         ]);
 
-        $data = $request->only([ 
+        $data = $request->only([
             'title',
             'content',
             'type'

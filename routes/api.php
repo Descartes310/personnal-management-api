@@ -18,7 +18,7 @@ use Illuminate\Contracts\Support\Jsonable;
 Route::group(['prefix' => 'auth'], function () {
 
     Route::post('token', 'AuthController@login');
-    
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'AuthController@user');
         Route::delete('token', 'AuthController@logout');
@@ -44,7 +44,7 @@ Route::group(['prefix' => 'pro_situations'], function() {
 Route::group(['prefix' => 'sanctions'], function() {
     Route::post('add', 'SanctionController@create');
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
-    
+
 });
 Route::group(['prefix'=>'contacts'], function(){
     Route::get('/{id}','ContactController@find');
@@ -96,7 +96,7 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
 
 Route::group(['prefix' => 'templates'], function () {
     Route::post('/', 'TemplateController@create');
-    Route::match(['put', 'post'],'/{id}', 'TemplateController@update');
+    Route::put('/{id}', 'TemplateController@update');
 });
 
 //il s'agit des routes pour read et delete profile
