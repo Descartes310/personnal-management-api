@@ -38,7 +38,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::group(['prefix' => 'blog_categories'], function () {
-
         Route::delete('/{id}', 'BlogCategoryController@delete');
         Route::get('/{id}', 'BlogCategoryController@find');
         Route::get('/', 'BlogCategoryController@get');
@@ -199,4 +198,24 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'TrainingController@delete');
     });
 
+
+    Route::group(['prefix' => 'license_types'], function () {
+        Route::get('/', 'LicenseTypeController@get');
+        Route::delete('/{id}', 'LicenseTypeController@delete');
+        Route::get('/{id}', 'LicenseTypeController@find');
+    });
+
+    Route::group(['prefix' => 'vacations'], function () {
+        Route::get('/', 'VacationController@get');
+        Route::delete('/{id}', 'VacationController@delete');
+        Route::get('/{id}', 'VacationController@find');
+    });
+
 });
+
+
+
+
+
+
+
