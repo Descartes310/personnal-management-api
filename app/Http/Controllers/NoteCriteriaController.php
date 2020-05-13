@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\APIError;
 use App\NoteCriteria;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class NoteCriteriaController extends Controller
@@ -16,7 +17,7 @@ class NoteCriteriaController extends Controller
      * Find an existing  NoteCriteria
      * *Author Warren TABA
      */
-    
+
     public function find($id){
         $notecriteria = NoteCriteria::find($id);
         if($notecriteria == null){
@@ -24,7 +25,7 @@ class NoteCriteriaController extends Controller
             $notexist->setStatus("404");
             $notexist->setCode("NOTCRITERIA_NOT_EXIST");
             $notexist->setMessage("NOTECRITERIA does not exist with id $id.");
-            
+
             return response()->json($notexist,404);
         }
         return response()->json($notecriteria);
@@ -36,22 +37,33 @@ class NoteCriteriaController extends Controller
      */
 
     public function get(Request $req){
-        $limit = $req->limit;
         $s = $req->s;
-        $notecriteria = NoteCriteria::where('name','LIKE','%'.$s.'%')->paginate($limit);
-        if($notecriteria==null){
-           $error_isempty = new APIError;
-           $error_isempty->setStatus("404");
-           $error_isempty->setCode("NOTECRITERIA_IS_EMPTY");
-           $error_isempty->setMessage("NOTECRITERIA is empty in Database.");
-           
-           return response()->json($error_isempty,404);
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
         }
-        return response()->json($notecriteria);
+
+        if ($s) {
+            if ($limit || $page) {
+                $noteCriterias = NoteCriteria::where('name', 'LIKE', '%' . $s . '%')->paginate($limit);
+            } else {
+                $noteCriterias = NoteCriteria::where('name', 'LIKE', '%' . $s . '%')->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $noteCriterias = NoteCriteria::paginate($limit);
+            } else {
+                $noteCriterias = NoteCriteria::all();
+            }
+        }
+
+        return response()->json($noteCriterias);
     }
-    
+
      /**
-      * Delete the choosen NoteCriteria 
+      * Delete the choosen NoteCriteria
       *Author Warren TABA
       */
 
@@ -70,7 +82,7 @@ class NoteCriteriaController extends Controller
       }
 
     public function create(Request $request) {
-        $request->validate([
+        $this->validate($request->all(), [
             'name' => 'string|required',
             'max_rate' => 'required|integer',
             'min_rate' => 'required|integer',

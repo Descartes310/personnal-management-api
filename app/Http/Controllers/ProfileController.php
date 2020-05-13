@@ -4,28 +4,45 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Profile;
-use Illuminate\Support\Facades\DB;
 use App\APIError;
 
 
 class ProfileController extends Controller{
     /**
-     * 
+     *
      * @author jiozangtheophane@gmail.com
      */
     public function get(Request $req){
-        $limit = $req->limit;
-        $s = $req->s; 
-        $page = $req->page; 
-        $profile = Profile::where('name','LIKE','%'.$s.'%')->paginate($limit);
-        return response() ->json($profile); 
+        $s = $req->s;
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($s) {
+            if ($limit || $page) {
+                $profiles = Profile::where('name', 'LIKE', '%' . $s . '%')->paginate($limit);
+            } else {
+                $profiles = Profile::where('name', 'LIKE', '%' . $s . '%')->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $profiles = Profile::paginate($limit);
+            } else {
+                $profiles = Profile::all();
+            }
+        }
+
+        return response() ->json($profiles);
     }
     /**
-     * 
+     *
      * @author jiozangtheophane@gmail.com
      */
     public function find($id){
-     
+
         $profile = Profile::find($id);
         if($profile == null){
             $unauthorized = new APIError;
@@ -34,12 +51,12 @@ class ProfileController extends Controller{
             $unauthorized->setMessage("not found id.");
 
             return response()->json($unauthorized, 404);
-            
+
         }
         return response()->json($profile);
     }
     /**
-     * 
+     *
      * @author jiozangtheophane@gmail.com
      */
     public function delete($id){
@@ -53,10 +70,9 @@ class ProfileController extends Controller{
 
             return response()->json($unauthorized, 404);
         }
-        else{
-            $profile->delete($profile);
-        }
-        $profile = Profile::get();
-        return response()->json($profile);
+
+        $profile->delete($profile);
+
+        return response(null);
     }
 }

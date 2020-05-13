@@ -46,15 +46,36 @@ class TemplateController extends Controller
     /**
      * show all Templates
      */
-    public function get(Request $request) {
+    public function get(Request $req) {
+        $s = $req->s;
+        $page = $req->page;
+        $limit = null;
 
-        $limit = $request->limit;
-        $page = $request->page;
-        $s = $request->s;
-        $templates = Template::where('name','LIKE','%'.$s.'%')
-                               ->paginate($limit);
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($s) {
+            if ($limit || $page) {
+                $templates = Template::where('name', 'LIKE', '%' . $s . '%')
+                                    ->orWhere('content', 'LIKE', '%' . $s . '%')
+                                    ->orWhere('type', 'LIKE', '%' . $s . '%')
+                                    ->paginate($limit);
+            } else {
+                $templates = Template::where('name', 'LIKE', '%' . $s . '%')
+                                    ->orWhere('content', 'LIKE', '%' . $s . '%')
+                                    ->orWhere('type', 'LIKE', '%' . $s . '%')
+                                    ->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $templates = Template::paginate($limit);
+            } else {
+                $templates = Template::all();
+            }
+        }
+
         return response()->json($templates);
-
     }
 
 
@@ -62,7 +83,7 @@ class TemplateController extends Controller
      *  @author jiozangtheophane@gmail.com
     */
     public function create (Request $request){
-        $request->validate([
+        $this->validate($request->all(), [
             'title' => 'required',
             'content' => 'required'
         ]);
@@ -91,7 +112,7 @@ class TemplateController extends Controller
             return response()->json($apiError, 404);
         }
 
-        $request->validate([
+        $this->validate($request->all(), [
             'title' => 'required',
             'content' => 'required'
         ]);
