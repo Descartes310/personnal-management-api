@@ -55,7 +55,15 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
 
+    Route::group(['prefix' => 'pro_situations'], function () {
+        Route::delete('/{id}', 'ProSituationController@delete');
+        Route::get('/{id}', 'ProSituationController@find');
+        Route::get('/', 'ProSituationController@get');
+        Route::post('/', 'ProSituationController@create');
+        Route::match(['post', 'put'], '/{id}', 'ProSituationController@update');
+    });
 
+    
     Route::group(['prefix' => 'contracts'], function () {
         Route::post('/', 'ContractController@create');
         Route::post('/{id}', 'ContractController@update');
