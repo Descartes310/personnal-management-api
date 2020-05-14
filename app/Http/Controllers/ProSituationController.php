@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\APIError;
 use App\ProSituation;
-    
+
 class ProSituationController extends Controller {
 
     protected $successStatus = 200;
@@ -26,7 +26,7 @@ class ProSituationController extends Controller {
             $notFoundError->setCode("PRO_SITUATION_NOT_FOUND");
             $notFoundError->setMessage("pro_situation id not found");
 
-            return response()->json($notFoundError, 404); 
+            return response()->json($notFoundError, 404);
         }
         return response()->json($prosituation);
     }
@@ -36,13 +36,30 @@ class ProSituationController extends Controller {
      * @author adamu aliyu
      * adamualiyu199@gmail.com
      */
-    public function get(Request $request){
-      $limit = $request->limit;
-      $s = $request->s; 
-      $page = $request->page; 
-      $prosituations = ProSituation::where('name','LIKE','%'.$s.'%')
-                                     ->paginate($limit); 
-      return response()->json($prosituations);
+    public function get(Request $req){
+        $s = $req->s;
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($s) {
+            if ($limit || $page) {
+                $proSituations = ProSituation::where('name', 'LIKE', '%' . $s . '%')->paginate($limit);
+            } else {
+                $proSituations = ProSituation::where('name', 'LIKE', '%' . $s . '%')->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $proSituations = ProSituation::paginate($limit);
+            } else {
+                $proSituations = ProSituation::all();
+            }
+        }
+
+        return response()->json($proSituations);
     }
 
     /**
@@ -58,9 +75,9 @@ class ProSituationController extends Controller {
             $notFoundError->setCode("PRO_SITUATION_NOT_FOUND");
             $notFoundError->setMessage("pro_situation id not found");
 
-            return response()->json($notFoundError, 404); 
+            return response()->json($notFoundError, 404);
         }
-        $prosituation->delete($prosituation);
+        $prosituation->delete();
         return response(null);
     }
 
@@ -112,9 +129,9 @@ class ProSituationController extends Controller {
         }
 
         $proSituation->update(
-            $request->only([ 
-                'name', 
-                'description', 
+            $request->only([
+                'name',
+                'description',
                 'weight'
             ])
         );

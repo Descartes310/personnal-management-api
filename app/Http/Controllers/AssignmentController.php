@@ -33,7 +33,7 @@ class AssignmentController extends Controller
     }
 
     /**
-     * find a spacific assignement 
+     * find a spacific assignement
      * @author Brell Sanwouo
      */
     public function find($id){
@@ -50,18 +50,34 @@ class AssignmentController extends Controller
     }
 
     /**
-     * get all assignements with spécific value 
+     * get all assignements with spécific value
      * @author Brell Sanwouo
      */
 
-    public function get(Request $request){
-        $limit = $request->limit;
-        $s = $request->s;
-        $page = $request->page;
-        $assignment = Assignment::where('raison', 'LIKE', '%'.$s.'%')
-                                  ->paginate($limit);
+    public function get(Request $req){
+        $s = $req->s;
+        $page = $req->page;
+        $limit = null;
 
-        return response()->json($assignment);
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($s) {
+            if ($limit || $page) {
+                $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->paginate($limit);
+            } else {
+                $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $assignments = Assignment::paginate($limit);
+            } else {
+                $assignments = Assignment::all();
+            }
+        }
+
+        return response()->json($assignments);
     }
 
      /**
@@ -70,7 +86,7 @@ class AssignmentController extends Controller
      */
     public function create(Request $request){
 
-        $request->validate([
+        $this->validate($request->all(), [
             'user_id' => 'required',
             'assignment_type_id' => 'required',
             'destination' => 'required',
@@ -116,7 +132,7 @@ class AssignmentController extends Controller
 
     public function update(Request $request, $id){
 
-        $request->validate([
+        $this->validate($request->all(), [
             'user_id' => 'required',
             'assignment_type_id' => 'required',
             'destination' => 'required',

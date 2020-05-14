@@ -7,9 +7,9 @@ use App\Submission;
 use App\APIError;
 
 class SubmissionController extends Controller
-{   
+{
     /**
-     * find one submission with id 
+     * find one submission with id
      * @author adamu aliyu
      */
     public function find($id){
@@ -20,22 +20,39 @@ class SubmissionController extends Controller
             $unauthorized->setCode("SUBMISSION_NOT_FOUND");
             $unauthorized->setMessage("submissions id not found");
 
-            return response()->json($unauthorized, 404); 
+            return response()->json($unauthorized, 404);
         }
         return response()->json($submission);
     }
-    
+
     /**
      * get all  submissions with specific parameters
      * @author adamu aliyu
      */
-    public function get(Request $request){
-      $limit = $request->limit;
-      $s = $request->s; 
-      $page = $request->page; 
-      $submissions = Submission::where('subject','LIKE','%'.$s.'%')
-                                 ->paginate($limit); 
-      return response()->json($submissions);
+    public function get(Request $req){
+        $s = $req->s;
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($s) {
+            if ($limit || $page) {
+                $submissions = Submission::where('subject', 'LIKE', '%' . $s . '%')->orWhere('message', 'LIKE', '%' . $s . '%')->paginate($limit);
+            } else {
+                $submissions = Submission::where('subject', 'LIKE', '%' . $s . '%')->orWhere('message', 'LIKE', '%' . $s . '%')->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $submissions = Submission::paginate($limit);
+            } else {
+                $submissions = Submission::all();
+            }
+        }
+
+        return response()->json($submissions);
     }
 
     /**
@@ -50,7 +67,7 @@ class SubmissionController extends Controller
             $unauthorized->setCode("SUBMISSION_NOT_FOUND");
             $unauthorized->setMessage("submissions id not found");
 
-            return response()->json($unauthorized, 404); 
+            return response()->json($unauthorized, 404);
         }
         $submission->delete($submission);
         return response(null);
