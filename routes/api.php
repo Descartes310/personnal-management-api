@@ -110,6 +110,10 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/{id}', 'AssignmentController@update');
     });
 
+    Route::group(['prefix' => 'assignments'], function () {
+        Route::post('/', 'AssignmentController@create');
+        Route::put('/{id}', 'AssignmentController@update');
+    });
 
     Route::group(['prefix' => 'licenses'], function () {
         Route::get('/', 'LicenseController@get');
@@ -118,6 +122,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
     });
 
+    Route::group(['prefix' => 'licenses'], function () {
+        Route::get('/', 'LicenseController@get');
+        Route::delete('{id}', 'LicenseController@delete');
+        Route::get('{id}', 'LicenseController@find');
+        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
+    });
 
     Route::group(['prefix' => 'blog_posts'], function () {
         Route::get('/', 'BlogPostController@get');
@@ -178,6 +188,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'VacationController@get');
         Route::delete('/{id}', 'VacationController@delete');
         Route::get('/{id}', 'VacationController@find');
+        Route::post('/', 'VacationController@create');
+        Route::match(['post', 'put'], '/{id}', 'VacationController@update');
     });
 
     Route::group(['prefix' => 'disciplinary_teams'], function () {
@@ -201,6 +213,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'ProfileUpdateController@get');
         Route::get('{id}', 'ProfileUpdateController@find');
         Route::delete('{id}', 'ProfileUpdateController@delete');
+        Route::post('/', 'ProfileUpdateController@create');
+        Route::post('/{id}', 'ProfileUpdateController@update');
     });
 
 
@@ -209,9 +223,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/{id}', 'BlogCatController@update');
     });
 
-    Route::group(['prefix' => 'vacations'], function () {
-        Route::post('/', 'VacationController@create');
-        Route::post('/{id}', 'VacationController@update');
-    });
 
 });
+
+
+
+
+
+
+
