@@ -204,5 +204,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
 
-});
+    Route::group(['prefix' => 'blog_categories'], function () {
+        Route::post('/', 'BlogCatController@create');
+        Route::post('/{id}', 'BlogCatController@update');
+    });
 
+    Route::group(['prefix' => 'vacations'], function () {
+        Route::post('/', 'VacationController@create');
+        Route::post('/{id}', 'VacationController@update');
+    });
+
+});
