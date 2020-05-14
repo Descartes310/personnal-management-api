@@ -168,6 +168,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'CareerController@get');
         Route::get('/{id}', 'CareerController@find');
         Route::delete('/{id}', 'CareerController@delete');
+        Route::post('/', 'CareerController@create');
+        Route::match(['put', 'post'], '/{id}', 'CareerController@update');
     });
 
 
@@ -224,9 +226,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
 
+    Route::group(['prefix' => 'contacts'], function () {
+        Route::get('/{id}', 'ContactController@find');
+        Route::get('/', 'ContactController@get');
+        Route::delete('/{id}', 'ContactController@delete');
+    });
+
 });
-
-
 
 
 
