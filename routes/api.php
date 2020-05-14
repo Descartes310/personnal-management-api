@@ -138,3 +138,14 @@ Route::group(['prefix' => 'disciplinary_teams'], function() {
     Route::post('/', 'DisciplinaryTeamController@create');
     Route::match(['put', 'post'],'/{id}', 'DisciplinaryTeamController@update');
 });
+
+
+Route::group(['prefix' => 'roles'], function() {
+    Route::get('/', 'RoleController@get');
+    Route::post('/', 'RoleController@store');
+    Route::post('/{id}', 'RoleController@update');
+    Route::delete('/{id}', 'RoleController@delete');
+    Route::get('/{id}', 'RoleController@find');
+});
+
+Route::get('/permissions', 'RoleController@getPermissions');
