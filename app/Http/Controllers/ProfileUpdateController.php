@@ -10,15 +10,7 @@ use App\ProfileUpdate;
 
 class ProfileUpdateController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -30,6 +22,9 @@ class ProfileUpdateController extends Controller
         $this->validate($request->all(), [
             'user_id' => 'required|numeric',
             'profile_id' => 'required|numeric',
+            'old_value' => 'present',   // the field must be there, even if it's value is null
+            'new_value' => 'present',    // the field must be there, even if it's value is null
+            'raison' => 'nullable'
         ]);
 
         //We find the user
@@ -58,7 +53,7 @@ class ProfileUpdateController extends Controller
             'profile_id' => $request->profile_id,
             'old_value' => $request->old_value,
             'new_value' => $request->new_value,
-            'is_accepted' => $request->is_accepted,
+            'is_accepted' => false,
             'raison' => $request->raison,
         ]);
         return response()->json($profileupdate, 201);
@@ -100,50 +95,5 @@ class ProfileUpdateController extends Controller
         // les données de la requête sont valides
         $profileupdate->update($datas);
         return response()->json($profileupdate, 200);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
