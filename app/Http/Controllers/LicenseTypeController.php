@@ -7,7 +7,7 @@ use App\APIError;
 use App\License;
 /**
  * 
- * @author tchamou ramses
+ * @author whitney houston
  * 
  */
 class LicenseTypeController extends Controller
@@ -21,17 +21,7 @@ class LicenseTypeController extends Controller
             'description' => 'required',
             'days' => 'email',        
         ]);
-        $file = $request->file('picture');
-        $path = null;
-        if($file != null){
-            $request->validate(['picture'=>'picture|mimes: jpeg,jpg,png,svg']);
-            $extension = $file->getClientOriginalExtension();
-            $relativeDestination = "uploads/Licenses";
-            $destinationPath = public_path($relativeDestination);
-            $safeName = str_replace(' ','_',$request->name).time().'.'.$extension;
-            $file->move($destinationPath, $safeName);
-            $path = url("$relativeDestination/$safeName");
-        }
+        
         $License = License::create([
             'name' => $request->name,
             'slug' => $request->type,
@@ -43,7 +33,7 @@ class LicenseTypeController extends Controller
         return response()->json($License);
     }
 
-    public function updateLicense(Request $request, $id){
+    public function updateLicenseType(Request $request, $id){
         $request->validate([
             'name' => 'string',
             'slug' => 'string',
@@ -84,7 +74,7 @@ class LicenseTypeController extends Controller
             $errorcode = new APIError;
             $errorcode->setStatus("404");
             $errorcode->setCode("CON_ERROR");
-            $errorcode->setMessage("The License whit id ".$id." does not exist");
+            $errorcode->setMessage("The License with id ".$id." does not exist");
 
             return response()->json($errorcode, 404);
         }

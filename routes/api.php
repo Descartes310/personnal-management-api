@@ -30,5 +30,5 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['prefix' => 'License'], function () {
     Route::post('/', 'LicenseTypeController@saveLicenseType');
-    Route::match(['post', 'put'], '/{id}', 'LicenseTypeController@updateLicense');
+    Route::match(['post', 'put'], '/{id}', 'LicenseTypeController@updateLicenseType');
 });
