@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Contracts\Support\Jsonable;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +17,7 @@ use Illuminate\Contracts\Support\Jsonable;
 Route::group(['prefix' => 'auth'], function () {
 
     Route::post('token', 'AuthController@login');
-    
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'AuthController@user');
         Route::delete('token', 'AuthController@logout');
@@ -44,7 +43,7 @@ Route::group(['prefix' => 'pro_situations'], function() {
 Route::group(['prefix' => 'sanctions'], function() {
     Route::post('add', 'SanctionController@create');
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
-    
+
 });
 Route::group(['prefix'=>'contacts'], function(){
     Route::get('/{id}','ContactController@find');
@@ -104,9 +103,21 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
 });
 
 
+<<<<<<< HEAD
 Route::group(['prefix' => 'vacationtypes'],function(){
     Route::get('', 'VacationTypeController@get');
     Route::get('/{id}', 'VacationTypeController@find');
     Route::delete('/{id}', 'VacationTypeController@delete');
 });
  
+=======
+Route::group(['prefix' => 'disciplinary_teams'], function() {
+    Route::post('/', 'DisciplinaryTeamController@create');
+    Route::match(['put', 'post'],'/{id}', 'DisciplinaryTeamController@update');
+});
+
+Route::group(['prefix' => 'assignments', 'middleware' => 'auth:api'], function () {
+    Route::post('/', 'AssignmentController@create');
+    Route::put('/{id}', 'AssignmentController@update');
+});
+>>>>>>> 8c4fadbf365e3d6fea84f174e513abbe44ab21ea
