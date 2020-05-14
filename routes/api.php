@@ -26,14 +26,11 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('roles', 'AuthController@roles');
         Route::get('teams', 'AuthController@teams');
     });
-    
+
 });
 Route::group(['prefix'=>'contacts'], function(){
     Route::get('/{id}','ContactController@find');
     Route::get('/', 'ContactController@get');
-    Route::get('/{page}', 'ContactController@get');
-    //Route::get ('','ContactController@get');
-    //Roue::get('', 'ContactController@get'); 
     Route::delete('/{id}', 'ContactController@delete');
 });
 Route::group(['prefix' => 'careers'], function () {
