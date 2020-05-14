@@ -38,11 +38,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::group(['prefix' => 'blog_categories'], function () {
-
         Route::delete('/{id}', 'BlogCategoryController@delete');
         Route::get('/{id}', 'BlogCategoryController@find');
         Route::get('/', 'BlogCategoryController@get');
     });
+
 
 Route::group(['prefix' => 'sanctions'], function() {
     Route::post('add', 'SanctionController@create');
@@ -56,6 +56,7 @@ Route::group(['prefix'=>'contacts'], function(){
     Route::post('/', 'contactController@saveContact');
     Route::match(['post', 'put'], '/{id}', 'contactController@updateContact');
 });
+
 
 
 
@@ -206,21 +207,25 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::delete('/{id}', 'CareerController@delete');
     });
 
-});
+
+    Route::group(['prefix' => 'trainings'], function () {
+        Route::get('/', 'TrainingController@get');
+        Route::get('/{id}', 'TrainingController@find');
+        Route::delete('/{id}', 'TrainingController@delete');
+    });
 
 
-Route::group(['prefix' => 'license_types'], function(){
-	Route::get('/','LicenseTypeController@get');
-	Route::delete('/{id}','LicenseTypeController@delete');
-	Route::get('/{id}','LicenseTypeController@find');
+    Route::group(['prefix' => 'license_types'], function () {
+        Route::get('/', 'LicenseTypeController@get');
+        Route::delete('/{id}', 'LicenseTypeController@delete');
+        Route::get('/{id}', 'LicenseTypeController@find');
+    });
 
-
-});
-Route::group(['prefix' => 'vacations'], function(){
-    Route::get('/','VacationController@get');
-    Route::delete('/{id}','VacationController@delete');
-    Route::get('/{id}','VacationController@find');
-});
+    Route::group(['prefix' => 'vacations'], function () {
+        Route::get('/', 'VacationController@get');
+        Route::delete('/{id}', 'VacationController@delete');
+        Route::get('/{id}', 'VacationController@find');
+    });
 
 
 
