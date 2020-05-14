@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\APIError;
 use App\Contact;
 
 class ContactController extends Controller
 {
-    
+
     //pour la recherche des contacts
-   
+
     public function find($id){
         $contacts = Contact::find($id);
         if ($contacts == null) {
@@ -22,17 +20,31 @@ class ContactController extends Controller
             $unauthorized->setMessage("Incorrect id or is not declared.");
 
             return response()->json($unauthorized, 404);
-            // arrete le code et retourne une erreur, quand à abort, le 1er paramètre c'est le message et 2nd c'est le code http 
+            // arrete le code et retourne une erreur, quand à abort, le 1er paramètre c'est le message et 2nd c'est le code http
         }
         return response()->json($contacts);
     }
 
     public function get(Request $req){
-        $limit=$req->limit;
-        $s=$req->s;
-        
-        $contacts = Contact::where('name','LIKE',"%  .$s. %")->paginate($limit);
-        
+
+        $limit = $req->limit;
+        $page = $req->page;
+        $s = $req->s;
+
+        if ($s) {
+            if ($limit || $page) {
+                $contacts = Contact::where('name', 'LIKE', "%  .$s. %")->paginate($limit);
+            } else {
+                $contacts = Contact::where('name', 'LIKE', "%  .$s. %")->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $contacts = Contact::paginate($limit);
+            } else {
+                $contacts = Contact::all();
+            }
+        }
+
         return response()->json($contacts);
 
     }
