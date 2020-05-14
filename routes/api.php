@@ -37,6 +37,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'UserController@getUserInfo');
     });
 
+
     Route::group(['prefix' => 'blog_categories'], function () {
         Route::delete('/{id}', 'BlogCategoryController@delete');
         Route::get('/{id}', 'BlogCategoryController@find');
@@ -52,37 +53,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/{id}', 'AssignmentController@update');
     });
 
-    Route::group(['prefix' => 'pro_situations'], function () {
-        Route::post('/', 'ProSituationController@create');
-        Route::put('/{id}', 'ProSituationController@update');
-        Route::get('/', 'ProSituationController@get');
-        Route::get('/{id}', 'ProSituationController@find');
-        Route::delete('/{id}', 'ProSituationController@delete');
-    });
 
-
-    Route::group(['prefix' => 'contacts'], function () {
-        Route::get('/{id}', 'ContactController@find');
-        Route::get('/', 'ContactController@get');
-        Route::delete('/{id}', 'ContactController@delete');
-        Route::post('/', 'contactController@saveContact');
-        Route::put('/{id}', 'contactController@updateContact');
-    });
-
-    Route::group(['prefix' => 'submissions'], function () {
-        Route::get('/', 'SubmissionController@get');
-        Route::get('/{id}', 'SubmissionController@find');
-        Route::delete('/{id}', 'SubmissionController@delete');
-    });
-
-    //AssignmentType routes
-    Route::group(['prefix' => 'assignment_types'], function () {
-        Route::post('/', 'AssignmentTypeController@create');
-        Route::put('/{id}', 'AssignmentTypeController@update');
-        Route::get('/{id}', 'AssignmentTypeController@find');
-        Route::get('/', 'AssignmentTypeController@get');
-        Route::delete('/{id}', 'AssignmentTypeController@delete');
-    });
 
     Route::group(['prefix' => 'contracts'], function () {
         Route::post('/', 'ContractController@create');
@@ -92,11 +63,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'ContractController@delete');
     });
 
-    Route::group(['prefix' => 'templates'], function () {
-        Route::get('/{id}', 'TemplateController@find');
-        Route::delete('/{id}', 'TemplateController@delete');
-        Route::get('', 'TemplateController@get');
-    });
+
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('/', 'DivisionController@create');
@@ -211,23 +178,31 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'VacationController@find');
     });
 
+    Route::group(['prefix' => 'disciplinary_teams'], function () {
+        Route::post('/', 'DisciplinaryTeamController@create');
+        Route::match(['put', 'post'], '/{id}', 'DisciplinaryTeamController@update');
+    });
+
+
+    Route::group(['prefix' => 'roles'], function () {
+        Route::get('/', 'RoleController@get');
+        Route::post('/', 'RoleController@store');
+        Route::post('/{id}', 'RoleController@update');
+        Route::delete('/{id}', 'RoleController@delete');
+        Route::get('/{id}', 'RoleController@find');
+    });
+
+    Route::get('/permissions', 'RoleController@getPermissions');
+
+    //profile_updates
+    Route::group(['prefix' => 'profile_updates'], function () {
+        Route::get('/', 'ProfileUpdateController@get');
+        Route::get('{id}', 'ProfileUpdateController@find');
+        Route::delete('{id}', 'ProfileUpdateController@delete');
+    });
+
+
 });
-
-Route::group(['prefix' => 'disciplinary_teams'], function() {
-    Route::post('/', 'DisciplinaryTeamController@create');
-    Route::match(['put', 'post'],'/{id}', 'DisciplinaryTeamController@update');
-});
-
-
-Route::group(['prefix' => 'roles'], function() {
-    Route::get('/', 'RoleController@get');
-    Route::post('/', 'RoleController@store');
-    Route::post('/{id}', 'RoleController@update');
-    Route::delete('/{id}', 'RoleController@delete');
-    Route::get('/{id}', 'RoleController@find');
-});
-
-Route::get('/permissions', 'RoleController@getPermissions');
 
 
 
