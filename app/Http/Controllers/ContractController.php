@@ -42,7 +42,7 @@ class ContractController extends Controller
             $extension = $file->getClientOriginalExtension();
             $relativeDestination = "uploads/contracts";
             $destinationPath = public_path($relativeDestination);
-            $safeName = str_replace(' ', '_', $request->email) . time() . '.' . $extension;
+            $safeName = str_replace(' ', '_', $request->name) . time() . '.' . $extension;
             $file->move($destinationPath, $safeName);
             $path['file'] = "/uploads/contracts/".$safeName;
         }

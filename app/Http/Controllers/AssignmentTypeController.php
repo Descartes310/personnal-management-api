@@ -53,12 +53,14 @@ class AssignmentTypeController extends Controller {
         $assignmentType = AssignmentType::find($id);
 
         if($assignmentType == null) {
+
             $notFoundError = new APIError;
             $notFoundError->setStatus("404");
             $notFoundError->setCode("NOT_FOUND_ASSIGNMENT_ID");
             $notFoundError->setMessage("Assignment type with id " . $id . " not found");
 
             return response()->json($notFoundError, $this->notFoundStatus);
+            
         }
 
         $slug = $request->slug;
@@ -66,12 +68,14 @@ class AssignmentTypeController extends Controller {
         $foundAssignmentType = AssignmentType::whereSlug($slug)->first();
         
 		if($foundAssignmentType != null && $foundAssignmentType != $assignmentType) {
+
 			$badRequestError = new APIError;
             $badRequestError->setStatus("400");
             $badRequestError->setCode("ASSIGNMENT_SLUG_ALREADY_EXIST");
             $badRequestError->setMessage("Assignment type with slug " . $slug . " already exist");
 
             return response()->json($badRequestError, $this->badRequestStatus);
+
 		}
 
         $assignmentType->update(

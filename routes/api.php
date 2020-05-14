@@ -24,7 +24,6 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('permissions', 'AuthController@permissions');
         Route::get('roles', 'AuthController@roles');
         Route::get('teams', 'AuthController@teams');
-
     });
 
 });
@@ -35,16 +34,14 @@ Route::group(['prefix' => 'pro_situations'], function() {
     Route::get('/', 'ProSituationController@get');
     Route::get('/{id}', 'ProSituationController@find');
     Route::delete('/{id}', 'ProSituationController@delete');
-
 });
 
 //il s'agit ici des routes pour la gestion gestion du create-update sanction
-
 Route::group(['prefix' => 'sanctions'], function() {
     Route::post('add', 'SanctionController@create');
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
-
 });
+
 Route::group(['prefix'=>'contacts'], function(){
     Route::get('/{id}','ContactController@find');
     Route::get('/', 'ContactController@get');
@@ -57,8 +54,8 @@ Route::group(['prefix' => 'submissions'], function() {
     Route::get('/', 'SubmissionController@get');
     Route::get('/{id}', 'SubmissionController@find');
     Route::delete('/{id}', 'SubmissionController@delete');
-
 });
+
 //AssignmentType routes
 Route::group(['prefix' => 'assignment_types'], function() {
     Route::post('/', 'AssignmentTypeController@create');
@@ -70,21 +67,22 @@ Route::group(['prefix' => 'sanctions'], function () {
     Route::get('/{id}', 'SanctionController@find');
     Route::delete('/{id}', 'SanctionController@delete');
 });
-  //Les routes create et update Contracts
+  
+//Les routes create et update Contracts
 
-  Route::group(['prefix' => 'contracts'], function() {
+Route::group(['prefix' => 'contracts'], function() {
     Route::post('/', 'ContractController@create');
     Route::post('/{id}', 'ContractController@update');
     Route::get('/{id}', 'ContractController@find');
     Route::get('/', 'ContractController@get');
     Route::delete('/{id}', 'ContractController@delete');
-  });
+});
 
 Route::group(['prefix' => 'divisions'], function () {
     Route::post('/', 'DivisionController@create');
     Route::match(['put', 'post'],'/{id}', 'DivisionController@update');
     Route::get('/', 'DivisionController@get');
-     Route::get('/{id}', 'DivisionController@find');
+    Route::get('/{id}', 'DivisionController@find');
     Route::delete('/{id}', 'DivisionController@delete');
 });
 
