@@ -3,23 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Career;
 use App\APIError;
 
 class CareerController extends Controller
 {
     //create the career in controller
-     
+
     public function create (Request $request){
         $request->validate([
             'pro_situation_id' => 'required',
-            
+            'user_id' => 'required',
+            'effective_date' => 'nullable'
         ]);
-        
+
         if(isset($request->user_id))
         {
-            if(Career::find($request->user_id) == null) 
+            if(Career::find($request->user_id) == null)
             {//user_id not existing in table Career
                 $apiError = new APIError;
                 $apiError->setStatus("400");
@@ -31,13 +31,13 @@ class CareerController extends Controller
         }
 
         $data = $request->all();
-        $data['slug'] = str_replace(' ', '_', $request->user_id) . time();
+
         $career = Career::create($data);
         return response()->json($career);
     }
 
 
-    
+
     public function update(Request $request, $id){
         $career = Career::find($id);
         if($career == null){
@@ -48,9 +48,11 @@ class CareerController extends Controller
 
             return response()->json($apiError, 404);
         }
-        
+
         $request->validate([
-            'pro_situation_id' => 'required'
+            'pro_situation_id' => 'required',
+            'user_id' => 'required',
+            'effective_date' => 'nullable'
         ]);
 
         if(isset($request->user_id))
@@ -67,7 +69,6 @@ class CareerController extends Controller
         }
 
         $data = $request->all();
-        $data['slug'] = str_replace(' ', '_', $request->user_id) . time();
         $career->update($data);
         return response()->json($career);
     }
