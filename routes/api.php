@@ -115,12 +115,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/{id}', 'AssignmentController@update');
     });
 
-    Route::group(['prefix' => 'licenses'], function () {
-        Route::get('/', 'LicenseController@get');
-        Route::delete('{id}', 'LicenseController@delete');
-        Route::get('{id}', 'LicenseController@find');
-        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
-    });
+   
 
     Route::group(['prefix' => 'licenses'], function () {
         Route::get('/', 'LicenseController@get');
@@ -186,14 +181,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'LicenseTypeController@find');
     });
 
-    Route::group(['prefix' => 'vacations'], function () {
-        Route::get('/', 'VacationController@get');
-        Route::delete('/{id}', 'VacationController@delete');
-        Route::get('/{id}', 'VacationController@find');
-        Route::post('/', 'VacationController@create');
-        Route::match(['post', 'put'], '/{id}', 'VacationController@update');
-    });
-
+   
     Route::group(['prefix' => 'disciplinary_teams'], function () {
         Route::post('/', 'DisciplinaryTeamController@create');
         Route::match(['put', 'post'], '/{id}', 'DisciplinaryTeamController@update');
@@ -232,9 +220,23 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'ContactController@delete');
     });
 
+    
+    Route::group(['prefix' => 'licenses'], function () {
+        Route::post('/','LicenseController@create');
+        Route::match(['post', 'put'],'/{id}','LicenseController@update');
+        Route::get('/', 'LicenseController@get');
+        Route::delete('{id}', 'LicenseController@delete');
+        Route::get('{id}', 'LicenseController@find');
+        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
+    });
+    
+    
+    Route::group(['prefix' => 'vacations'], function () {
+        Route::get('/', 'VacationController@get');
+        Route::delete('/{id}', 'VacationController@delete');
+        Route::get('/{id}', 'VacationController@find');
+        Route::post('/', 'VacationController@create');
+        Route::match(['post', 'put'], '/{id}', 'VacationController@update');
+    });
+
 });
-
-
-
-
-
