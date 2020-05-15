@@ -244,6 +244,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('', 'ChatController@newMessage');
         Route::get('/discussion/{id}', 'ChatController@discussionMessage');
         Route::delete('/discussion/{id}', 'ChatController@deleteDiscussion');
+        Route::delete('/{id}', 'ChatController@deleteMessage');
         Route::get('/discussions/{id}', 'ChatController@getDiscussions');
     });
 

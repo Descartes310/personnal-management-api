@@ -60,6 +60,19 @@ class ChatController extends Controller
         return response()->json(200);
     }
 
+    public function deleteMessage($id) {
+        $message = ChatMessage::find($id);
+        if($message == null) {
+            $apiError = new APIError;
+            $apiError->setStatus("404");
+            $apiError->setCode("MESSAGE_NOT_FOUND");
+            $apiError->setMessage("no message found with id $id");
+            return response()->json($apiError, 404);
+        }
+        $message->delete();
+        return response()->json(200);
+    }
+
     public function newMessage(Request $request)
     {
         $data = $request->except('file');
