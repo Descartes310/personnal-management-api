@@ -26,6 +26,12 @@ class BlogPostController extends Controller{
         return response()->json($blogPost);
     }
 
+     /**
+     * Update a blog_post with name, description or weight
+     * @author Nebou Richie
+     * @email richienebou@gmail.com
+     */
+
     public function create(Request $request){
         
         $this->validate($request->all(), [
@@ -52,6 +58,12 @@ class BlogPostController extends Controller{
         return response()->json($blogPost, $this->createStatus);
     }
     
+     /**
+     * Update a blog_post with name, description or weight
+     * @author Nebou Riche
+     * @email richienebou@gmail.com
+     */
+
     public function update(Request $request, $id){
 
         $this->validate($request->all(), [
