@@ -34,6 +34,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'users'], function () {
         Route::get('/{id}', 'UserController@getUserInfo');
+        Route::get('', 'UserController@getUsers');
         Route::post('/', 'UserController@create');
         Route::match(['post', 'put'], '/{id}', 'UserController@update');
     });
@@ -237,6 +238,13 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'ContactController@find');
         Route::get('/', 'ContactController@get');
         Route::delete('/{id}', 'ContactController@delete');
+    });
+
+    Route::group(['prefix' => 'chats'], function () {
+        Route::post('', 'ChatController@newMessage');
+        Route::get('/discussion/{id}', 'ChatController@discussionMessage');
+        Route::delete('/discussion/{id}', 'ChatController@deleteDiscussion');
+        Route::get('/discussions/{id}', 'ChatController@getDiscussions');
     });
 
 });

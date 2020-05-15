@@ -10,7 +10,9 @@ use App\Profile;
 use App\UserProfile;
 use App\SelectOption;
 use App\User;
+use Auth;
 use App\APIError;
+use App\ChatDiscussion;
 
 
 class UserController extends Controller
@@ -32,6 +34,7 @@ class UserController extends Controller
                 $user[$user_info->profile->slug] = $user_info->value;
         }
 
+
         // The empty user field must be present in response, with null value
         $profiles = Profile::all();
         foreach ($profiles as $profile) {
@@ -41,6 +44,47 @@ class UserController extends Controller
         }
 
         return response()->json($user);
+    }
+
+    public function getUsers() {
+        $connected_user = Auth::user();
+        $users = User::get();
+        foreach ($users as $key => $user) {
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+            $discussion = ChatDiscussion::whereUser1IdAndUser2Id($connected_user->id, $user->id)->first();
+            if($discussion == null) {
+                $discussion = ChatDiscussion::whereUser2IdAndUser1Id($connected_user->id, $user->id)->first();
+                if($discussion != null) {
+                    $user['discussion_id'] = $discussion->id;
+                    $user['last_message'] = $discussion->last_message;
+                    $user['last_date'] = $discussion->updated_at;
+                } else {
+                    $user['discussion_id'] = null;
+                    $user['last_message'] = null;
+                    $user['last_date'] = null;
+                }
+            } else {
+                $user['discussion_id'] = $discussion->id;
+                $user['last_message'] = $discussion->last_message;
+                $user['last_date'] = $discussion->updated_at;
+            }
+            // The empty user field must be present in response, with null value
+            $profiles = Profile::all();
+            foreach ($profiles as $profile) {
+                if ( ! isset($user[$profile->slug]) ) {
+                    $user[$profile->slug] = null;
+                }
+            }
+            $users[$key] = $user;
+        }
+
+        return response()->json($users);
     }
 
 
