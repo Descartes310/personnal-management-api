@@ -20,13 +20,12 @@ class AssignmentTypeController extends Controller {
      * @email arleonzemtsop@gmail.com
      */
     public function create(Request $request) {
-
         $this->validate($request->all(), [
             'name' => 'required|string',
             'slug' => 'required|string|unique:assignment_types',
             'description' => 'required|string'
         ]);
-
+        
         $assignmentType = AssignmentType::create([
             'name' => $request->name,
             'slug' => $request->slug,

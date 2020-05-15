@@ -247,8 +247,16 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'ChatController@deleteMessage');
         Route::get('/discussions/{id}', 'ChatController@getDiscussions');
     });
+    
+    Route::group(['prefix' => 'assignment_types'], function () {
+        Route::post('/', 'AssignmentTypeController@create');
+        Route::post('/{id}', 'AssignmentTypeController@update');
+        Route::get('/{id}', 'AssignmentTypeController@find');
+    });
 
 });
+
+
 
 
 
