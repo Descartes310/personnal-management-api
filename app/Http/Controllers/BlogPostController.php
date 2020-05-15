@@ -4,101 +4,86 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\BlogPost;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use App\APIError;
 
 class BlogPostController extends Controller{
-    public function create (Request $request){
-        $request->validate([
-            'title' => 'required',
-            'content' => 'required'
-        ]);
+
+    protected $successStatus = 200;
+    protected $createStatus = 201;
+    protected $notFoundStatus = 404;
+
+    public function find($id){
+        $blogPost = BlogPost::find($id);
+        if($blogPost == null) {
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("404");
+            $unauthorized->setCode("BLOG_POST_NOT_FOUND");
+            $unauthorized->setMessage("blog_post id not found");
+
+            return response()->json($unauthorized, 404); 
+        }
+        return response()->json($blogPost);
+    }
+
+    public function create(Request $request){
         
-        $data = $request->only([ 
-            'user_id',
-            'blog_category_id',
-            'title',
-            'content',
-            'image',
-            'views'
+        $this->validate($request->all(), [
+            'title' => 'required|string',
+            'content' => 'string|required',
+            'user_id' => 'integer|exists:App\User,id',
+            'blog_category_id' => 'integer|required|exists:App\BlogCategory,id',
+            'views'=>'integer'           
         ]);
 
-        if(isset($request->user_id)){
-            if(BlogPost::find($request->user_id) == null) {
-                $apiError = new APIError;
-                $apiError->setStatus("400");
-                $apiError->setCode("BLOG_POST_USER_ID_NOT_FOUND");
-                $apiError->setErrors(['user_id' => 'user_id not existing']);
-
-                return response()->json($apiError, 400);
-            }
+        $data = $request-all();
+        if($file = $request->file('image')){
+            $request->validate(['image'=> 'image|mines:jpeg,png,jpg']);
+            $extension = $file->getClientOriginalExtension();
+            $relativeDestination = "uploads/users";
+            $destinationPath = public_path($relativeDestination);
+            $safeName =time() . '.' . $extension;
+            $file->move($destinationPath, $safeName);
+            $data['image'] = url("$relativeDestination/$safeName");
         }
 
-        if(isset($request->blog_category_id)){
-            if(BlogPost::find($request->blog_category_id) == null) {
-                $apiError = new APIError;
-                $apiError->setStatus("400");
-                $apiError->setCode("BLOG_CATEGORY_ID_NOT_FOUND");
-                $apiError->setErrors(['BLOG_CATEGORY_id' => 'blog_category_id not existing']);
+        $blogPost = BlogPost::create($data);
 
-                return response()->json($apiError, 400);
+        return response()->json($blogPost, $this->createStatus);
+    }
+    
+    public function update(Request $request, $id){
+
+        $this->validate($request->all(), [
+            'title' => 'required|string',
+            'content' => 'string|required',
+            'user_id' => 'integer|required|exists:App\User,id',
+            'blog_category_id' => 'integer|required|exists:App\BlogCategory,id',
+            'image' => 'nullable'
+        ]);
+            $blogPost = BlogPost::find($id);
+    
+            if($blogPost == null) {
+                $notFoundError = new APIError;
+                $notFoundError->setStatus("404");
+                $notFoundError->setCode("NOT_FOUND_USER_ID");
+                $notFoundError->setMessage("BLOG POST with id " . $id . " not found");
+    
+                return response()->json($notFoundError, $this->notFoundStatus);
             }
-            $blogPost = BlogPost::create($data);
-            return response()->json($blogPost);
-        
+    
+            $blogPost->update(
+                $request->only([ 
+                    'title', 
+                    'content', 
+                    'image',
+                    'views'
+                ])
+            );
+    
+            return response()->json($blogPost, $this->successStatus);
+    
         }
     }
-    public function update(Request $request, $id){
-        $blogPost = BlogPost::find($id);
-        if($blogPost == null){
-            $apiError = new APIError;
-            $apiError->setStatus("404");
-            $apiError->setCode("BLOG_POST_ID_NOT_EXISTING");
-            $apiError->setErrors(['id' => 'blog_post id not existing']);
     
-            return response()->json($apiError, 404);
-        }
-            
-        $request->validate([
-            'title' => 'required',
-            'content' => 'required'
-            ]);
-            
-        $data = $request->only([ 
-            'user_id',
-            'blog_category_id',
-            'title',
-            'content',
-            'image',
-            'views'
-        ]);
-    
-    
-        if(isset($request->user_id)){
-            if(BlogPost::find($request->user_id) == null) {
-                $apiError = new APIError;
-                $apiError->setStatus("400");
-                $apiError->setCode("BLOG_POST_USER_ID_NOT_FOUND");
-                $apiError->setErrors(['user_id' => 'user_id not existing']);
-    
-                return response()->json($apiError, 400);
-            }
-        }
-    
-        if(isset($request->blog_category_id)){
-            if(BlogPost::find($request->blog_category_id) == null) {
-                $apiError = new APIError;
-                $apiError->setStatus("400");
-                $apiError->setCode("BLOG_CATEGORY_ID_NOT_FOUND");
-                $apiError->setErrors(['BLOG_CATEGORY_id' => 'blog_category_id not existing']);
-    
-                return response()->json($apiError, 400);
-            }
-            $blogPost = BlogPost::create($data);
-            return response()->json($blogPost);
-        }
-    }   
-    
-       
-}
     
