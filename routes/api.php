@@ -256,4 +256,15 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/{id}', 'AssignmentTypeController@update');
         Route::get('/{id}', 'AssignmentTypeController@find');
     });
+
+    //roads for the blogcategory
+    Route::group(['prefix' => 'blogcategory'], function () {
+        Route::post('/', 'BlogCatController@create');
+        Route::post('/{id}', 'BlogCatController@update');
+    });
+
+    Route::group(['prefix' => 'profile'], function () {
+        Route::post('/', 'ProfileController@create');
+        Route::post('/{id}', 'ProfileController@update');
+    });
 });
