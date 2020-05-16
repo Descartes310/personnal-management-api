@@ -90,6 +90,7 @@ class ChatController extends Controller
 
     public function deleteMessage($id) {
         $message = ChatMessage::find($id);
+        $user = Auth::user();
         if($message == null) {
             $apiError = new APIError;
             $apiError->setStatus("404");
@@ -97,7 +98,15 @@ class ChatController extends Controller
             $apiError->setMessage("no message found with id $id");
             return response()->json($apiError, 404);
         }
-        $message->delete();
+        if($message->sender_id == $user->id) {
+            $message->update([
+                "sender_delete_at" => Carbon::now()
+            ]);
+        } else {
+            $message->update([
+                "receiver_delete_at" => Carbon::now()
+            ]);
+        }
         return response()->json(200);
     }
 
@@ -173,6 +182,12 @@ class ChatController extends Controller
                 $message->update([
                     'viewed_at' => Carbon::now()
                 ]);
+            }
+            if($message->sender_delete_at != null) {
+                $message['sender_delete'] = true;
+            }
+            if($message->receier_delete_at != null) {
+                $message['receiver_delete'] = true;
             }
         }
         return response()->json($discussion, 200);
