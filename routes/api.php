@@ -243,6 +243,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'chats'], function () {
         Route::post('', 'ChatController@newMessage');
         Route::get('/discussion/{id}', 'ChatController@discussionMessage');
+        Route::get('/discussion/{id}/newmessages', 'ChatController@getNewMessages');
         Route::delete('/discussion/{id}', 'ChatController@deleteDiscussion');
         Route::delete('/{id}', 'ChatController@deleteMessage');
         Route::get('/discussions/{id}', 'ChatController@getDiscussions');

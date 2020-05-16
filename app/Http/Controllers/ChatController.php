@@ -8,6 +8,8 @@ use App\ChatDiscussion;
 use App\APIError;
 use App\User;
 use App\UserProfile;
+use Carbon\Carbon;
+use Auth;
 
 class ChatController extends Controller
 {
@@ -18,33 +20,59 @@ class ChatController extends Controller
         $data = [];
 
         foreach ($chats as $chat) {
-            $unread = ChatMessage::whereDiscussionId($chat->id)->where('sender_id', '<>', $id)->whereNotNull('viewed_at')->count();
-            $user = null;
-            if($chat->user1_id != $id) {
-                $user = User::whereId($chat->user1_id)->first();
-                $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
-                foreach ($user_infos as $user_info) {
-                    if($user_info->profile->type == 'file')
-                        $user[$user_info->profile->slug] = url($user_info->value);
-                    else
-                        $user[$user_info->profile->slug] = $user_info->value;
+            if($chat->user1_id != $chat->user2_id) {
+                $unread = ChatMessage::whereDiscussionId($chat->id)->where('sender_id', '<>', $id)->whereNull('viewed_at')->count();
+                $user = null;
+                if($chat->user1_id != $id) {
+                    $user = User::whereId($chat->user1_id)->first();
+                    $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+                    foreach ($user_infos as $user_info) {
+                        if($user_info->profile->type == 'file')
+                            $user[$user_info->profile->slug] = url($user_info->value);
+                        else
+                            $user[$user_info->profile->slug] = $user_info->value;
+                    }
+                } else {
+                    $user = User::whereId($chat->user2_id)->first();
+                    $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+                    foreach ($user_infos as $user_info) {
+                        if($user_info->profile->type == 'file')
+                            $user[$user_info->profile->slug] = url($user_info->value);
+                        else
+                            $user[$user_info->profile->slug] = $user_info->value;
+                    }
                 }
-            } else {
-                $user = User::whereId($chat->user2_id)->first();
-                $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
-                foreach ($user_infos as $user_info) {
-                    if($user_info->profile->type == 'file')
-                        $user[$user_info->profile->slug] = url($user_info->value);
-                    else
-                        $user[$user_info->profile->slug] = $user_info->value;
-                }
+                $chat['unread'] = $unread;
+                $chat['user'] = $user;
+                array_push($data, $chat);
             }
-            $chat['unread'] = $unread;
-            $chat['user'] = $user;
-            array_push($data, $chat);
         }
 
         return response()->json($data, 200);
+    }
+
+    public function getNewMessages($id)
+    {
+        $chat = ChatDiscussion::find($id);
+        $user = Auth::user();
+        if(!$chat) {
+            if(!$chat) {
+                $unauthorized = new APIError;
+                $unauthorized->setStatus("404");
+                $unauthorized->setCode("DISCUSSION_NOT_FOUND");
+                $unauthorized->setMessage("Discussion non existante.");
+                return response()->json($unauthorized, 404);
+            }
+        }
+        $messages = $chat->messages()->whereNull('viewed_at')->where('sender_id', '<>', $user->id)->get();
+        foreach ($messages as $message) {
+            if($user->id != $message->sender_id) {
+                $message->update([
+                    'viewed_at' => Carbon::now()
+                ]);
+            }
+        }
+        return response()->json($messages, 200);
     }
 
     public function deleteDiscussion($id) {
@@ -131,6 +159,7 @@ class ChatController extends Controller
 
     public function discussionMessage($id) {
         $discussion = ChatDiscussion::find($id);
+        $user = Auth::user();
         if($discussion == null) {
             $apiError = new APIError;
             $apiError->setStatus("404");
@@ -139,6 +168,13 @@ class ChatController extends Controller
             return response()->json($apiError, 404);
         }
         $discussion->messages;
+        foreach ($discussion->messages as $message) {
+            if($user->id != $message->sender_id && $message->viewed_at == null) {
+                $message->update([
+                    'viewed_at' => Carbon::now()
+                ]);
+            }
+        }
         return response()->json($discussion, 200);
     }
 
