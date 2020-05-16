@@ -112,9 +112,9 @@ class VacationTypeController extends Controller
             'name' => 'required',
         ]);
 
-        $vacationtypeTmp = VacationType::whereName($request->name);
-
-        if($vacationtype != $vacationtypeTmp) {
+        $vacationtypeTmp = VacationType::whereName($request->name)->first();
+        
+        if($vacationtype != $vacationtypeTmp && $vacationtypeTmp != null) {
             $apiError = new APIError;
             $apiError->setStatus("400"); 
             $apiError->setCode("VACATIONTYPE_ALREADY_EXISTS"); 
