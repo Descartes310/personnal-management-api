@@ -27,7 +27,7 @@ class BlogPostController extends Controller{
     }
 
      /**
-     * Update a blog_post with name, description or weight
+     * create a blog_post 
      * @author Nebou Richie
      * @email richienebou@gmail.com
      */
@@ -37,12 +37,12 @@ class BlogPostController extends Controller{
         $this->validate($request->all(), [
             'title' => 'required|string',
             'content' => 'string|required',
-            'user_id' => 'integer|exists:App\User,id',
+            'user_id' => 'integer|required|exists:App\User,id',
             'blog_category_id' => 'integer|required|exists:App\BlogCategory,id',
             'views'=>'integer'           
         ]);
 
-        $data = $request-all();
+        $data = $request->all();
         if($file = $request->file('image')){
             $request->validate(['image'=> 'image|mines:jpeg,png,jpg']);
             $extension = $file->getClientOriginalExtension();
@@ -59,7 +59,7 @@ class BlogPostController extends Controller{
     }
     
      /**
-     * Update a blog_post with name, description or weight
+     * Update a blog_post 
      * @author Nebou Riche
      * @email richienebou@gmail.com
      */
