@@ -240,6 +240,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'ContactController@find');
         Route::get('/', 'ContactController@get');
         Route::delete('/{id}', 'ContactController@delete');
+        Route::post('/', 'ContactController@saveContact');
+        Route::put('/{id}', 'ContactController@updateContact');
     });
 
     Route::group(['prefix' => 'chats'], function () {
