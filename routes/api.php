@@ -95,6 +95,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('', 'VacationTypeController@get');
         Route::get('/{id}', 'VacationTypeController@find');
         Route::delete('/{id}', 'VacationTypeController@delete');
+        Route::post('/', 'VacationTypeController@create');
+        Route::match(['put', 'post'],'/{id}', 'VacationTypeController@update');
     });
 
     Route::group(['prefix' => 'disciplinary_boards'], function () {
@@ -254,12 +256,4 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/{id}', 'AssignmentTypeController@update');
         Route::get('/{id}', 'AssignmentTypeController@find');
     });
-
 });
-
-
-
-
-
-
-
