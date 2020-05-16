@@ -34,7 +34,6 @@ class UserController extends Controller
                 $user[$user_info->profile->slug] = $user_info->value;
         }
 
-
         // The empty user field must be present in response, with null value
         $profiles = Profile::all();
         foreach ($profiles as $profile) {

@@ -143,6 +143,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'BlogPostController@get');
         Route::delete('{id}', 'BlogPostController@delete');
         Route::get('{id}', 'BlogPostController@find');
+        Route::post('/', 'BlogPostController@create');
+        Route::put('/{id}', 'BlogpostController@update');
     });
 
 
@@ -269,4 +271,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/', 'ProfileController@create');
         Route::post('/{id}', 'ProfileController@update');
     });
+
+    Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], function () {
+        Route::post('/', 'NoteCriteriaController@create');
+        Route::put('/{id}', 'NoteCriteriaController@update');
+    });
+
 });
+
