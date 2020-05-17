@@ -51,7 +51,7 @@ class LicenseTypeController extends Controller
 
 
     public function add(Request $request){
-        $request->validate([
+        $this->validate($request->al(), [
             'name' => 'required',
             'slug' => 'required|unique:license_types'
         ]);
@@ -59,9 +59,13 @@ class LicenseTypeController extends Controller
         $licensetype = LicenseType::create($data);
         return response()->json($licensetype);
     }
-    
+
     public function update(Request $request, $id)
     {
+        $this->validate($request->al(), [
+            'name' => 'required',
+            'slug' => 'required|unique:license_types'
+        ]);
         $licensetype = LicenseType::find($id);
 
         abort_if($licensetype == null, 404, "license type not founded.");

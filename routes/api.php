@@ -44,16 +44,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'BlogCategoryController@delete');
         Route::get('/{id}', 'BlogCategoryController@find');
         Route::get('/', 'BlogCategoryController@get');
+        Route::post('/', 'BlogCatController@create');
+        Route::post('/{id}', 'BlogCatController@update');
     });
-
-
-Route::group(['prefix' => 'sanctions'], function() {
-    Route::post('add', 'SanctionController@create');
-    Route::match(['put','patch'],'/{id}', 'SanctionController@update');
-
-});
-
-
 
 
     Route::group(['prefix' => 'assignments'], function () {
@@ -130,14 +123,6 @@ Route::group(['prefix' => 'sanctions'], function() {
     });
 
 
-
-    Route::group(['prefix' => 'licenses'], function () {
-        Route::get('/', 'LicenseController@get');
-        Route::delete('{id}', 'LicenseController@delete');
-        Route::get('{id}', 'LicenseController@find');
-        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
-    });
-
     Route::group(['prefix' => 'blog_posts'], function () {
         Route::get('/', 'BlogPostController@get');
         Route::delete('{id}', 'BlogPostController@delete');
@@ -212,11 +197,6 @@ Route::group(['prefix' => 'sanctions'], function() {
         Route::post('/{id}', 'ProfileUpdateController@update');
     });
 
-    Route::group(['prefix' => 'blog_categories'], function () {
-        Route::post('/', 'BlogCatController@create');
-        Route::post('/{id}', 'BlogCatController@update');
-    });
-
 
     Route::group(['prefix' => 'contacts'], function () {
         Route::get('/{id}', 'ContactController@find');
@@ -261,10 +241,6 @@ Route::group(['prefix' => 'sanctions'], function() {
         Route::post('/{id}', 'ProfileController@update');
     });
 
-    Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], function () {
-        Route::post('/', 'NoteCriteriaController@create');
-        Route::put('/{id}', 'NoteCriteriaController@update');
-    });
 
     Route::group(['prefix' => 'licenses'], function () {
         Route::post('/','LicenseController@create');
@@ -272,7 +248,7 @@ Route::group(['prefix' => 'sanctions'], function() {
         Route::get('/', 'LicenseController@get');
         Route::delete('{id}', 'LicenseController@delete');
         Route::get('{id}', 'LicenseController@find');
-        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
+        Route::patch('{id}/changeStatus', 'LicenseController@changeStatus');
     });
 
 
