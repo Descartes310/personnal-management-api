@@ -87,7 +87,7 @@ class VacationTypeController extends Controller
             'days'
         ]);
         //$data=$request->all();
-        $data['slug'] = str_replace(' ', '_', $request->name) . time();
+        $data['slug'] = $request->name;
         $vacationtype = VacationType::create($data);
         return response()->json($vacationtype);
     }
