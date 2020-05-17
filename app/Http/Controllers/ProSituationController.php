@@ -91,7 +91,6 @@ class ProSituationController extends Controller {
 
         $this->validate($request->all(), [
             'name' => 'required|string|unique:pro_situations',
-            'description' => 'string',
             'weight' => 'required|integer|min:1|max:100'
         ]);
 
@@ -114,7 +113,7 @@ class ProSituationController extends Controller {
 
         $this->validate($request->all(), [
             'name' => 'string',
-            'description' => 'string',
+            'description' => 'nullable|string',
             'weight' => 'integer|min:1|max:100'
         ]);
 
