@@ -113,7 +113,7 @@ class ProSituationController extends Controller {
 
         $this->validate($request->all(), [
             'name' => 'string',
-            'description' => 'string',
+            'description' => 'nullable|string',
             'weight' => 'integer|min:1|max:100'
         ]);
 
