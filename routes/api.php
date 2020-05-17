@@ -196,11 +196,7 @@ Route::group(['prefix'=>'contacts'], function(){
     });
 
 
-    Route::group(['prefix' => 'license_types'], function () {
-        Route::get('/', 'LicenseTypeController@get');
-        Route::delete('/{id}', 'LicenseTypeController@delete');
-        Route::get('/{id}', 'LicenseTypeController@find');
-    });
+    
 
     Route::group(['prefix' => 'vacations'], function () {
         Route::get('/', 'VacationController@get');
@@ -210,9 +206,9 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::match(['post', 'put'], '/{id}', 'VacationController@update');
     });
 
-<<<<<<< HEAD
 
-=======
+
+
     Route::group(['prefix' => 'disciplinary_teams'], function () {
         Route::post('/', 'DisciplinaryTeamController@create');
         Route::match(['put', 'post'], '/{id}', 'DisciplinaryTeamController@update');
@@ -237,7 +233,7 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::post('/', 'ProfileUpdateController@create');
         Route::post('/{id}', 'ProfileUpdateController@update');
     });
->>>>>>> d1b4aba7e527f814300620652ff85ab58d947add
+
 
 
     Route::group(['prefix' => 'blog_categories'], function () {
@@ -252,6 +248,14 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::delete('/{id}', 'ContactController@delete');
     });
 
+});
+
+Route::group(['prefix' => 'license_types'], function () {
+        Route::get('/', 'LicenseTypeController@get');
+        Route::delete('/{id}', 'LicenseTypeController@delete');
+        Route::get('/{id}', 'LicenseTypeController@find');
+        Route::post('/', 'LicenseTypeController@add');
+        Route::post('/{id}', 'LicenseTypeController@update');
 });
 
 
