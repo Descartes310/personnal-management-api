@@ -52,13 +52,6 @@ Route::group(['prefix' => 'sanctions'], function() {
     Route::match(['put','patch'],'/{id}', 'SanctionController@update');
 
 });
-Route::group(['prefix'=>'contacts'], function(){
-    Route::get('/{id}','ContactController@find');
-    Route::get('/', 'ContactController@get');
-    Route::delete('/{id}', 'ContactController@delete');
-    Route::post('/', 'contactController@saveContact');
-    Route::match(['post', 'put'], '/{id}', 'contactController@updateContact');
-});
 
 
 
@@ -80,7 +73,7 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::match(['post', 'put'], '/{id}', 'ProSituationController@update');
     });
 
-    
+
     Route::group(['prefix' => 'contracts'], function () {
         Route::post('/', 'ContractController@create');
         Route::post('/{id}', 'ContractController@update');
@@ -121,11 +114,6 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::delete('/{id}', 'DisciplinaryBoardController@delete');
     });
 
-    Route::group(['prefix' => 'disciplinary_teams'], function () {
-        Route::post('/', 'DisciplinaryTeamController@create');
-        Route::put('/{id}', 'DisciplinaryTeamController@update');
-    });
-
     Route::group(['prefix' => 'disciplinary_boards'], function () {
         Route::post('/', 'DisciplinaryBoardController@create');
         Route::put('/{id}', 'DisciplinaryBoardController@update');
@@ -141,7 +129,7 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::put('/{id}', 'AssignmentController@update');
     });
 
-   
+
 
     Route::group(['prefix' => 'licenses'], function () {
         Route::get('/', 'LicenseController@get');
@@ -158,12 +146,6 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::put('/{id}', 'BlogpostController@update');
     });
 
-
-    Route::group(['prefix' => 'disciplinary_teams'], function () {
-        Route::get('/{id}', 'DisciplinaryTeamController@find');
-        Route::get('/', 'DisciplinaryTeamController@get');
-        Route::delete('/{id}', 'DisciplinaryTeamController@delete');
-    });
 
     Route::group(['prefix' => 'templates'], function () {
         Route::post('/', 'TemplateController@create');
@@ -202,17 +184,13 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::delete('/{id}', 'TrainingController@delete');
     });
 
-    Route::group(['prefix' => 'vacations'], function () {
-        Route::get('/', 'VacationController@get');
-        Route::delete('/{id}', 'VacationController@delete');
-        Route::get('/{id}', 'VacationController@find');
-        Route::post('/', 'VacationController@create');
-        Route::match(['post', 'put'], '/{id}', 'VacationController@update');
-    });
 
     Route::group(['prefix' => 'disciplinary_teams'], function () {
         Route::post('/', 'DisciplinaryTeamController@create');
         Route::match(['put', 'post'], '/{id}', 'DisciplinaryTeamController@update');
+        Route::get('/{id}', 'DisciplinaryTeamController@find');
+        Route::get('/', 'DisciplinaryTeamController@get');
+        Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
     Route::group(['prefix' => 'roles'], function () {
@@ -256,7 +234,7 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::delete('/{id}', 'ChatController@deleteMessage');
         Route::get('/discussions/{id}', 'ChatController@getDiscussions');
     });
-    
+
     Route::group(['prefix' => 'assignment_types'], function () {
         Route::post('/', 'AssignmentTypeController@create');
         Route::post('/{id}', 'AssignmentTypeController@update');
@@ -278,7 +256,7 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::post('/{id}', 'BlogCatController@update');
     });
 
-    Route::group(['prefix' => 'profile'], function () {
+    Route::group(['prefix' => 'profiles'], function () {
         Route::post('/', 'ProfileController@create');
         Route::post('/{id}', 'ProfileController@update');
     });
@@ -287,7 +265,7 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::post('/', 'NoteCriteriaController@create');
         Route::put('/{id}', 'NoteCriteriaController@update');
     });
-    
+
     Route::group(['prefix' => 'licenses'], function () {
         Route::post('/','LicenseController@create');
         Route::match(['post', 'put'],'/{id}','LicenseController@update');
@@ -296,8 +274,8 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::get('{id}', 'LicenseController@find');
         Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
     });
-    
-    
+
+
     Route::group(['prefix' => 'vacations'], function () {
         Route::get('/', 'VacationController@get');
         Route::delete('/{id}', 'VacationController@delete');
@@ -306,4 +284,13 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::match(['post', 'put'], '/{id}', 'VacationController@update');
     });
 
+    Route::group(['prefix' => 'submissions'], function () {
+        Route::get('/', 'SubmissionController@get');
+        Route::delete('/{id}', 'SubmissionController@delete');
+        Route::get('/{id}', 'SubmissionController@find');
+        Route::post('submissions', 'SubmissionController@create');
+        Route::match(['put', 'post'], 'submissions/{id}', 'SubmissionController@update');
+    });
+
 });
+

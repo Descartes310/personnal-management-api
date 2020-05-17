@@ -55,4 +55,61 @@ class Controller extends BaseController
 
         return $result;
     }
+
+
+    /**
+     * Uploads multiple files from request into uploads/directory
+     *
+     * @param Illuminate\Http\Request $request
+     * @param string $key_validator
+     * @param string $directory
+     * @return array saved files paths
+     */
+    public function uploadMultipleFiles($request, $key_validator, $directory, array $rules = [])
+    {
+        $savedFilePaths = [];
+        $fileRules = array_merge(['file'], $rules);
+        $fileRules = array_unique($fileRules);
+
+        if ($files = $request->file($key_validator)) {
+            foreach ($files as $file) {
+                $this->validate($request->all(), [$key_validator . '[]' => $fileRules]);
+                $extension = $file->getClientOriginalExtension();
+                $relativeDestinationPath = 'uploads/' . $directory;
+                $destinationPath = public_path($relativeDestinationPath);
+                $safeName =  uniqid(substr($directory, 0, 15) . '.', true) . '.' . $extension;
+                $file->move($destinationPath, $safeName);
+                $savedFilePaths[] = $relativeDestinationPath . $safeName;
+            }
+        }
+
+        return $savedFilePaths;
+    }
+
+
+    /**
+     * Uploads file from request into uploads/directory
+     *
+     * @param Illuminate\Http\Request $request
+     * @param string $key_validator
+     * @param string $directory
+     * @return array saved file path
+     */
+    public function uploadSingleFile($request, $key_validator, $directory, array $rules = [])
+    {
+        $savedFilePath = null;
+        $fileRules = array_merge(['file'], $rules);
+        $fileRules = array_unique($fileRules);
+        if ($file = $request->file($key_validator)) {
+            $this->validate($request->all(), [$key_validator => $fileRules]);
+            $extension = $file->getClientOriginalExtension();
+            $relativeDestinationPath = 'uploads/' . $directory;
+            $destinationPath = public_path($relativeDestinationPath);
+            $safeName =  uniqid(substr($directory, 0, 15) . '.', true) . '.' . $extension;
+            $file->move($destinationPath, $safeName);
+            $savedFilePath = $relativeDestinationPath . $safeName;
+        }
+
+        return $savedFilePath;
+    }
 }
