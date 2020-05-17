@@ -137,7 +137,7 @@ class LicenseController extends Controller{
             $path = null;
             if($file != null){
                 $extension = $file->getClientOriginalExtension();
-                $relativeDestination = "uploads/document";
+                $relativeDestination = "uploads/permissions";
                 $destinationPath = public_path($relativeDestination);
                 $safeName = "document".time().'.'.$extension;
                 $file->move($destinationPath, $safeName);
@@ -235,7 +235,7 @@ class LicenseController extends Controller{
 
             if($file != null){
                 $extension = $file->getClientOriginalExtension();
-                $relativeDestination = "uploads/document";
+                $relativeDestination = "uploads/permissions";
                 $destinationPath = public_path($relativeDestination);
                 $safeName = "document".time().'.'.$extension;
                 $file->move($destinationPath, $safeName);
