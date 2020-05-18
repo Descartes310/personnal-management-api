@@ -10,5 +10,5 @@ class UserProfile extends Model
 
     public function profile() {
         return $this->belongsTo('App\Profile', 'profile_id');
-      }
+    }
 }

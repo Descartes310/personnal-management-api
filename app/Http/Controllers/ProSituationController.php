@@ -12,6 +12,7 @@ class ProSituationController extends Controller {
     protected $successStatus = 200;
     protected $createStatus = 201;
     protected $notFoundStatus = 404;
+    protected $badRequestStatus = 400;
 
     /**
      * find one submission with id
@@ -89,8 +90,7 @@ class ProSituationController extends Controller {
     public function create(Request $request) {
 
         $this->validate($request->all(), [
-            'name' => 'required|string',
-            'description' => 'string',
+            'name' => 'required|string|unique:pro_situations',
             'weight' => 'required|integer|min:1|max:100'
         ]);
 
@@ -113,7 +113,7 @@ class ProSituationController extends Controller {
 
         $this->validate($request->all(), [
             'name' => 'string',
-            'description' => 'string',
+            'description' => 'nullable|string',
             'weight' => 'integer|min:1|max:100'
         ]);
 
@@ -127,6 +127,21 @@ class ProSituationController extends Controller {
 
             return response()->json($notFoundError, $this->notFoundStatus);
         }
+
+        $name = $request->name;
+
+        $foundProSituation = ProSituation::whereName($name)->first();
+
+		if($foundProSituation != null && $foundProSituation != $proSituation) {
+
+			$badRequestError = new APIError;
+            $badRequestError->setStatus("400");
+            $badRequestError->setCode("PROSITUATION_NAME_ALREADY_EXIST");
+            $badRequestError->setMessage("Pro situation with name " . $name . " already exist");
+
+            return response()->json($badRequestError, $this->badRequestStatus);
+
+		}
 
         $proSituation->update(
             $request->only([

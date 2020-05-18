@@ -21,7 +21,7 @@ class CreateVacationTypesTable extends Migration
             $table->unsignedInteger('days')->nullable();
             $table->timestamps();
         });
-    }
+    } 
 
     /**
      * Reverse the migrations.
