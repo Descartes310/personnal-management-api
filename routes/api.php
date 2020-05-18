@@ -142,11 +142,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
-    Route::group(['prefix' => 'templates'], function () {
-        Route::post('/', 'TemplateController@create');
-        Route::put('/{id}', 'TemplateController@update');
-    });
-
+    
     //il s'agit des routes pour read et delete profile
     Route::group(['prefix' => 'profiles'], function () {
         Route::get('/', 'ProfileController@get');
@@ -241,6 +237,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 
+Route::group(['prefix' => 'templates'], function () {
+        Route::post('/', 'TemplateController@create');
+        Route::get('/{id}', 'TemplateController@find');
+        Route::match(['put', 'post'],'/{id}', 'TemplateController@update');
+    });
 
 
 
