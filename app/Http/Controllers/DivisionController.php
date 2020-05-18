@@ -4,27 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Division;
-use Illuminate\Support\Facades\DB;
 use App\APIError;
+use Illuminate\Support\Str;
 
 
 class DivisionController extends Controller
 {
-    
+
     public function create (Request $request){
-        $request->validate([
+        $this->validate($request->all(), [
             'name' => 'required'
         ]);
-        
-        $data = $request->only([ 
-            'parent_id', 
-            'name', 
+
+        $data = $request->only([
+            'name',
             'description'
         ]);
 
-        if(isset($request->parent_id))
+        if($request->parent_id)
         {
-            if(Division::find($request->parent_id) == null) 
+            if(Division::find($request->parent_id) == null)
             {//parent_id not existing in table division
                 $apiError = new APIError;
                 $apiError->setStatus("400");
@@ -32,17 +31,18 @@ class DivisionController extends Controller
                 $apiError->setErrors(['parent_id' => 'parent_id not existing']);
 
                 return response()->json($apiError, 400);
+            } else {
+                $data['parent_id'] = $request->parent_id;
             }
         }
 
-        //$data = $request->all()
-        $data['slug'] = str_replace(' ', '_', $request->name) . time();
+        $data['slug'] = Str::slug($request->name) . time();
         $division = Division::create($data);
         return response()->json($division);
     }
 
 
-    
+
     public function update(Request $request, $id){
         $division = Division::find($id);
         if($division == null){
@@ -53,18 +53,17 @@ class DivisionController extends Controller
 
             return response()->json($apiError, 404);
         }
-        
-        $request->validate([
+
+        $this->validate($request->all(), [
             'name' => 'required'
         ]);
 
-        $data = $request->only([ 
-            'parent_id', 
-            'name', 
+        $data = $request->only([
+            'name',
             'description'
         ]);
 
-        if(isset($request->parent_id))
+        if($request->parent_id)
         {
             if(Division::find($request->parent_id) == null)
             {//parent_id not existing in table division
@@ -74,23 +73,40 @@ class DivisionController extends Controller
                 $apiError->setErrors(['parent_id' => 'parent_id not existing']);
 
                 return response()->json($apiError, 400);
+            } else {
+                $data['parent_id'] = $request->parent_id;
             }
         }
 
-        $data = $request->all();
-        $data['slug'] = str_replace(' ', '_', $request->name) . time();
         $division->update($data);
         return response()->json($division);
     }
 
-    public function get(Request $request){
-        $limit = $request->limit;
-        $s = $request->s; 
-        $page = $request->page; 
-        $divisions = Division::where('name','LIKE','%'.$s.'%')
-                                       ->paginate($limit); 
+    public function get(Request $req) {
+        $s = $req->s;
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($s) {
+            if ($limit || $page) {
+                $divisions = Division::where('name', 'LIKE', '%' . $s . '%')->paginate($limit);
+            } else {
+                $divisions = Division::where('name', 'LIKE', '%' . $s . '%')->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $divisions = Division::paginate($limit);
+            } else {
+                $divisions = Division::all();
+            }
+        }
+
         return response()->json($divisions);
-      }
+    }
 
     public function find($id){
         $division = Division::find($id);
@@ -99,7 +115,7 @@ class DivisionController extends Controller
             $unauthorized->setStatus("404");
             $unauthorized->setCode("DIVISION_NOT_FOUND");
             $unauthorized->setMessage("No division found with id $id");
-            return response()->json($unauthorized, 404); 
+            return response()->json($unauthorized, 404);
         }
         return response()->json($division);
     }
@@ -111,9 +127,9 @@ class DivisionController extends Controller
             $unauthorized->setStatus("404");
             $unauthorized->setCode("DIVISION_NOT_FOUND");
             $unauthorized->setMessage("No division found with id $id");
-            return response()->json($unauthorized, 404); 
+            return response()->json($unauthorized, 404);
         }
         $division->delete($division);
         return null;
-    }   
+    }
 }
