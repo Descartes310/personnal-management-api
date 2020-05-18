@@ -34,6 +34,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'users'], function () {
+        Route::post('/', 'UserController@create');
         Route::get('/{id}', 'UserController@getUserInfo');
         Route::post('/', 'UserController@create');
         Route::match(['post', 'put'], '/{id}', 'UserController@update');
@@ -110,9 +111,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/{id}', 'AssignmentController@update');
     });
 
-    Route::group(['prefix' => 'assignments'], function () {
-        Route::post('/', 'AssignmentController@create');
-        Route::put('/{id}', 'AssignmentController@update');
+    Route::group(['prefix' => 'assignment_types'], function () {
+        Route::get('/', 'AssignmentTypeController@get');
+        Route::post('/', 'AssignmentTypeController@create');
+        Route::get('{id}', 'AssignmentTypeController@find');
+        Route::put('/{id}', 'AssignmentTypeController@update');
     });
 
     Route::group(['prefix' => 'licenses'], function () {

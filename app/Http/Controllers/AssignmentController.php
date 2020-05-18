@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Assignment;
 use App\AssignmentType;
 use App\APIError;
+use App\User;
 
 class AssignmentController extends Controller
 {
