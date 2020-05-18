@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::pattern('id', '[0-9]+');
 
-Route::group(['prefix' => 'auth'], function () {
+Route::group(['prefix' => 'auth'], function () { 
 
     Route::post('/', 'AuthController@login');
 
@@ -31,7 +31,7 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 
-//Route::group(['middleware' => 'auth:api'], function () {
+Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'users'], function () {
         Route::get('/{id}', 'UserController@getUserInfo');
@@ -164,6 +164,8 @@ Route::group(['prefix' => 'auth'], function () {
 
 
     Route::group(['prefix' => 'trainings'], function () {
+        Route::post('/', 'TrainingController@create');
+        Route::match(['put', 'post'], '/{id}', 'TrainingController@update');
         Route::get('/', 'TrainingController@get');
         Route::get('/{id}', 'TrainingController@find');
         Route::delete('/{id}', 'TrainingController@delete');
@@ -256,9 +258,7 @@ Route::group(['prefix' => 'auth'], function () {
         //Route::delete('/{id}', 'CareerController@delete');
     });
 
-//});
-
-
+});
 
 
 
