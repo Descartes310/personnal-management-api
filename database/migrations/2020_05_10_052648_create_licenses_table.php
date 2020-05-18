@@ -29,7 +29,7 @@ class CreateLicensesTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('license_type_id')->references('id')->on('license_types');
+            $table->foreign('license_type_id')->references('id')->on('license_types')->onDelete('cascade');
         });
     }
 
