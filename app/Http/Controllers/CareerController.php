@@ -13,7 +13,7 @@ class CareerController extends Controller
      
     public function create (Request $request){
         $request->validate([
-            'user_id' => 'required',
+            'user _id' => 'required',
             
         ]);
         
