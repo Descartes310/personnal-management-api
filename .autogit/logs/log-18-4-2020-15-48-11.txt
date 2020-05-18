@@ -1,0 +1,15 @@
+-------------------- Auto-Git Log --------------------
+		Mon May 18 2020 15:48:11 GMT+0200 (heure d’été d’Europe centrale)
+------------------------------------------------------
+
+Modified files:
+
+
+Created files:
+* .autogit/autogit.json
+
+
+Deleted files:
+
+
+Renamed files:

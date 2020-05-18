@@ -1,0 +1,3 @@
+[submodule "personnal-management-api2"]
+	path = personnal-management-api2
+	url = https://github.com/Descartes310/personnal-management-api.git
