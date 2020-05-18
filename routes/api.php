@@ -165,11 +165,7 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
-    Route::group(['prefix' => 'templates'], function () {
-        Route::post('/', 'TemplateController@create');
-        Route::put('/{id}', 'TemplateController@update');
-    });
-
+    
     //il s'agit des routes pour read et delete profile
     Route::group(['prefix' => 'profiles'], function () {
         Route::get('/', 'ProfileController@get');
@@ -269,7 +265,14 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::get('/{id}', 'LicenseTypeController@find');
         Route::post('/', 'LicenseTypeController@add');
         Route::post('/{id}', 'LicenseTypeController@update');
-    });
+});
+
+
+Route::group(['prefix' => 'templates'], function () {
+    Route::post('/', 'TemplateController@create');
+    Route::get('/{id}', 'TemplateController@find');
+    Route::match(['put', 'post'],'/{id}', 'TemplateController@update');
+});
 
 
     //roads for the blogcategory
