@@ -64,6 +64,8 @@ class Handler extends ExceptionHandler
                         $error->setMessage("Not found !");
                     } elseif ($exception->getStatusCode() == 500) {
                         $error->setMessage("Internal server error !");
+                    } elseif ($exception->getStatusCode() == 403) {
+                        $error->setMessage("Access denied.");
                     }
                 }
 
