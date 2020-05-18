@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Submission;
-<<<<<<< HEAD
 use App\APIError;
 
 class SubmissionController extends Controller
@@ -74,10 +73,8 @@ class SubmissionController extends Controller
         return response(null);
     }
 
-=======
 
-class SubmissionController extends Controller
-{
+
     public function create(Request $request){
         $request->validate([
             'user_id' => 'required',
@@ -114,5 +111,4 @@ class SubmissionController extends Controller
         $submission->files = json_decode($submission->files);
         return response()->json($submission);
     }
->>>>>>> frankl
 }

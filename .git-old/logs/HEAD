@@ -1,0 +1,105 @@
+0000000000000000000000000000000000000000 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589298409 +0100	clone: from git@github.com:Descartes310/personnal-management-api.git
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589298505 +0100	checkout: moving from master to adamu
+87764d7deb99080ec3103df85102af607341a271 c95da7125708080a800a1845ed30d59e2c083644 Ben677 <meztsacar@gmail.com> 1589298518 +0100	pull origin adamu: Fast-forward
+c95da7125708080a800a1845ed30d59e2c083644 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589298843 +0100	checkout: moving from adamu to master
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589298877 +0100	checkout: moving from master to tester
+87764d7deb99080ec3103df85102af607341a271 c95da7125708080a800a1845ed30d59e2c083644 Ben677 <meztsacar@gmail.com> 1589298884 +0100	merge adamu: Fast-forward
+c95da7125708080a800a1845ed30d59e2c083644 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589299181 +0100	checkout: moving from tester to master
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589299208 +0100	checkout: moving from master to mytest
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589299279 +0100	checkout: moving from mytest to master
+87764d7deb99080ec3103df85102af607341a271 c95da7125708080a800a1845ed30d59e2c083644 Ben677 <meztsacar@gmail.com> 1589299372 +0100	merge adamu: Fast-forward
+c95da7125708080a800a1845ed30d59e2c083644 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589299502 +0100	checkout: moving from master to mytest
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589299511 +0100	checkout: moving from mytest to stephane
+87764d7deb99080ec3103df85102af607341a271 f8c173ea1ba352273fbda456b70d3deabbb99210 Ben677 <meztsacar@gmail.com> 1589299528 +0100	pull origin stephane: Fast-forward
+f8c173ea1ba352273fbda456b70d3deabbb99210 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589300004 +0100	checkout: moving from stephane to mytest
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589300023 +0100	checkout: moving from mytest to dave
+87764d7deb99080ec3103df85102af607341a271 94ca2707cb03ab647041e14284272e7606700a36 Ben677 <meztsacar@gmail.com> 1589301305 +0100	commit (merge): fix syntax error in Assignment Controller
+94ca2707cb03ab647041e14284272e7606700a36 c95da7125708080a800a1845ed30d59e2c083644 Ben677 <meztsacar@gmail.com> 1589301392 +0100	checkout: moving from dave to master
+c95da7125708080a800a1845ed30d59e2c083644 8c4fadbf365e3d6fea84f174e513abbe44ab21ea Ben677 <meztsacar@gmail.com> 1589301615 +0100	commit (merge): merge de dave et master
+8c4fadbf365e3d6fea84f174e513abbe44ab21ea f8c173ea1ba352273fbda456b70d3deabbb99210 Ben677 <meztsacar@gmail.com> 1589301808 +0100	checkout: moving from master to stephane
+f8c173ea1ba352273fbda456b70d3deabbb99210 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589302078 +0100	checkout: moving from stephane to mytest
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589302086 +0100	checkout: moving from mytest to cassandra
+87764d7deb99080ec3103df85102af607341a271 f8c173ea1ba352273fbda456b70d3deabbb99210 Ben677 <meztsacar@gmail.com> 1589304331 +0100	checkout: moving from cassandra to stephane
+f8c173ea1ba352273fbda456b70d3deabbb99210 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589342088 +0100	checkout: moving from stephane to mytest
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589342110 +0100	checkout: moving from mytest to adrienne
+87764d7deb99080ec3103df85102af607341a271 23c900a58d51f98b8a210421aa33e21e8f11b4fd Ben677 <meztsacar@gmail.com> 1589342124 +0100	pull origin adrienne: Fast-forward
+23c900a58d51f98b8a210421aa33e21e8f11b4fd d57b7fb4c28bbd1a2d3ff0b1b5ccafbb9d9d6585 Ben677 <meztsacar@gmail.com> 1589342835 +0100	commit: create-update@DisciplinaryBoard correction
+d57b7fb4c28bbd1a2d3ff0b1b5ccafbb9d9d6585 8c4fadbf365e3d6fea84f174e513abbe44ab21ea Ben677 <meztsacar@gmail.com> 1589342862 +0100	checkout: moving from adrienne to master
+8c4fadbf365e3d6fea84f174e513abbe44ab21ea ed79b9f4c199266880a965e3ff47a6100dace606 Ben677 <meztsacar@gmail.com> 1589342872 +0100	pull origin master: Fast-forward
+ed79b9f4c199266880a965e3ff47a6100dace606 0305c33abb2b14240db7d0692db8bce5d5018614 Ben677 <meztsacar@gmail.com> 1589343659 +0100	commit (merge): merge with adrienne
+0305c33abb2b14240db7d0692db8bce5d5018614 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589343746 +0100	checkout: moving from master to mytest
+87764d7deb99080ec3103df85102af607341a271 f8c173ea1ba352273fbda456b70d3deabbb99210 Ben677 <meztsacar@gmail.com> 1589344137 +0100	checkout: moving from mytest to stephane
+f8c173ea1ba352273fbda456b70d3deabbb99210 7cf24d91f902fd3367acfc3b2baa2b6e42a63a31 Ben677 <meztsacar@gmail.com> 1589344146 +0100	pull origin stephane: Fast-forward
+7cf24d91f902fd3367acfc3b2baa2b6e42a63a31 a78f22c0c3b8edb75b22b8004a3001c30bf7b4d1 Ben677 <meztsacar@gmail.com> 1589344454 +0100	commit: little fix on BlogPostController, LicenseController and routes
+a78f22c0c3b8edb75b22b8004a3001c30bf7b4d1 0305c33abb2b14240db7d0692db8bce5d5018614 Ben677 <meztsacar@gmail.com> 1589344478 +0100	checkout: moving from stephane to master
+0305c33abb2b14240db7d0692db8bce5d5018614 0e37e1c99b48831c9922d967f9330df7644a7d5e Ben677 <meztsacar@gmail.com> 1589345383 +0100	commit (merge): Merge with stephane and add null field to userInfo
+0e37e1c99b48831c9922d967f9330df7644a7d5e 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589345400 +0100	checkout: moving from master to mytest
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589345755 +0100	checkout: moving from mytest to warren
+87764d7deb99080ec3103df85102af607341a271 b882c447d1b326e013716207258e25b5e0f47792 Ben677 <meztsacar@gmail.com> 1589345766 +0100	pull origin warren: Fast-forward
+b882c447d1b326e013716207258e25b5e0f47792 a78f22c0c3b8edb75b22b8004a3001c30bf7b4d1 Ben677 <meztsacar@gmail.com> 1589345836 +0100	checkout: moving from warren to stephane
+a78f22c0c3b8edb75b22b8004a3001c30bf7b4d1 b882c447d1b326e013716207258e25b5e0f47792 Ben677 <meztsacar@gmail.com> 1589345874 +0100	checkout: moving from stephane to warren
+b882c447d1b326e013716207258e25b5e0f47792 c5527919731ae4c2263ffccea175338d0e53ae3e Ben677 <meztsacar@gmail.com> 1589346327 +0100	commit: fix get methods and AssignmentTypeController name
+c5527919731ae4c2263ffccea175338d0e53ae3e 0e37e1c99b48831c9922d967f9330df7644a7d5e Ben677 <meztsacar@gmail.com> 1589346348 +0100	checkout: moving from warren to master
+0e37e1c99b48831c9922d967f9330df7644a7d5e 520a8cb3c6f91974c5ff6d1e83f7b29a90f95e47 Ben677 <meztsacar@gmail.com> 1589346426 +0100	commit (merge): merge with warren
+520a8cb3c6f91974c5ff6d1e83f7b29a90f95e47 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589346444 +0100	checkout: moving from master to mytest
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589347078 +0100	checkout: moving from mytest to theophane
+87764d7deb99080ec3103df85102af607341a271 7168abf1ed5913575ad99cfdbe3e97dc5ce0f27c Ben677 <meztsacar@gmail.com> 1589347149 +0100	pull origin theophane: Fast-forward
+7168abf1ed5913575ad99cfdbe3e97dc5ce0f27c a9c827dcfafca13109019cbec1590d59a0ae6bd5 Ben677 <meztsacar@gmail.com> 1589347930 +0100	commit: remove non used import in TemplaceController
+a9c827dcfafca13109019cbec1590d59a0ae6bd5 520a8cb3c6f91974c5ff6d1e83f7b29a90f95e47 Ben677 <meztsacar@gmail.com> 1589347952 +0100	checkout: moving from theophane to master
+520a8cb3c6f91974c5ff6d1e83f7b29a90f95e47 7c76aad1b7f9a55365ebf9adb5cda68dc379f6d0 Ben677 <meztsacar@gmail.com> 1589348088 +0100	commit (merge): Merge branch 'theophane'
+7c76aad1b7f9a55365ebf9adb5cda68dc379f6d0 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589348131 +0100	checkout: moving from master to mytest
+87764d7deb99080ec3103df85102af607341a271 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589348259 +0100	checkout: moving from mytest to frank
+87764d7deb99080ec3103df85102af607341a271 d66c648e52745b6632e7039d93a4d3c0684f385e Ben677 <meztsacar@gmail.com> 1589348962 +0100	commit (merge): Merge branch 'frank' of github.com:Descartes310/personnal-management-api into frank
+d66c648e52745b6632e7039d93a4d3c0684f385e 368c35d16792739240331652e5829e6a6cd315fc Ben677 <meztsacar@gmail.com> 1589348989 +0100	commit: Remove SanctionRequest
+368c35d16792739240331652e5829e6a6cd315fc 7c76aad1b7f9a55365ebf9adb5cda68dc379f6d0 Ben677 <meztsacar@gmail.com> 1589349009 +0100	checkout: moving from frank to master
+7c76aad1b7f9a55365ebf9adb5cda68dc379f6d0 72bf4c5b7d5cd204d6186cf1964cdefb3d829b2f Ben677 <meztsacar@gmail.com> 1589349118 +0100	commit (merge): Merge branch 'frank'
+72bf4c5b7d5cd204d6186cf1964cdefb3d829b2f 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589349502 +0100	checkout: moving from master to mytest
+87764d7deb99080ec3103df85102af607341a271 a9c827dcfafca13109019cbec1590d59a0ae6bd5 Ben677 <meztsacar@gmail.com> 1589349531 +0100	checkout: moving from mytest to theophane
+a9c827dcfafca13109019cbec1590d59a0ae6bd5 72bf4c5b7d5cd204d6186cf1964cdefb3d829b2f Ben677 <meztsacar@gmail.com> 1589349788 +0100	checkout: moving from theophane to master
+72bf4c5b7d5cd204d6186cf1964cdefb3d829b2f 35634ee9b491e282e36de67c0a74b2f1fd674c69 Ben677 <meztsacar@gmail.com> 1589352402 +0100	commit: Global fix, check point-1
+35634ee9b491e282e36de67c0a74b2f1fd674c69 5ed3ce02af7f3db071c26403307fbb57772ee114 Ben677 <meztsacar@gmail.com> 1589353007 +0100	commit: fix wrong validate call
+5ed3ce02af7f3db071c26403307fbb57772ee114 d7ecdb9c1e232faff04d4ec4d847999ae1c8f931 Ben677 <meztsacar@gmail.com> 1589358161 +0100	commit: Fix missing import
+d7ecdb9c1e232faff04d4ec4d847999ae1c8f931 2f6758ac9c3f28f55211fd4ff8d87e7ab842f4a9 Ben677 <meztsacar@gmail.com> 1589358202 +0100	checkout: moving from master to aubin
+2f6758ac9c3f28f55211fd4ff8d87e7ab842f4a9 b1359672364f30a75e67bfb5f7b83f3f47b43291 Ben677 <meztsacar@gmail.com> 1589358217 +0100	pull origin aubin: Fast-forward
+b1359672364f30a75e67bfb5f7b83f3f47b43291 18340cde4c4687d963aa9937be95613607389513 Ben677 <meztsacar@gmail.com> 1589358484 +0100	commit: merge with aubin
+18340cde4c4687d963aa9937be95613607389513 d7ecdb9c1e232faff04d4ec4d847999ae1c8f931 Ben677 <meztsacar@gmail.com> 1589358551 +0100	checkout: moving from aubin to master
+d7ecdb9c1e232faff04d4ec4d847999ae1c8f931 9eebb8a490d9dc2ef080baeb81015a1a88e8cc18 Ben677 <meztsacar@gmail.com> 1589358556 +0100	merge aubin: Merge made by the 'recursive' strategy.
+9eebb8a490d9dc2ef080baeb81015a1a88e8cc18 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589358926 +0100	checkout: moving from master to cassandra
+87764d7deb99080ec3103df85102af607341a271 1fd8d6c43646038f4a27ff79200a6b0c75d1a4f5 Ben677 <meztsacar@gmail.com> 1589359037 +0100	commit (merge): Merge branch 'cassandra' of github.com:Descartes310/personnal-management-api into cassandra
+1fd8d6c43646038f4a27ff79200a6b0c75d1a4f5 7071fa049186ecb65fd0c9bc6442dd29389e5f7c Ben677 <meztsacar@gmail.com> 1589359843 +0100	commit: correction on get methods
+7071fa049186ecb65fd0c9bc6442dd29389e5f7c 9eebb8a490d9dc2ef080baeb81015a1a88e8cc18 Ben677 <meztsacar@gmail.com> 1589359912 +0100	checkout: moving from cassandra to master
+9eebb8a490d9dc2ef080baeb81015a1a88e8cc18 a50492d84779bea404c5bda5f5982a37b5157fd2 Ben677 <meztsacar@gmail.com> 1589359976 +0100	commit (merge): Merge branch 'cassandra'
+a50492d84779bea404c5bda5f5982a37b5157fd2 5cde6adbdffa198b6feb188f559748db4d60dc5d Ben677 <meztsacar@gmail.com> 1589448690 +0100	pull origin master: Fast-forward
+5cde6adbdffa198b6feb188f559748db4d60dc5d a78f22c0c3b8edb75b22b8004a3001c30bf7b4d1 Ben677 <meztsacar@gmail.com> 1589448806 +0100	checkout: moving from master to stephane
+a78f22c0c3b8edb75b22b8004a3001c30bf7b4d1 db4628b4e5956a125e4723364590114fc1f35a23 Ben677 <meztsacar@gmail.com> 1589448843 +0100	pull origin stephane: Fast-forward
+db4628b4e5956a125e4723364590114fc1f35a23 5cde6adbdffa198b6feb188f559748db4d60dc5d Ben677 <meztsacar@gmail.com> 1589448956 +0100	checkout: moving from stephane to master
+5cde6adbdffa198b6feb188f559748db4d60dc5d d20f2741d1bbba859de0a59ea33f4966b4b622da Ben677 <meztsacar@gmail.com> 1589449184 +0100	commit (merge): Merge branch 'stephane'
+d20f2741d1bbba859de0a59ea33f4966b4b622da cb328feeb850ae9c90ce1acace0bd49b9dc4aa7f Ben677 <meztsacar@gmail.com> 1589449239 +0100	commit: rename contactController to ContactController
+cb328feeb850ae9c90ce1acace0bd49b9dc4aa7f d57b7fb4c28bbd1a2d3ff0b1b5ccafbb9d9d6585 Ben677 <meztsacar@gmail.com> 1589449267 +0100	checkout: moving from master to adrienne
+d57b7fb4c28bbd1a2d3ff0b1b5ccafbb9d9d6585 b51d8ad007403ffe8e5cdfbc24aa1b13d0f05595 Ben677 <meztsacar@gmail.com> 1589449377 +0100	checkout: moving from adrienne to armel
+b51d8ad007403ffe8e5cdfbc24aa1b13d0f05595 cf2e0f8ef8b23ee5e48fe6277fa08167b31ce58b Ben677 <meztsacar@gmail.com> 1589449405 +0100	pull origin armel: Fast-forward
+cf2e0f8ef8b23ee5e48fe6277fa08167b31ce58b cb328feeb850ae9c90ce1acace0bd49b9dc4aa7f Ben677 <meztsacar@gmail.com> 1589449478 +0100	checkout: moving from armel to master
+cb328feeb850ae9c90ce1acace0bd49b9dc4aa7f 08aa50b88ba9df3fcd9d32e4c1f017b72aedd552 Ben677 <meztsacar@gmail.com> 1589450503 +0100	commit (merge): Merge branch 'armel'
+08aa50b88ba9df3fcd9d32e4c1f017b72aedd552 cebecc3187cdbe398b15642c88dc08a4b9f00c2e Ben677 <meztsacar@gmail.com> 1589450747 +0100	checkout: moving from master to steph1
+cebecc3187cdbe398b15642c88dc08a4b9f00c2e 08aa50b88ba9df3fcd9d32e4c1f017b72aedd552 Ben677 <meztsacar@gmail.com> 1589451576 +0100	checkout: moving from steph1 to master
+08aa50b88ba9df3fcd9d32e4c1f017b72aedd552 a28613dfe1e09e4ba2cb0949f8710f4cd3caa768 Ben677 <meztsacar@gmail.com> 1589452421 +0100	commit (merge): Merge branch 'steph1'
+a28613dfe1e09e4ba2cb0949f8710f4cd3caa768 9711545e9a1a0993f084ac0936dbb1b5214204e0 Ben677 <meztsacar@gmail.com> 1589452753 +0100	commit: Merge BlogCat and BlogCategory controller
+9711545e9a1a0993f084ac0936dbb1b5214204e0 d57b7fb4c28bbd1a2d3ff0b1b5ccafbb9d9d6585 Ben677 <meztsacar@gmail.com> 1589452873 +0100	checkout: moving from master to adrienne
+d57b7fb4c28bbd1a2d3ff0b1b5ccafbb9d9d6585 548941e4f372005f60f7fa5f85f66b0e7968a765 Ben677 <meztsacar@gmail.com> 1589452916 +0100	pull origin adrienne: Fast-forward
+548941e4f372005f60f7fa5f85f66b0e7968a765 6bfc1c4aa487411bbcb9007b4b2430d5b9be4666 Ben677 <meztsacar@gmail.com> 1589453586 +0100	commit: update some validation on ProfileUpdate
+6bfc1c4aa487411bbcb9007b4b2430d5b9be4666 9711545e9a1a0993f084ac0936dbb1b5214204e0 Ben677 <meztsacar@gmail.com> 1589453594 +0100	checkout: moving from adrienne to master
+9711545e9a1a0993f084ac0936dbb1b5214204e0 ab3085fc9bb9c018d1bff424df7a50aab4e31270 Ben677 <meztsacar@gmail.com> 1589453901 +0100	commit (merge): Merge branch 'adrienne'
+ab3085fc9bb9c018d1bff424df7a50aab4e31270 7720476a72ba671b7ee90395b281e8dad3e5ac4c Ben677 <meztsacar@gmail.com> 1589455246 +0100	checkout: moving from master to xavier
+7720476a72ba671b7ee90395b281e8dad3e5ac4c 7e2f7715b1b84f7bc12fe253e94b1f9110241222 Ben677 <meztsacar@gmail.com> 1589456478 +0100	commit: update validator of CareerController
+7e2f7715b1b84f7bc12fe253e94b1f9110241222 30e65f48096ed6615af1f7d902c224194b306a09 Ben677 <meztsacar@gmail.com> 1589456614 +0100	commit (merge): Merge branch 'xavier' of github.com:Descartes310/personnal-management-api into xavier
+30e65f48096ed6615af1f7d902c224194b306a09 ab3085fc9bb9c018d1bff424df7a50aab4e31270 Ben677 <meztsacar@gmail.com> 1589456806 +0100	checkout: moving from xavier to master
+ab3085fc9bb9c018d1bff424df7a50aab4e31270 1df221138e3bfc6962b14f8d0dfdf51a7a1a7035 Ben677 <meztsacar@gmail.com> 1589457044 +0100	commit (merge): Merge branch 'xavier'
+1df221138e3bfc6962b14f8d0dfdf51a7a1a7035 d1b4aba7e527f814300620652ff85ab58d947add Ben677 <meztsacar@gmail.com> 1589459381 +0100	commit: remove AssignmentSeeder
+d1b4aba7e527f814300620652ff85ab58d947add 655de4a3ef88c72a7592e8a05f3e39c77dd27674 Ben677 <meztsacar@gmail.com> 1589715222 +0100	pull origin master: Fast-forward
+655de4a3ef88c72a7592e8a05f3e39c77dd27674 a7b3df7a66d39455c01c1ab2e12245a4b4ba9539 Ben677 <meztsacar@gmail.com> 1589715490 +0100	commit: delete Passport model
+a7b3df7a66d39455c01c1ab2e12245a4b4ba9539 ded0c4fed7a6cabe81de4b42f777a8916ebad282 Ben677 <meztsacar@gmail.com> 1589715777 +0100	checkout: moving from master to frankl
+ded0c4fed7a6cabe81de4b42f777a8916ebad282 e195460bfb8a2403684473b45f406fd561677567 Ben677 <meztsacar@gmail.com> 1589719229 +0100	commit: perform upload system
+e195460bfb8a2403684473b45f406fd561677567 68355bc5431a1c9fd509fd662c7316b2d36c5dfa Ben677 <meztsacar@gmail.com> 1589719258 +0100	commit: correct submission create and update
+68355bc5431a1c9fd509fd662c7316b2d36c5dfa a7b3df7a66d39455c01c1ab2e12245a4b4ba9539 Ben677 <meztsacar@gmail.com> 1589719322 +0100	checkout: moving from frankl to master
+a7b3df7a66d39455c01c1ab2e12245a4b4ba9539 d3e686ea82ffcde76627f434df7ef49c110a99df Ben677 <meztsacar@gmail.com> 1589719558 +0100	commit (merge): merge with frankl
+                                                                                                                                                               

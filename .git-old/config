@@ -1,0 +1,26 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = git@github.com:Descartes310/personnal-management-api.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[branch "aubin"]
+	remote = origin
+	merge = refs/heads/aubin
+[branch "armel"]
+	remote = origin
+	merge = refs/heads/armel
+[branch "steph1"]
+	remote = origin
+	merge = refs/heads/steph1
+[branch "xavier"]
+	remote = origin
+	merge = refs/heads/xavier
+[branch "frankl"]
+	remote = origin
+	merge = refs/heads/frankl

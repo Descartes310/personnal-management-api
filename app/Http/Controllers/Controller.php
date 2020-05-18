@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
 use App\APIError;
 
 class Controller extends BaseController
@@ -65,7 +66,7 @@ class Controller extends BaseController
      * @param string $directory
      * @return array saved files paths
      */
-    public function uploadMultipleFiles($request, $key_validator, $directory, array $rules = [])
+    public function uploadMultipleFiles(Request $request, string $key_validator, string $directory, array $rules = [])
     {
         $savedFilePaths = [];
         $fileRules = array_merge(['file'], $rules);
@@ -95,7 +96,7 @@ class Controller extends BaseController
      * @param string $directory
      * @return array saved file path
      */
-    public function uploadSingleFile($request, $key_validator, $directory, array $rules = [])
+    public function uploadSingleFile(Request $request, string $key_validator, string $directory, array $rules = [])
     {
         $savedFilePath = null;
         $fileRules = array_merge(['file'], $rules);

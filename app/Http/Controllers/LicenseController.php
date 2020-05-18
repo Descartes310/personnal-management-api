@@ -76,8 +76,8 @@ class LicenseController extends Controller{
            'requested_days' => 'required|numeric|min:0',
            'is_active' => 'required|boolean',
            'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'
-    ]);
-     
+        ]);
+
         $data = $request->only([
           'user_id',
           'license_type_id',
@@ -90,7 +90,8 @@ class LicenseController extends Controller{
           'file',
           'is_active',
           'status'
-    ]);
+        ]);
+
          if(User::find($request->user_id) == null){
             $apiError = new APIError;
             $apiError->setStatus("400");
@@ -253,4 +254,4 @@ class LicenseController extends Controller{
         $license->update($data);
         return response()->json($license);
     }
-}   
+}
