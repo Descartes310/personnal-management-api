@@ -71,6 +71,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::group(['prefix' => 'contracts'], function () {
+        Route::post('/', 'ContractController@create');
+        Route::post('/{id}', 'ContractController@update');
         Route::get('/{id}', 'ContractController@find');
         Route::get('/', 'ContractController@get');
         Route::delete('/{id}', 'ContractController@delete');
