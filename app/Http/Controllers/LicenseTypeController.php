@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\APIError;
 use App\License;
@@ -13,6 +12,7 @@ use App\License;
 class LicenseTypeController extends Controller
 {
 
+    // function save
     public function saveLicenseType(Request $request){
         return response()->json($request);
         $request->validate([
@@ -33,6 +33,7 @@ class LicenseTypeController extends Controller
         return response()->json($License);
     }
 
+    // function update
     public function updateLicenseType(Request $request, $id){
         $request->validate([
             'name' => 'string',
@@ -44,24 +45,7 @@ class LicenseTypeController extends Controller
 
         if($License != null){
             $path = null;
-           
-            if($file = $request->file('picture')){
-                $request->validate(['picture'=>'picture|mimes: jpeg,jpg,png,svg']);
-                $extension = $file->getClientOriginalExtension();
-                $relativeDestination = "uploads/Licenses";
-                $destinationPath = public_path($relativeDestination);
-                $safeName = str_replace(' ','_',$request->email).time().'.'.$extension;
-                $file->move($destinationPath, $safeName);
-                //Delete old License picture if exxists
-                if ($License->picture) {
-                    $oldpicturePath = str_replace(url('/'), public_path(), $License->picture);
-                    if (file_exists($oldpicturePath)) {
-                        @unlink($oldpicturePath);
-                    }
-                }
-                $License->picture = url("$relativeDestination/$safeName");
-            }
-          
+
             $License->update($request->only([
                 'name',
                 'slug',
@@ -79,6 +63,12 @@ class LicenseTypeController extends Controller
             return response()->json($errorcode, 404);
         }
     }
-
     
+// function find
+    public function find($id){
+		$licensetype = LicenseType::find($id);
+        abort_if($licensetype == null, 404, "license type not found.");
+        return response()->json($licensetype);
+	}
+
 }
