@@ -79,7 +79,6 @@ class LicenseController extends Controller{
            'is_active' => 'required|boolean',
            'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'
         ]);
-     
         $data = $request->only([
           'user_id',
           'license_type_id',
@@ -93,6 +92,10 @@ class LicenseController extends Controller{
           'is_active',
           'status'
         ]);
+<<<<<<< HEAD
+=======
+
+>>>>>>> a9b4d4b2a8cd2eb30d776e370dc5121e53c220ba
          if(User::find($request->user_id) == null){
             $apiError = new APIError;
             $apiError->setStatus("400");
@@ -254,4 +257,4 @@ class LicenseController extends Controller{
         $license->update($data);
         return response()->json($license);
     }
-}   
+}

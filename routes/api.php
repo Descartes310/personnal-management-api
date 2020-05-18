@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::pattern('id', '[0-9]+');
 
 Route::group(['prefix' => 'auth'], function () {
 
@@ -35,7 +36,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'users'], function () {
         Route::get('/{id}', 'UserController@getUserInfo');
         Route::get('', 'UserController@getUsers');
+        Route::get('/search', 'UserController@search');
         Route::post('/', 'UserController@create');
+        Route::delete('/{user}', 'UserController@delete')->where('user', '[0-9]+');
         Route::match(['post', 'put'], '/{id}', 'UserController@update');
     });
 
@@ -44,23 +47,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'BlogCategoryController@delete');
         Route::get('/{id}', 'BlogCategoryController@find');
         Route::get('/', 'BlogCategoryController@get');
+        Route::post('/', 'BlogCategoryController@create');
+        Route::post('/{id}', 'BlogCategoryController@update');
     });
-
-
-Route::group(['prefix' => 'sanctions'], function() {
-    Route::post('add', 'SanctionController@create');
-    Route::match(['put','patch'],'/{id}', 'SanctionController@update');
-
-});
-Route::group(['prefix'=>'contacts'], function(){
-    Route::get('/{id}','ContactController@find');
-    Route::get('/', 'ContactController@get');
-    Route::delete('/{id}', 'ContactController@delete');
-    Route::post('/', 'contactController@saveContact');
-    Route::match(['post', 'put'], '/{id}', 'contactController@updateContact');
-});
-
-
 
 
     Route::group(['prefix' => 'assignments'], function () {
@@ -80,10 +69,8 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::match(['post', 'put'], '/{id}', 'ProSituationController@update');
     });
 
-    
+
     Route::group(['prefix' => 'contracts'], function () {
-        Route::post('/', 'ContractController@create');
-        Route::post('/{id}', 'ContractController@update');
         Route::get('/{id}', 'ContractController@find');
         Route::get('/', 'ContractController@get');
         Route::delete('/{id}', 'ContractController@delete');
@@ -119,43 +106,17 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::get('/', 'DisciplinaryBoardController@get');
         Route::get('/{id}', 'DisciplinaryBoardController@find');
         Route::delete('/{id}', 'DisciplinaryBoardController@delete');
-    });
-
-    Route::group(['prefix' => 'disciplinary_teams'], function () {
-        Route::post('/', 'DisciplinaryTeamController@create');
-        Route::put('/{id}', 'DisciplinaryTeamController@update');
-    });
-
-    Route::group(['prefix' => 'disciplinary_boards'], function () {
         Route::post('/', 'DisciplinaryBoardController@create');
         Route::put('/{id}', 'DisciplinaryBoardController@update');
     });
 
-    Route::group(['prefix' => 'assignments'], function () {
-        Route::post('/', 'AssignmentController@create');
-        Route::put('/{id}', 'AssignmentController@update');
-    });
-
-    Route::group(['prefix' => 'assignments'], function () {
-        Route::post('/', 'AssignmentController@create');
-        Route::put('/{id}', 'AssignmentController@update');
-    });
-
-   
-
-    Route::group(['prefix' => 'licenses'], function () {
-        Route::get('/', 'LicenseController@get');
-        Route::delete('{id}', 'LicenseController@delete');
-        Route::get('{id}', 'LicenseController@find');
-        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
-    });
 
     Route::group(['prefix' => 'blog_posts'], function () {
         Route::get('/', 'BlogPostController@get');
         Route::delete('{id}', 'BlogPostController@delete');
         Route::get('{id}', 'BlogPostController@find');
-        Route::post('/', 'BlogPostController@create');
-        Route::put('/{id}', 'BlogpostController@update');
+        Route::post('/', 'BlogPostController@create')->middleware('has-permission:create-blog-post');
+        Route::match(['post','put'], '/{id}', 'BlogPostController@update');
     });
 
 
@@ -166,14 +127,23 @@ Route::group(['prefix'=>'contacts'], function(){
     });
 
     
+    Route::group(['prefix' => 'templates'], function () {
+        Route::get('/', 'TemplateController@get');
+        Route::delete('{id}', 'TemplateController@delete');
+        Route::get('{id}', 'TemplateController@find');
+        Route::post('/', 'TemplateController@create');
+        Route::put('/{id}', 'TemplateController@update');
+    });
+
     //il s'agit des routes pour read et delete profile
     Route::group(['prefix' => 'profiles'], function () {
         Route::get('/', 'ProfileController@get');
         Route::get('/{id}', 'ProfileController@find');
         Route::delete('/{id}', 'ProfileController@delete');
+        Route::post('/', 'ProfileController@create');
+        Route::put('/{id}', 'ProfileController@update');
     });
 
-    //sanctions
     Route::group(['prefix' => 'sanctions'], function () {
         Route::post('/', 'SanctionController@create');
         Route::put('/{id}', 'SanctionController@update');
@@ -182,7 +152,6 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::delete('/{id}', 'SanctionController@delete');
     });
 
-    //career read and delete
     Route::group(['prefix' => 'careers'], function () {
         Route::get('/', 'CareerController@get');
         Route::get('/{id}', 'CareerController@find');
@@ -198,17 +167,13 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::delete('/{id}', 'TrainingController@delete');
     });
 
-    Route::group(['prefix' => 'vacations'], function () {
-        Route::get('/', 'VacationController@get');
-        Route::delete('/{id}', 'VacationController@delete');
-        Route::get('/{id}', 'VacationController@find');
-        Route::post('/', 'VacationController@create');
-        Route::match(['post', 'put'], '/{id}', 'VacationController@update');
-    });
 
     Route::group(['prefix' => 'disciplinary_teams'], function () {
         Route::post('/', 'DisciplinaryTeamController@create');
         Route::match(['put', 'post'], '/{id}', 'DisciplinaryTeamController@update');
+        Route::get('/{id}', 'DisciplinaryTeamController@find');
+        Route::get('/', 'DisciplinaryTeamController@get');
+        Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
     Route::group(['prefix' => 'roles'], function () {
@@ -227,12 +192,7 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::get('{id}', 'ProfileUpdateController@find');
         Route::delete('{id}', 'ProfileUpdateController@delete');
         Route::post('/', 'ProfileUpdateController@create');
-        Route::post('/{id}', 'ProfileUpdateController@update');
-    });
-
-    Route::group(['prefix' => 'blog_categories'], function () {
-        Route::post('/', 'BlogCatController@create');
-        Route::post('/{id}', 'BlogCatController@update');
+        Route::match(['post','put'], '/{id}', 'ProfileUpdateController@update');
     });
 
 
@@ -252,11 +212,13 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::delete('/{id}', 'ChatController@deleteMessage');
         Route::get('/discussions/{id}', 'ChatController@getDiscussions');
     });
-    
+
     Route::group(['prefix' => 'assignment_types'], function () {
         Route::post('/', 'AssignmentTypeController@create');
         Route::post('/{id}', 'AssignmentTypeController@update');
         Route::get('/{id}', 'AssignmentTypeController@find');
+        Route::post('/', 'AssignmentTypeController@create');
+        Route::put('/{id}', 'AssignmentTypeController@update');
     });
 
     Route::group(['prefix' => 'license_types'], function () {
@@ -265,48 +227,33 @@ Route::group(['prefix'=>'contacts'], function(){
         Route::get('/{id}', 'LicenseTypeController@find');
         Route::post('/', 'LicenseTypeController@add');
         Route::post('/{id}', 'LicenseTypeController@update');
-});
-
-
-Route::group(['prefix' => 'templates'], function () {
-    Route::post('/', 'TemplateController@create');
-    Route::get('/{id}', 'TemplateController@find');
-    Route::match(['put', 'post'],'/{id}', 'TemplateController@update');
-});
-
-
-    //roads for the blogcategory
-    Route::group(['prefix' => 'blogcategory'], function () {
-        Route::post('/', 'BlogCatController@create');
-        Route::post('/{id}', 'BlogCatController@update');
+        Route::put('/{id}', 'LicenseTypeController@update');
     });
 
-    Route::group(['prefix' => 'profile'], function () {
-        Route::post('/', 'ProfileController@create');
-        Route::post('/{id}', 'ProfileController@update');
-    });
-
-    Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], function () {
-        Route::post('/', 'NoteCriteriaController@create');
-        Route::put('/{id}', 'NoteCriteriaController@update');
-    });
-    
     Route::group(['prefix' => 'licenses'], function () {
         Route::post('/','LicenseController@create');
         Route::match(['post', 'put'],'/{id}','LicenseController@update');
         Route::get('/', 'LicenseController@get');
         Route::delete('{id}', 'LicenseController@delete');
         Route::get('{id}', 'LicenseController@find');
-        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
+        Route::patch('{id}/changeStatus', 'LicenseController@changeStatus');
     });
-    
-    
+
+
     Route::group(['prefix' => 'vacations'], function () {
         Route::get('/', 'VacationController@get');
         Route::delete('/{id}', 'VacationController@delete');
         Route::get('/{id}', 'VacationController@find');
         Route::post('/', 'VacationController@create');
         Route::match(['post', 'put'], '/{id}', 'VacationController@update');
+    });
+
+    Route::group(['prefix' => 'submissions'], function () {
+        Route::get('/', 'SubmissionController@get');
+        Route::delete('/{id}', 'SubmissionController@delete');
+        Route::get('/{id}', 'SubmissionController@find');
+        Route::post('submissions', 'SubmissionController@create');
+        Route::match(['put', 'post'], 'submissions/{id}', 'SubmissionController@update');
     });
 
 });

@@ -13,11 +13,11 @@ class NoteCriteriaController extends Controller
     protected $createStatus = 201;
     protected $notFoundStatus = 404;
     protected $badRequestStatus = 400;
-     /**
+
+    /**
      * Find an existing  NoteCriteria
      * *Author Warren TABA
      */
-
     public function find($id){
         $notecriteria = NoteCriteria::find($id);
         if($notecriteria == null){
@@ -35,7 +35,6 @@ class NoteCriteriaController extends Controller
      * Get All the NoteCriteria
      * *Author Warren TABA
      */
-
     public function get(Request $req){
         $s = $req->s;
         $page = $req->page;
@@ -62,12 +61,11 @@ class NoteCriteriaController extends Controller
         return response()->json($noteCriterias);
     }
 
-     /**
-      * Delete the choosen NoteCriteria
-      *Author Warren TABA
-      */
-
-      public function delete($id){
+    /**
+     * Delete the choosen NoteCriteria
+    *Author Warren TABA
+    */
+    public function delete($id){
         $notecriteria = NoteCriteria:: find($id);
         if($notecriteria == null){
             $notexist = new APIError;
@@ -79,7 +77,7 @@ class NoteCriteriaController extends Controller
         }
         $notecriteria->delete($notecriteria);
         return response()->json($notecriteria);
-      }
+    }
 
     public function create(Request $request) {
         $this->validate($request->all(), [
