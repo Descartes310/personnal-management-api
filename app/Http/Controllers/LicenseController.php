@@ -78,8 +78,13 @@ class LicenseController extends Controller{
            'requested_days' => 'required|numeric|min:0',
            'is_active' => 'required|boolean',
            'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'
+<<<<<<< HEAD
          ]);
      
+=======
+        ]);
+
+>>>>>>> 27b1a450a19517e9e4de699953be5c50b01e13fa
         $data = $request->only([
           'user_id',
           'license_type_id',
@@ -92,7 +97,12 @@ class LicenseController extends Controller{
           'file',
           'is_active',
           'status'
+<<<<<<< HEAD
          ]);
+=======
+        ]);
+
+>>>>>>> 27b1a450a19517e9e4de699953be5c50b01e13fa
          if(User::find($request->user_id) == null){
             $apiError = new APIError;
             $apiError->setStatus("400");
@@ -139,7 +149,7 @@ class LicenseController extends Controller{
             $path = null;
             if($file != null){
                 $extension = $file->getClientOriginalExtension();
-                $relativeDestination = "uploads/document";
+                $relativeDestination = "uploads/permissions";
                 $destinationPath = public_path($relativeDestination);
                 $safeName = "document".time().'.'.$extension;
                 $file->move($destinationPath, $safeName);
@@ -238,7 +248,7 @@ class LicenseController extends Controller{
 
             if($file != null){
                 $extension = $file->getClientOriginalExtension();
-                $relativeDestination = "uploads/document";
+                $relativeDestination = "uploads/permissions";
                 $destinationPath = public_path($relativeDestination);
                 $safeName = "document".time().'.'.$extension;
                 $file->move($destinationPath, $safeName);
@@ -256,4 +266,4 @@ class LicenseController extends Controller{
         $license->update($data);
         return response()->json($license);
     }
-}   
+}
