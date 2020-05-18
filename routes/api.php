@@ -137,7 +137,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/{id}', 'ProfileController@update');
     });
 
-    //sanctions
     Route::group(['prefix' => 'sanctions'], function () {
         Route::post('/', 'SanctionController@create');
         Route::put('/{id}', 'SanctionController@update');
@@ -146,7 +145,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'SanctionController@delete');
     });
 
-    //career read and delete
     Route::group(['prefix' => 'careers'], function () {
         Route::get('/', 'CareerController@get');
         Route::get('/{id}', 'CareerController@find');
