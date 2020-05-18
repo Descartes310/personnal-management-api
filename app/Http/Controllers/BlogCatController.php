@@ -48,4 +48,16 @@ class BlogCatController extends Controller
         $blogcat->update($data);
         return response()->json($blogcat);
     }
+
+    public function find($id){
+        $blogcat = BlogCategory::find($id);
+        if($blogcat ==null){
+            $apiError = new APIError;
+            $apiError->setStatus("404");
+            $apiError->setCode("BLOGCATEGORY_ID_NOT_EXISTING");
+            $apiError->setErrors(['id' => 'blog category id not existing']);
+            return response()->json($apiError, 404); 
+        }
+        return response()->json($blogcat);
+    }
 }

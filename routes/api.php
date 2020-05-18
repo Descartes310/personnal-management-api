@@ -98,10 +98,16 @@ Route::group(['prefix' => 'note_criterias', 'middleware' => 'auth:api'], functio
 Route::group(['prefix' => 'blogcategory'], function () {
     Route::post('/', 'BlogCatController@create');
     Route::post('/{id}', 'BlogCatController@update');
+    Route::get('/{id}', 'BlogCatController@find');
 });
 
 //roads for the vacation 
 Route::group(['prefix' => 'vacations'], function () {
     Route::post('/', 'VacationController@create');
     Route::post('/{id}', 'VacationController@update');
+});
+
+Route::group(['prefix' => 'profile'], function () {
+    Route::post('/', 'ProfileController@create');
+    Route::post('/{id}', 'ProfileController@update');
 });
