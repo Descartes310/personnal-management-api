@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use App\APIError;
 use Illuminate\Http\Request;
 use App\License;
@@ -12,10 +11,10 @@ use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 
 
-class LicenseController extends Controller{
+class LicenseController extends Controller {
 
 
-    public function get(Request $request){
+    public function get(Request $request) {
 
 
         $s = $request->s;
@@ -70,7 +69,7 @@ class LicenseController extends Controller{
 
 
      public function create (Request $request){
-        $now = Carbon::now(); 
+        $now = Carbon::now();
         $request->validate([
            'user_id' => 'required',
            'license_type_id' => 'required',
@@ -92,11 +91,8 @@ class LicenseController extends Controller{
           'is_active',
           'status'
         ]);
-<<<<<<< HEAD
-=======
 
->>>>>>> a9b4d4b2a8cd2eb30d776e370dc5121e53c220ba
-         if(User::find($request->user_id) == null){
+        if(User::find($request->user_id) == null){
             $apiError = new APIError;
             $apiError->setStatus("400");
             $apiError->setCode("USER_ID_NOT_FOUND");
