@@ -1,3 +1,0 @@
-0000000000000000000000000000000000000000 87764d7deb99080ec3103df85102af607341a271 Ben677 <meztsacar@gmail.com> 1589347078 +0100	branch: Created from HEAD
-87764d7deb99080ec3103df85102af607341a271 7168abf1ed5913575ad99cfdbe3e97dc5ce0f27c Ben677 <meztsacar@gmail.com> 1589347149 +0100	pull origin theophane: Fast-forward
-7168abf1ed5913575ad99cfdbe3e97dc5ce0f27c a9c827dcfafca13109019cbec1590d59a0ae6bd5 Ben677 <meztsacar@gmail.com> 1589347930 +0100	commit: remove non used import in TemplaceController
