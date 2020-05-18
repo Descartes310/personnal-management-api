@@ -121,6 +121,7 @@ class DivisionController extends Controller
             $unauthorized->setMessage("No division found with id $id");
             return response()->json($unauthorized, 404);
         }
+        $division->division;
         return response()->json($division);
     }
 
