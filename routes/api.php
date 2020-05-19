@@ -74,6 +74,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'ContractController@find');
         Route::get('/', 'ContractController@get');
         Route::delete('/{id}', 'ContractController@delete');
+        Route::get('/print-pdf/{id}','ContractController@printPDF');
     });
 
 
@@ -132,7 +133,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
-    
+
     Route::group(['prefix' => 'templates'], function () {
         Route::get('/', 'TemplateController@get');
         Route::delete('{id}', 'TemplateController@delete');
@@ -227,7 +228,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/{id}', 'AssignmentTypeController@update');
     });
 
-    
+
     Route::group(['prefix' => 'license_types'], function () {
         Route::get('/', 'LicenseTypeController@get');
         Route::delete('/{id}', 'LicenseTypeController@delete');
@@ -264,3 +265,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
 });
+
+Route::get('/download','ContractController@getDownload');
+;

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contract;
 use App\APIError;
+use Barryvdh\DomPDF\Facade as PDF;
+
 
 class ContractController extends Controller
 {
@@ -70,5 +72,17 @@ class ContractController extends Controller
         }
 
         return response()->json($contracts);
+    }
+
+    public function printPDF(Request $request, $id){
+
+        $name = $this->find($id)->name;
+        $title = $this->find($id)->title;
+        $namepdf = $name . ' ' . $title.'.pdf';
+
+        $data = $this->find($id)->terms;
+
+        $pdf = PDF::loadHtml($data);
+        return $pdf->download($namepdf);
     }
 }
