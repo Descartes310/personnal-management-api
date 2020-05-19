@@ -93,18 +93,17 @@ class DivisionController extends Controller
 
         if ($s) {
             if ($limit || $page) {
-                $divisions = Division::where('name', 'LIKE', '%' . $s . '%')->paginate($limit);
+                $divisions = Division::where('name', 'LIKE', '%' . $s . '%')->with('division')->paginate($limit);
             } else {
-                $divisions = Division::where('name', 'LIKE', '%' . $s . '%')->get();
+                $divisions = Division::where('name', 'LIKE', '%' . $s . '%')->with('division')->get();
             }
         } else {
             if ($limit || $page) {
-                $divisions = Division::paginate($limit);
+                $divisions = Division::with('division')->paginate($limit);
             } else {
-                $divisions = Division::all();
+                $divisions = Division::with('division')->get();
             }
         }
-
         return response()->json($divisions);
     }
 
