@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'blog_categories'], function () {
         Route::delete('/{id}', 'BlogCategoryController@delete');
         Route::get('/{id}', 'BlogCategoryController@find');
-        Route::get('/', 'BlogCategoryController@get');
+        Route::get('', 'BlogCategoryController@get');
     });
 
 
@@ -59,10 +59,10 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::group(['prefix' => 'contracts'], function () {
-        Route::post('/', 'ContractController@create');
+        Route::post('', 'ContractController@create');
         Route::post('/{id}', 'ContractController@update');
         Route::get('/{id}', 'ContractController@find');
-        Route::get('/', 'ContractController@get');
+        Route::get('', 'ContractController@get');
         Route::delete('/{id}', 'ContractController@delete');
     });
 

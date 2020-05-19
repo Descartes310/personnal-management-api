@@ -21,7 +21,7 @@ class ContractController extends Controller
         ]);
         //on cherche l'utilisateur
         $user = User::find($request->user_id);
-
+        
         if ($user == null) {
             $apiError = new APIError;
             $apiError->setStatus("400");
