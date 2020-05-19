@@ -176,8 +176,8 @@ class SanctionController extends Controller
         else{
             $sanction->delete($sanction);
         }
-        $sanction = Sanction::get();
-        return response()->json($sanction);
+        //$sanction = Sanction::get();
+        return response()->json(null);
     }
 
     //on verifie si la subject passe existe

@@ -86,7 +86,7 @@ class AssignmentController extends Controller
      */
     public function create(Request $request){
 
-        $request->validate([
+        $this->validate($request->all(), [
             'user_id' => 'required',
             'assignment_type_id' => 'required',
             'destination' => 'required',
@@ -132,7 +132,7 @@ class AssignmentController extends Controller
 
     public function update(Request $request, $id){
 
-        $request->validate([
+        $this->validate($request->all(), [
             'user_id' => 'required',
             'assignment_type_id' => 'required',
             'destination' => 'required',

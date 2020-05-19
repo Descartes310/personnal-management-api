@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Division;
 use App\APIError;
+use Illuminate\Support\Str;
 
 
 class DivisionController extends Controller
 {
 
     public function create (Request $request){
-        $request->validate([
+        $this->validate($request->all(), [
             'name' => 'required'
         ]);
 
@@ -53,7 +54,7 @@ class DivisionController extends Controller
             return response()->json($apiError, 404);
         }
 
-        $request->validate([
+        $this->validate($request->all(), [
             'name' => 'required'
         ]);
 

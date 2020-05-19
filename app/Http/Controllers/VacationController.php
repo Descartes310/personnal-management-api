@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use App\APIError;
 use Illuminate\Http\Request;
-use App\License;
-use App\LicenseType;
-use App\User;
-use Carbon\Carbon;
+use App\Vacation;
 use App\Http\Controllers\Controller;
+use App\VacationType;
+use App\User;
+use App\APIError;
 
 
-class LicenseController extends Controller{
+class VacationController extends Controller
+{
+    public function find($id){
+		$vacat = Vacation::find($id);
+        abort_if($vacat == null, 404, "vacation not found.");
+        return response()->json($vacat);
+	}
 
 
-    public function get(Request $request){
-
-
+	public function get(Request $request) {
         $s = $request->s;
         $page = $request->page;
         $limit = null;
@@ -28,147 +30,32 @@ class LicenseController extends Controller{
 
         if ($s) {
             if ($limit || $page) {
-                return License::where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->paginate($limit);
+                return Vacation::where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->paginate($limit);
             } else {
-                return License::where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->get();
+                return Vacation::where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->get();
             }
         } else {
             if ($limit || $page) {
-                return License::paginate($limit);
+                return Vacation::paginate($limit);
             } else {
-                return License::all();
+                return Vacation::all();
             }
         }
     }
 
 
-
-    public function find($id){
-
-        $license = License::find($id);
-        abort_if($license == null, 404, "license not found.");
-        return response()->json($license);
-    }
-
-
-    public function changeStatus($id){
-
-        $license = License::find($id)->first();
-        abort_if($license == null, 404, "license not found.");
-        $license->update(['is_active' => !$license->is_active]);
-        return $license;
-    }
-
-
-    public function delete($id){
-
-        $license = License::find($id);
-        abort_if($license == null, 404, "license not found.");
-        $license->delete();
+	public function delete($id){
+		$vacat = Vacation::find($id);
+        abort_if($vacat == null, 404, "vacation not found.");
+        $vacat->delete($vacat);
         return response()->json([]);
     }
 
 
-     public function create (Request $request){
-        $now = Carbon::now(); 
-        $request->validate([
-           'user_id' => 'required',
-           'license_type_id' => 'required',
-           'requested_start_date' => 'required|date|after:'.$now,
-           'requested_days' => 'required|numeric|min:0',
-           'is_active' => 'required|boolean',
-           'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'
-        ]);
-        $data = $request->only([
-          'user_id',
-          'license_type_id',
-          'raison',
-          'description',
-          'requested_start_date',
-          'accorded_start_date',
-          'requested_days',
-          'accorded_days',
-          'file',
-          'is_active',
-          'status'
-        ]);
-<<<<<<< HEAD
-=======
-
->>>>>>> a9b4d4b2a8cd2eb30d776e370dc5121e53c220ba
-         if(User::find($request->user_id) == null){
-            $apiError = new APIError;
-            $apiError->setStatus("400");
-            $apiError->setCode("USER_ID_NOT_FOUND");
-            $apiError->setErrors(['user_id' => 'user_id not existing']);
-
-            return response()->json($apiError, 400);
-        }
-
-         if(LicenseType::find($request->license_type_id) == null){
-            $apiError = new APIError;
-            $apiError->setStatus("400");
-            $apiError->setCode("LICENSE_TYPE_ID_NOT_FOUND");
-            $apiError->setErrors(['license_type_id' => 'license_type_id not existing']);
-
-            return response()->json($apiError, 400);
-        }
-
-        if($data['requested_days'] <= 0){
-            $apiError = new APIError;
-            $apiError->setStatus("400");
-            $apiError->setCode("REQUESTED_DAYS_ERROR");
-            $apiError->setErrors(['requested_days' => 'requested_days should be an entire and positive number']);
-
-            return response()->json($apiError, 400);
-        }
-
-
-        if(isset($request->accorded_days)){
-            $accorded_days = $request->accorded_days;
-            if($accorded_days <= 0){
-                $apiError = new APIError;
-                $apiError->setStatus("400");
-                $apiError->setCode("ACCORDED_DAYS_ERROR");
-                $apiError->setErrors(['accorded_days' => 'accorded_days should be an entire and positive number']);
-
-                return response()->json($apiError, 400);
-            }
-        }
-
-
-        if(isset($request->file)){
-            $file = $request->file('file');
-            $path = null;
-            if($file != null){
-                $extension = $file->getClientOriginalExtension();
-                $relativeDestination = "uploads/permissions";
-                $destinationPath = public_path($relativeDestination);
-                $safeName = "document".time().'.'.$extension;
-                $file->move($destinationPath, $safeName);
-                $path = "$relativeDestination/$safeName";
-            }
-            $data['file'] = $path;
-        }
-
-        $license = License::create($data);
-        return response()->json($license);
-    }
-
-    public function update(Request $request, $id){
-        $license = License::find($id);
-        if($license == null){
-            $apiError = new APIError;
-            $apiError->setStatus("404");
-            $apiError->setCode("license_ID_NOT_EXISTING");
-            $apiError->setErrors(['id' => 'license id not existing']);
-
-            return response()->json($apiError, 404);
-        }
-
+    public function create (Request $request){
         $request->validate([
             'user_id' => 'required',
-            'license_type_id' => 'required',
+            'vacation_type_id' => 'required',
             'requested_start_date' => 'required|date',
             'requested_days' => 'required|numeric|min:0',
             'is_active' => 'required|boolean',
@@ -177,7 +64,7 @@ class LicenseController extends Controller{
 
         $data = $request->only([
             'user_id',
-            'license_type_id',
+            'vacation_type_id',
             'raison',
             'description',
             'requested_start_date',
@@ -189,29 +76,28 @@ class LicenseController extends Controller{
             'status'
         ]);
 
-        if(isset($request->user_id)){
-            if(User::find($request->user_id) == null){
-                $apiError = new APIError;
-                $apiError->setStatus("400");
-                $apiError->setCode("USER_ID_NOT_FOUND");
-                $apiError->setErrors(['user_id' => 'user_id not existing']);
+        if(User::find($request->user_id) == null)
+        {//user not existing in table vacation
+            $apiError = new APIError;
+            $apiError->setStatus("400");
+            $apiError->setCode("USER_ID_NOT_FOUND");
+            $apiError->setErrors(['user_id' => 'user_id not existing']);
 
-                return response()->json($apiError, 400);
-            }
+            return response()->json($apiError, 400);
         }
 
-        if(isset($request->license_type_id)){
-            if(LicenseType::find($request->license_type_id) == null){
-                $apiError = new APIError;
-                $apiError->setStatus("400");
-                $apiError->setCode("license_TYPE_ID_NOT_FOUND");
-                $apiError->setErrors(['license_type_id' => 'license_type_id not existing']);
+        if(VacationType::find($request->vacation_type_id) == null)
+        {//vacation type not existing in table vacation
+            $apiError = new APIError;
+            $apiError->setStatus("400");
+            $apiError->setCode("VACATION_TYPE_ID_NOT_FOUND");
+            $apiError->setErrors(['vacation_type_id' => 'vacation_type_id not existing']);
 
-                return response()->json($apiError, 400);
-            }
+            return response()->json($apiError, 400);
         }
 
-        if($data['requested_days'] < 0){
+        if($data['requested_days'] <= 0)
+        {
             $apiError = new APIError;
             $apiError->setStatus("400");
             $apiError->setCode("REQUESTED_DAYS_ERROR");
@@ -221,9 +107,11 @@ class LicenseController extends Controller{
         }
 
 
-        if(isset($request->accorded_days)){
+        if(isset($request->accorded_days))
+        {
             $accorded_days = $request->accorded_days;
-            if($accorded_days < 0){
+            if($accorded_days <= 0)
+            {
                 $apiError = new APIError;
                 $apiError->setStatus("400");
                 $apiError->setCode("ACCORDED_DAYS_ERROR");
@@ -233,19 +121,130 @@ class LicenseController extends Controller{
             }
         }
 
-        if(isset($request->file)){
+
+        if(isset($request->file))
+        {
+            $file = $request->file('file');
+            $path = null;
+            if($file != null)
+            {
+                $extension = $file->getClientOriginalExtension();
+                $relativeDestination = "uploads/document";
+                $destinationPath = public_path($relativeDestination);
+                $safeName = "document".time().'.'.$extension;
+                $file->move($destinationPath, $safeName);
+                $path = "$relativeDestination/$safeName";
+            }
+
+        }
+        $data['file'] = $path;
+
+        $vacation = Vacation::create($data);
+        return response()->json($vacation);
+    }
+
+
+
+    public function update(Request $request, $id){
+        $vacation = Vacation::find($id);
+        if($vacation == null){
+            $apiError = new APIError;
+            $apiError->setStatus("404");
+            $apiError->setCode("VACATION_ID_NOT_EXISTING");
+            $apiError->setErrors(['id' => 'vacation id not existing']);
+
+            return response()->json($apiError, 404);
+        }
+
+        $request->validate([
+            'user_id' => 'required',
+            'vacation_type_id' => 'required',
+            'requested_start_date' => 'required|date',
+            'requested_days' => 'required|numeric|min:0',
+            'is_active' => 'required|boolean',
+            'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'
+        ]);
+
+        $data = $request->only([
+            'user_id',
+            'vacation_type_id',
+            'raison',
+            'description',
+            'requested_start_date',
+            'accorded_start_date',
+            'requested_days',
+            'accorded_days',
+            'file',
+            'is_active',
+            'status'
+        ]);
+
+        if(isset($request->user_id))
+        {
+            if(User::find($request->user_id) == null)
+            {//user not existing in table vacation
+                $apiError = new APIError;
+                $apiError->setStatus("400");
+                $apiError->setCode("USER_ID_NOT_FOUND");
+                $apiError->setErrors(['user_id' => 'user_id not existing']);
+
+                return response()->json($apiError, 400);
+            }
+        }
+
+        if(isset($request->vacation_type_id))
+        {
+            if(VacationType::find($request->vacation_type_id) == null)
+            {//vacation type not existing in table vacation
+                $apiError = new APIError;
+                $apiError->setStatus("400");
+                $apiError->setCode("VACATION_TYPE_ID_NOT_FOUND");
+                $apiError->setErrors(['vacation_type_id' => 'vacation_type_id not existing']);
+
+                return response()->json($apiError, 400);
+            }
+        }
+
+        if($data['requested_days'] < 0)
+        {
+            $apiError = new APIError;
+            $apiError->setStatus("400");
+            $apiError->setCode("REQUESTED_DAYS_ERROR");
+            $apiError->setErrors(['requested_days' => 'requested_days should be an entire and positive number']);
+
+            return response()->json($apiError, 400);
+        }
+
+
+        if(isset($request->accorded_days))
+        {
+            $accorded_days = $request->accorded_days;
+            if($accorded_days < 0)
+            {
+                $apiError = new APIError;
+                $apiError->setStatus("400");
+                $apiError->setCode("ACCORDED_DAYS_ERROR");
+                $apiError->setErrors(['accorded_days' => 'accorded_days should be an entire and positive number']);
+
+                return response()->json($apiError, 400);
+            }
+        }
+
+        if(isset($request->file))
+        {
             $file = $request->file('file');
             $path = null;
 
             if($file != null){
                 $extension = $file->getClientOriginalExtension();
-                $relativeDestination = "uploads/permissions";
+                $relativeDestination = "uploads/document";
                 $destinationPath = public_path($relativeDestination);
                 $safeName = "document".time().'.'.$extension;
                 $file->move($destinationPath, $safeName);
                 $path = "$relativeDestination/$safeName";
-                if ($license->file) {
-                    $oldImagePath = public_path($license->file);
+                //Delete old vacation document if exists
+                if ($vacation->file) {
+                    $oldImagePath = public_path($vacation->file);
                     if (file_exists($oldImagePath)) {
                         @unlink($oldImagePath);
                     }
@@ -254,7 +253,7 @@ class LicenseController extends Controller{
             $data['file'] = $path;
         }
 
-        $license->update($data);
-        return response()->json($license);
+        $vacation->update($data);
+        return response()->json($vacation);
     }
 }
