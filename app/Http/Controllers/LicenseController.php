@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\License;
 use App\LicenseType;
 use App\User;
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 
 
@@ -69,15 +70,15 @@ class LicenseController extends Controller{
 
 
      public function create (Request $request){
+        $now = Carbon::now(); 
         $request->validate([
            'user_id' => 'required',
            'license_type_id' => 'required',
-           'requested_start_date' => 'required|date',
+           'requested_start_date' => 'required|date|after:'.$now,
            'requested_days' => 'required|numeric|min:0',
            'is_active' => 'required|boolean',
            'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'
-    ]);
-     
+        ]);
         $data = $request->only([
           'user_id',
           'license_type_id',
@@ -90,7 +91,11 @@ class LicenseController extends Controller{
           'file',
           'is_active',
           'status'
-    ]);
+        ]);
+<<<<<<< HEAD
+=======
+
+>>>>>>> a9b4d4b2a8cd2eb30d776e370dc5121e53c220ba
          if(User::find($request->user_id) == null){
             $apiError = new APIError;
             $apiError->setStatus("400");
@@ -143,9 +148,8 @@ class LicenseController extends Controller{
                 $file->move($destinationPath, $safeName);
                 $path = "$relativeDestination/$safeName";
             }
+            $data['file'] = $path;
         }
-
-         $data['file'] = $path;
 
         $license = License::create($data);
         return response()->json($license);
@@ -253,4 +257,4 @@ class LicenseController extends Controller{
         $license->update($data);
         return response()->json($license);
     }
-}   
+}

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
 use App\APIError;
 
 class Controller extends BaseController
@@ -60,12 +61,12 @@ class Controller extends BaseController
     /**
      * Uploads multiple files from request into uploads/directory
      *
-     * @param Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @param string $key_validator
      * @param string $directory
      * @return array saved files paths
      */
-    public function uploadMultipleFiles($request, $key_validator, $directory, array $rules = [])
+    public function uploadMultipleFiles(Request $request, string $key_validator, string $directory, array $rules = [])
     {
         $savedFilePaths = [];
         $fileRules = array_merge(['file'], $rules);
@@ -79,7 +80,7 @@ class Controller extends BaseController
                 $destinationPath = public_path($relativeDestinationPath);
                 $safeName =  uniqid(substr($directory, 0, 15) . '.', true) . '.' . $extension;
                 $file->move($destinationPath, $safeName);
-                $savedFilePaths[] = $relativeDestinationPath . $safeName;
+                $savedFilePaths[] = $relativeDestinationPath . '/' . $safeName;
             }
         }
 
@@ -90,12 +91,13 @@ class Controller extends BaseController
     /**
      * Uploads file from request into uploads/directory
      *
-     * @param Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @param string $key_validator
      * @param string $directory
+     * @param array $rules
      * @return array saved file path
      */
-    public function uploadSingleFile($request, $key_validator, $directory, array $rules = [])
+    public function uploadSingleFile(Request $request, string $key_validator, string $directory, array $rules = [])
     {
         $savedFilePath = null;
         $fileRules = array_merge(['file'], $rules);
@@ -107,7 +109,7 @@ class Controller extends BaseController
             $destinationPath = public_path($relativeDestinationPath);
             $safeName =  uniqid(substr($directory, 0, 15) . '.', true) . '.' . $extension;
             $file->move($destinationPath, $safeName);
-            $savedFilePath = $relativeDestinationPath . $safeName;
+            $savedFilePath = $relativeDestinationPath . '/' . $safeName;
         }
 
         return $savedFilePath;
