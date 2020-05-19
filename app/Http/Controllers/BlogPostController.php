@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\APIError;
 use Illuminate\Http\Request;
 use App\BlogPost;
+use App\User;
+use App\BlogComment;
 use App\Http\Controllers\Controller;
 use App\Team;
 use Illuminate\Support\Facades\Auth;
@@ -51,15 +53,35 @@ class BlogPostController extends Controller {
 
             return response()->json($unauthorized, 404);
         }
+
         $user = Auth::user();
-        abort_unless($user->isAbleTo('read-blog-post', $blogPost->slug), 403);
+        //abort_unless($user->isAbleTo('read-blog-post', $blogPost->slug), 403);
+        //recuperation du users qui a fait le post 
+        $userPost = User::find($blogPost->user_id);
+        //$blog_comments =BlogComment::where('blog_post_id','=',$blogPost->id); 
+        $blog_comments =BlogComment::all(); 
         $blogPost->increment('views');
-        return response()->json($blogPost);
+        return response()->json([
+            'blog_post' => [
+                    'id' => $blogPost->id,
+                    'title' => $blogPost->title,
+                    'content' => $blogPost->content,
+                    'views' => $blogPost->views,
+                    'image' => $blogPost->image,
+                    'user_id' => $blogPost->user_id,
+                    'blog_category_id' => $blogPost->blog_category_id,
+                    'create_at' => $blogPost->create_at,
+                    'update_at' => $blogPost->update_at,
+                    'user_post' => $userPost,
+                     'bog_comments' =>$blog_comments
+                ],
+            
+        ]);
     }
 
     public function delete($id){
 
-        $blogPost = BlogPost::find($id);
+        $blogPost = BlogPost::find(1);
         abort_if($blogPost == null, 404, "BlogPost not found.");
         $user = Auth::user();
         abort_unless($user->isAbleTo('delete-blog-post', $blogPost->slug), 403);

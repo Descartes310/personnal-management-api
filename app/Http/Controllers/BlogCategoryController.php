@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\BlogCategory;
 use App\APIError;
+use App\BlogPost;
+use App\User;
 
 class BlogCategoryController extends Controller
 {
@@ -88,6 +90,26 @@ class BlogCategoryController extends Controller
         }
         return response()->json($blogCategory);
     }
+    public function find2($id){
+        $blogCategory = BlogCategory::find($id);
+        if($blogCategory == null){
+            $notFound = new APIError;
+            $notFound->setStatus("404");
+            $notFound->setCode("BLOG_CATEGORY_NOT_FOUND");
+            $notFound->setMessage("blog Category id not found in database.");
+
+            return response()->json($notFound, 404);
+        }
+        $blogposts=BlogPost::all();
+        return response()->json([
+            'blog_categorie' => [
+                    'id' => $blogCategory->id,
+                    'title' => $blogCategory->title,
+                    'blog_posts' => $blogposts
+                ],
+            
+        ]);
+    }
 
     /**
      * get all blog categories with spécific value
@@ -119,4 +141,6 @@ class BlogCategoryController extends Controller
 
         return response()->json($blogCategories);
     }
+
+    
 }
