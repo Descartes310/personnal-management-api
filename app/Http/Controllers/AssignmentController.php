@@ -19,7 +19,7 @@ class AssignmentController extends Controller
      * @author Brell Sanwouo
      */
 
-    public function delete ($id){
+    public function delete($id){
         $assignment = Assignment::find($id);
         if(!$assignment){
             $unauthorized = new APIError;
@@ -29,7 +29,7 @@ class AssignmentController extends Controller
 
             return response()->json($unauthorized, 404);
         }
-
+        $assignment ->delete($assignment);
         return response()->json(null);
     }
 
