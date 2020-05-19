@@ -280,7 +280,7 @@
                 "phpstan/phpstan-strict-rules": "^0.11",
                 "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
             },
-            "type": "library",
+
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.0.x-dev"
@@ -1627,7 +1627,7 @@
                 "spatie/flysystem-dropbox": "Allows you to use Dropbox storage",
                 "srmklive/flysystem-dropbox-v2": "Allows you to use Dropbox storage for PHP 5 applications"
             },
-            "type": "library",
+
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.1-dev"
@@ -1860,7 +1860,7 @@
             "bin": [
                 "bin/carbon"
             ],
-            "type": "library",
+
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.x-dev",
@@ -3010,7 +3010,7 @@
                 "orchestra/testbench": "4.*|5.*",
                 "phpunit/phpunit": ">=4.1"
             },
-            "type": "library",
+
             "extra": {
                 "laravel": {
                     "providers": [
@@ -3429,7 +3429,6 @@
             "name": "symfony/finder",
             "version": "v5.0.8",
             "source": {
-                "type": "git",
                 "url": "https://github.com/symfony/finder.git",
                 "reference": "600a52c29afc0d1caa74acbec8d3095ca7e9910d"
             },
@@ -3708,7 +3707,6 @@
             "suggest": {
                 "ext-ctype": "For best performance"
             },
-            "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.17-dev"
@@ -3887,7 +3885,6 @@
             "suggest": {
                 "ext-mbstring": "For best performance"
             },
-            "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.17-dev"
@@ -3943,7 +3940,6 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.17-dev"
@@ -3998,7 +3994,7 @@
             "require": {
                 "php": ">=5.3.3"
             },
-            "type": "library",
+
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.17-dev"

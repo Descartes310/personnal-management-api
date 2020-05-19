@@ -46,9 +46,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'blog_categories'], function () {
         Route::delete('/{id}', 'BlogCategoryController@delete');
         Route::get('/{id}', 'BlogCategoryController@find');
-        Route::get('/', 'BlogCategoryController@get');
-        Route::post('/', 'BlogCategoryController@create');
-        Route::post('/{id}', 'BlogCategoryController@update');
+        Route::get('', 'BlogCategoryController@get');
     });
 
 
@@ -71,8 +69,10 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::group(['prefix' => 'contracts'], function () {
+        Route::post('', 'ContractController@create');
+        Route::post('/{id}', 'ContractController@update');
         Route::get('/{id}', 'ContractController@find');
-        Route::get('/', 'ContractController@get');
+        Route::get('', 'ContractController@get');
         Route::delete('/{id}', 'ContractController@delete');
         Route::get('/print-pdf/{id}','ContractController@printPDF');
     });
@@ -112,10 +112,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
 
-    Route::group(['prefix' => 'assignments'], function () {
-        Route::post('/', 'AssignmentController@create');
-        Route::put('/{id}', 'AssignmentController@update');
+    Route::group(['prefix' => 'licenses'], function () {
+        Route::get('/', 'LicenseController@get');
+        Route::delete('{id}', 'LicenseController@delete');
+        Route::get('{id}', 'LicenseController@find');
+        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
     });
+
 
 
     Route::group(['prefix' => 'blog_posts'], function () {
