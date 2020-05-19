@@ -61,7 +61,7 @@ class Controller extends BaseController
     /**
      * Uploads multiple files from request into uploads/directory
      *
-     * @param Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @param string $key_validator
      * @param string $directory
      * @return array saved files paths
@@ -80,7 +80,7 @@ class Controller extends BaseController
                 $destinationPath = public_path($relativeDestinationPath);
                 $safeName =  uniqid(substr($directory, 0, 15) . '.', true) . '.' . $extension;
                 $file->move($destinationPath, $safeName);
-                $savedFilePaths[] = $relativeDestinationPath . $safeName;
+                $savedFilePaths[] = $relativeDestinationPath . '/' . $safeName;
             }
         }
 
@@ -91,9 +91,10 @@ class Controller extends BaseController
     /**
      * Uploads file from request into uploads/directory
      *
-     * @param Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @param string $key_validator
      * @param string $directory
+     * @param array $rules
      * @return array saved file path
      */
     public function uploadSingleFile(Request $request, string $key_validator, string $directory, array $rules = [])
@@ -108,7 +109,7 @@ class Controller extends BaseController
             $destinationPath = public_path($relativeDestinationPath);
             $safeName =  uniqid(substr($directory, 0, 15) . '.', true) . '.' . $extension;
             $file->move($destinationPath, $safeName);
-            $savedFilePath = $relativeDestinationPath . $safeName;
+            $savedFilePath = $relativeDestinationPath . '/' . $safeName;
         }
 
         return $savedFilePath;

@@ -121,11 +121,18 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'BlogPostController@get');
         Route::delete('{id}', 'BlogPostController@delete');
         Route::get('{id}', 'BlogPostController@find');
-        Route::post('/', 'BlogPostController@create');
-        Route::put('/{id}', 'BlogpostController@update');
+        Route::post('/', 'BlogPostController@create')->middleware('has-permission:create-blog-post');
+        Route::match(['post','put'], '/{id}', 'BlogPostController@update');
     });
 
 
+    Route::group(['prefix' => 'disciplinary_teams'], function () {
+        Route::get('/{id}', 'DisciplinaryTeamController@find');
+        Route::get('/', 'DisciplinaryTeamController@get');
+        Route::delete('/{id}', 'DisciplinaryTeamController@delete');
+    });
+
+    
     Route::group(['prefix' => 'templates'], function () {
         Route::get('/', 'TemplateController@get');
         Route::delete('{id}', 'TemplateController@delete');
@@ -221,8 +228,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     
-
-
+    Route::group(['prefix' => 'license_types'], function () {
+        Route::get('/', 'LicenseTypeController@get');
+        Route::delete('/{id}', 'LicenseTypeController@delete');
+        Route::get('/{id}', 'LicenseTypeController@find');
+        Route::post('/', 'LicenseTypeController@add');
+        Route::post('/{id}', 'LicenseTypeController@update');
+        Route::put('/{id}', 'LicenseTypeController@update');
+    });
 
     Route::group(['prefix' => 'licenses'], function () {
         Route::post('/','LicenseController@create');
@@ -250,12 +263,4 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::match(['put', 'post'], 'submissions/{id}', 'SubmissionController@update');
     });
 
-});
-
-Route::group(['prefix' => 'license_types'], function () {
-    Route::get('/', 'LicenseTypeController@get');
-    Route::delete('/{id}', 'LicenseTypeController@delete');
-    Route::get('/{id}', 'LicenseTypeController@find');
-    Route::post('/', 'LicenseTypeController@add');
-    Route::put('/{id}', 'LicenseTypeController@update');
 });

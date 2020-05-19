@@ -70,7 +70,7 @@ class LicenseController extends Controller{
 
 
      public function create (Request $request){
-        $now = Carbon::now();
+        $now = Carbon::now(); 
         $request->validate([
            'user_id' => 'required',
            'license_type_id' => 'required',
@@ -94,7 +94,7 @@ class LicenseController extends Controller{
           'status'
            ]);
 
-         if(User::find($request->user_id) == null){
+           if(User::find($request->user_id) == null){
             $apiError = new APIError;
             $apiError->setStatus("400");
             $apiError->setCode("USER_ID_NOT_FOUND");
@@ -150,6 +150,8 @@ class LicenseController extends Controller{
 
         }
          
+    
+
         $license = License::create($data);
         return response()->json($license);
     }

@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use App\APIError;
 use Illuminate\Http\Request;
 use App\BlogPost;
 use App\Http\Controllers\Controller;
+use App\Team;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 
-class BlogPostController extends Controller{
+class BlogPostController extends Controller {
 
-    protected $successStatus = 200;
-    protected $createStatus = 201;
-    protected $notFoundStatus = 404;
 
     public function get(Request $request){
 
@@ -26,17 +24,19 @@ class BlogPostController extends Controller{
             $limit = $request->limit;
         }
 
+        $user = Auth::user();
+
         if ($s) {
             if ($limit || $page) {
-                return BlogPost::where('title', 'like', "%$s%")->orWhere('content', 'like', "%$s%")->paginate($limit);
+                return $user->getPermittedBlogPost('read-blog-post')->where('title', 'like', "%$s%")->orWhere('content', 'like', "%$s%")->paginate($limit);
             } else {
-                return BlogPost::where('title', 'like', "%$s%")->orWhere('content', 'like', "%$s%")->get();
+                return $user->getPermittedBlogPost('read-blog-post')->where('title', 'like', "%$s%")->orWhere('content', 'like', "%$s%")->get();
             }
         } else {
             if ($limit || $page) {
-                return BlogPost::paginate($limit);
+                return $user->getPermittedBlogPost('read-blog-post')->paginate($limit);
             } else {
-                return BlogPost::all();
+                return $user->getPermittedBlogPost('read-blog-post')->get();
             }
         }
     }
@@ -49,8 +49,11 @@ class BlogPostController extends Controller{
             $unauthorized->setCode("BLOG_POST_NOT_FOUND");
             $unauthorized->setMessage("blog_post id not found");
 
-            return response()->json($unauthorized, 404); 
+            return response()->json($unauthorized, 404);
         }
+        $user = Auth::user();
+        abort_unless($user->isAbleTo('read-blog-post', $blogPost->slug), 403);
+        $blogPost->increment('views');
         return response()->json($blogPost);
     }
 
@@ -58,61 +61,60 @@ class BlogPostController extends Controller{
 
         $blogPost = BlogPost::find($id);
         abort_if($blogPost == null, 404, "BlogPost not found.");
+        $user = Auth::user();
+        abort_unless($user->isAbleTo('delete-blog-post', $blogPost->slug), 403);
         $blogPost->delete();
-        return response()->json([]);
+        return response(null);
     }
 
-     /**
-     * create a blog_post 
-     * @author Nebou Richie
-     * @email richienebou@gmail.com
-     */
 
     public function create(Request $request){
-        
+
         $this->validate($request->all(), [
             'title' => 'required|string',
             'content' => 'string|required',
-            'user_id' => 'integer|required|exists:App\User,id',
             'blog_category_id' => 'integer|required|exists:App\BlogCategory,id',
-            'views'=>'integer'           
         ]);
 
-        $data = $request->all();
-        if($file = $request->file('image')){
-            $request->validate(['image'=> 'image|mines:jpeg,png,jpg']);
-            $extension = $file->getClientOriginalExtension();
-            $relativeDestination = "uploads/blogs";
-            $destinationPath = public_path($relativeDestination);
-            $safeName = time() . '.' . $extension;
-            $file->move($destinationPath, $safeName);
-            $data['image'] = "$relativeDestination/$safeName";
-        }
+        $user = Auth::user();
+
+        $data = $request->only('title', 'content', 'blog_category_id');
+        $data['user_id'] = $user->id;
+        $data['views'] = 0;
+        $data['slug'] = Str::slug($request->title) . time();
+        $data['image'] = $this->uploadSingleFile($request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
 
         $blogPost = BlogPost::create($data);
 
-        return response()->json($blogPost, $this->createStatus);
+        $team = Team::create([
+            'name' => $blogPost->slug,
+            'display_name' => "Team to handle BlogPost - $blogPost->title"
+        ]);
+
+        $blogPostPermissions = [
+            'read-blog-post',
+            'update-blog-post',
+            'delete-blog-post'
+        ];
+
+        $user->attachPermissions($blogPostPermissions, $team);
+
+        return response()->json($blogPost, 201);
     }
-    
-     /**
-     * Update a blog_post 
-     * @author Nebou Riche
-     * @email richienebou@gmail.com
-     */
+
 
     public function update(Request $request, $id){
 
         $this->validate($request->all(), [
             'title' => 'required|string',
             'content' => 'string|required',
-            'user_id' => 'integer|required|exists:App\User,id',
             'blog_category_id' => 'integer|required|exists:App\BlogCategory,id',
             'image' => 'nullable'
         ]);
 
         $blogPost = BlogPost::find($id);
 
-        if($blogPost == null) {
+        if ($blogPost == null) {
             $notFoundError = new APIError;
             $notFoundError->setStatus("404");
             $notFoundError->setCode("BLOG_POST_NOT_FOUND");
@@ -121,18 +123,21 @@ class BlogPostController extends Controller{
             return response()->json($notFoundError, $this->notFoundStatus);
         }
 
-        $blogPost->update(
-            $request->only([ 
-                'title', 
-                'content', 
-                'image',
-                'views'
-            ])
-        );
+        $user = Auth::user();
+        abort_unless($user->isAbleTo('update-blog-post', $blogPost->slug), 403);
 
-        return response()->json($blogPost, $this->successStatus);
+        $data = $request->only(['title', 'content', 'blog_category_id']);
+        $data['image'] = $this->uploadSingleFile($request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
+
+        if ($data['image']) {
+            @unlink(public_path($blogPost->image));
+        }
+
+        $blogPost->update($data);
+
+        return response()->json($blogPost, 200);
 
     }
 }
-    
-    
+
+
