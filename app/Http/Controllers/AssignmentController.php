@@ -7,6 +7,7 @@ use App\Assignment;
 use App\AssignmentType;
 use App\APIError;
 use App\User;
+use Carbon\Carbon;
 
 class AssignmentController extends Controller
 {
@@ -86,13 +87,13 @@ class AssignmentController extends Controller
      * @author daveChimba
      */
     public function create(Request $request){
-
+        $now = Carbon::now(); 
         $this->validate($request->all(), [
             'user_id' => 'required',
             'assignment_type_id' => 'required',
             'destination' => 'required',
             'signature_date' => 'required',
-            'installation_date' => 'required',
+            'installation_date' => 'required|date|after:'.$now,
             'raison' => 'required'
         ]);
 
