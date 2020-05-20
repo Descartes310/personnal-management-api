@@ -7,7 +7,7 @@ use App\Contract;
 use App\User;
 use App\APIError;
 use Barryvdh\DomPDF\Facade as PDF;
-
+use Illuminate\Support\Facades\Storage;
 
 class ContractController extends Controller
 {
@@ -19,11 +19,13 @@ class ContractController extends Controller
         $request->validate([
             'user_id' => 'required|numeric',
             'type' => 'required',
-            'file' => 'required',
+            'terms' => 'required'
+           // 'file' => 'required',
         ]);
+
         //on cherche l'utilisateur
         $user = User::find($request->user_id);
-        
+
         if ($user == null) {
             $apiError = new APIError;
             $apiError->setStatus("400");
@@ -32,19 +34,9 @@ class ContractController extends Controller
             return response()->json($apiError, 400);
         }
 
-        //    Enregistrement du chemin du Fichier file
-        $file = $request->file('file');
-        $path = null;
-        if ($file != null) {
-            $request->validate(['file' => 'file|mimes:pdf,doc,ppt,xls,rtf']);
-            $extension = $file->getClientOriginalExtension();
-            $relativeDestination = "uploads/contracts";
-            $destinationPath = public_path($relativeDestination);
-            $safeName = str_replace(' ', '_', $request->email) . time() . '.' . $extension;
-            $file->move($destinationPath, $safeName);
-            $path['file'] = "/uploads/contracts/".$safeName;
-        }
-
+        $namepdf =$request->name.'_'.$request->title.'.pdf';
+        $pdf = PDF::loadHtml($request->terms);
+        $pdf->save(public_path('/uploads/contracts/').$namepdf);
 
         // les données de la requête sont valides
         $contract = Contract::create([
@@ -56,7 +48,7 @@ class ContractController extends Controller
             'free_days' => $request->free_days,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
-            'file' => $path['file'],
+            'file' =>  '/uploads/contracts/'.$namepdf,
 
         ]);
         return response()->json($contract, 201);
@@ -74,7 +66,7 @@ class ContractController extends Controller
         $request->validate([
             'user_id' => 'required|numeric',
             'type' => 'required',
-            'file' => 'required',
+            'terms' => 'required',
         ]);
 
         $contract = Contract::find($id);
@@ -91,6 +83,7 @@ class ContractController extends Controller
             'is_active',
         ]);
 
+
         if ($contract == null) {
             $apiError = new APIError;
             $apiError->setStatus("404");
@@ -98,33 +91,28 @@ class ContractController extends Controller
             $apiError->setMessage("Something wrong with your request! None Contract found");
             return response()->json($apiError, 400);
         } else {
-            $file = $request->file('file');
-            if ($file != null) {
-                $request->validate(['file' => 'file|mimes:pdf,doc,ppt,xls,rtf']);
-                $extension = $file->getClientOriginalExtension();
-                $relativeDestination = "uploads/contracts";
-                $destinationPath = public_path($relativeDestination);
-                $safeName = str_replace(' ', '_', $request->email) . time() . '.' . $extension;
-                $file->move($destinationPath, $safeName);
-                $datas['file'] = "/uploads/contracts/".$safeName;
-                //Delete old contract file if exist
-                if ($contract->file) {
-                    $oldFilePath = str_replace(url('/'), public_path(), $contract->file);
-                    if (file_exists($oldFilePath)) {
-                        @unlink($oldFilePath);
-                    }
+            //$file = $request->file('file');
+            $namepdf =$request->name.'_'.$request->title.'.pdf';
+            $pdf = PDF::loadHtml($request->terms);
+            $pdf->save(public_path('/uploads/contracts/').$namepdf);
+            $datas['file'] = '/uploads/contracts/'.$namepdf;
+            //Delete old contract file if exist
+            if ($contract->file) {
+                $oldFilePath = str_replace(url('/'), public_path(), $contract->file);
+                if (file_exists($oldFilePath)) {
+                    @unlink($oldFilePath);
                 }
             }
 
             // les données de la requête sont valides
-            
+
             $contract->update($datas);
 
             return response()->json($contract, 200);
         }
     }
 
-    
+
     /**
      * Delete Contract
      */
@@ -172,15 +160,20 @@ class ContractController extends Controller
         return response()->json($contracts);
     }
 
-    public function printPDF(Request $request, $id){
+    /**
+     * @author ADAMU ALIYU
+     */
 
-        $name = $this->find($id)->name;
-        $title = $this->find($id)->title;
-        $namepdf = $name . ' ' . $title.'.pdf';
+    public function printPDF($id){
 
-        $data = $this->find($id)->terms;
-
-        $pdf = PDF::loadHtml($data);
-        return $pdf->download($namepdf);
+        $contract= Contract::find($id);
+        if($contract==null){
+            $apiError = new APIError;
+            $apiError->setStatus("404");
+            $apiError->setCode("CONTRACT_PAGE_NOT_FOUND");
+            $apiError->setMessage("page does not exist");
+            return response()->json($apiError, 404);
+        }
+        return response()->json(url($contract->file));
     }
 }
