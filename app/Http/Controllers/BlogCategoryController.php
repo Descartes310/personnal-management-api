@@ -100,7 +100,7 @@ class BlogCategoryController extends Controller
 
             return response()->json($notFound, 404);
         }
-        $blogposts=BlogPost::all();
+        $blogposts=BlogPost::where('blog_category_id','=',$id)->get();
         return response()->json([
             'blog_categorie' => [
                     'id' => $blogCategory->id,

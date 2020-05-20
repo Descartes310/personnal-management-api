@@ -257,4 +257,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::match(['put', 'post'], 'submissions/{id}', 'SubmissionController@update');
     });
 
+    Route::group(['prefix' => 'blog_comments'], function () {
+        Route::post('/', 'BlogCommentController@create');
+        Route::delete('/{id}', 'BlogCommentController@delete');
+    });
+
 });

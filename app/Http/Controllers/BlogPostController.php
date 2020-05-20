@@ -16,33 +16,22 @@ use Illuminate\Support\Str;
 class BlogPostController extends Controller {
 
 
-    public function get(Request $request){
-
-        $s = $request->s;
-        $page = $request->page;
+    public function get(Request $req){
+        $page = $req->page;
         $limit = null;
 
-        if ($request->limit && $request->limit > 0) {
-            $limit = $request->limit;
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
         }
 
-        $user = Auth::user();
-
-        if ($s) {
-            if ($limit || $page) {
-                return $user->getPermittedBlogPost('read-blog-post')->where('title', 'like', "%$s%")->orWhere('content', 'like', "%$s%")->paginate($limit);
-            } else {
-                return $user->getPermittedBlogPost('read-blog-post')->where('title', 'like', "%$s%")->orWhere('content', 'like', "%$s%")->get();
-            }
+        if ($limit || $page) {
+            $blogPost = BlogPost::paginate($limit);
         } else {
-            if ($limit || $page) {
-                return $user->getPermittedBlogPost('read-blog-post')->paginate($limit);
-            } else {
-                return $user->getPermittedBlogPost('read-blog-post')->get();
-            }
+            $blogPost = BlogPost::all();
         }
-    }
+        return response()->json($blogPost, 200);
 
+    }
     public function find($id){
         $blogPost = BlogPost::find($id);
         if($blogPost == null) {
@@ -59,7 +48,7 @@ class BlogPostController extends Controller {
         //recuperation du users qui a fait le post 
         $userPost = User::find($blogPost->user_id);
         //$blog_comments =BlogComment::where('blog_post_id','=',$blogPost->id); 
-        $blog_comments =BlogComment::all(); 
+        $blog_comments =BlogComment::where('blog_post_id','=',$blogPost->id)->get();
         $blogPost->increment('views');
         return response()->json([
             'blog_post' => [
@@ -67,7 +56,7 @@ class BlogPostController extends Controller {
                     'title' => $blogPost->title,
                     'content' => $blogPost->content,
                     'views' => $blogPost->views,
-                    'image' => $blogPost->image,
+                    'image' => url($blogPost->image),
                     'user_id' => $blogPost->user_id,
                     'blog_category_id' => $blogPost->blog_category_id,
                     'create_at' => $blogPost->create_at,
@@ -81,10 +70,16 @@ class BlogPostController extends Controller {
 
     public function delete($id){
 
-        $blogPost = BlogPost::find(1);
-        abort_if($blogPost == null, 404, "BlogPost not found.");
+        $blogPost = BlogPost::find($id);
+        if(!$blogPost){
+            $apiError = new APIError;
+            $apiError->setStatus("404");
+            $apiError->setCode("BlogPOst_NOT_FOUND");
+            $apiError->setMessage("no blogPost found with id $request->$id");
+            $apiError->setErrors(['blog_post_id' => ["this value is not exist"]]);
+            return response()->json($apiError, 404);
+        }
         $user = Auth::user();
-        abort_unless($user->isAbleTo('delete-blog-post', $blogPost->slug), 403);
         $blogPost->delete();
         return response(null);
     }
@@ -103,7 +98,7 @@ class BlogPostController extends Controller {
         $data = $request->only('title', 'content', 'blog_category_id');
         $data['user_id'] = $user->id;
         $data['views'] = 0;
-        $data['slug'] = Str::slug($request->title) . time();
+        //$data['slug'] = Str::slug($request->title) . time();
         $data['image'] = $this->uploadSingleFile($request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
 
         $blogPost = BlogPost::create($data);
