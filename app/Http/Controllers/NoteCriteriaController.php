@@ -16,7 +16,8 @@ class NoteCriteriaController extends Controller
 
     /**
      * Find an existing  NoteCriteria
-     * *Author Warren TABA
+     * @author Warren TABA
+     * @email fotiewarren50@gmail.com
      */
     public function find($id){
         $notecriteria = NoteCriteria::find($id);
@@ -33,7 +34,8 @@ class NoteCriteriaController extends Controller
 
     /**
      * Get All the NoteCriteria
-     * *Author Warren TABA
+     * @author Warren TABA
+     * @email fotiewarren50@gmail.com
      */
     public function get(Request $req){
         $s = $req->s;
@@ -61,11 +63,13 @@ class NoteCriteriaController extends Controller
         return response()->json($noteCriterias);
     }
 
-    /**
-     * Delete the choosen NoteCriteria
-    *Author Warren TABA
-    */
-    public function delete($id){
+     /**
+      * Delete the choosen NoteCriteria 
+      * @author Warren TABA
+      * @email fotiewarren50@gmail.com
+      */
+
+      public function delete($id){
         $notecriteria = NoteCriteria:: find($id);
         if($notecriteria == null){
             $notexist = new APIError;
