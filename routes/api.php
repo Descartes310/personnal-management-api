@@ -74,6 +74,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'ContractController@find');
         Route::get('', 'ContractController@get');
         Route::delete('/{id}', 'ContractController@delete');
+        Route::get('/print-pdf/{id}','ContractController@printPDF');
     });
 
 
@@ -270,4 +271,3 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 Route::get('/download','ContractController@getDownload');
 ;
-Route::get('/print-pdf/{id}','ContractController@printPDF');
