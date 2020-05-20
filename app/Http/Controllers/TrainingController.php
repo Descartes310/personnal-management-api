@@ -149,7 +149,8 @@ class TrainingController extends Controller
                 'description',
                 'start_date',
                 'duration',
-                'location'
+                'location',
+                'is_online'
             ])
         );
 
