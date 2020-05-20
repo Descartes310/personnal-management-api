@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use App\APIError;
 use Illuminate\Http\Request;
 use App\License;
@@ -12,10 +11,10 @@ use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 
 
-class LicenseController extends Controller{
+class LicenseController extends Controller {
 
 
-    public function get(Request $request){
+    public function get(Request $request) {
 
 
         $s = $request->s;
@@ -70,7 +69,7 @@ class LicenseController extends Controller{
 
 
      public function create (Request $request){
-        $now = Carbon::now(); 
+        $now = Carbon::now();
         $request->validate([
            'user_id' => 'required',
            'license_type_id' => 'required',
@@ -92,9 +91,9 @@ class LicenseController extends Controller{
           'file',
           'is_active',
           'status'
-           ]);
+        ]);
 
-           if(User::find($request->user_id) == null){
+        if(User::find($request->user_id) == null){
             $apiError = new APIError;
             $apiError->setStatus("400");
             $apiError->setCode("USER_ID_NOT_FOUND");
@@ -149,8 +148,8 @@ class LicenseController extends Controller{
             $data['file'] = $path;
 
         }
-         
-    
+
+
 
         $license = License::create($data);
         return response()->json($license);
@@ -167,7 +166,7 @@ class LicenseController extends Controller{
             return response()->json($apiError, 404);
          }
 
-        $now = Carbon::now(); 
+        $now = Carbon::now();
         $request->validate([
             'user_id' => 'required',
             'license_type_id' => 'required',
