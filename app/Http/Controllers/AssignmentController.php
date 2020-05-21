@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Assignment;
 use App\AssignmentType;
 use App\APIError;
+use App\User;
+use Carbon\Carbon;
+use App\UserProfile;
 
 class AssignmentController extends Controller
 {
@@ -18,7 +21,7 @@ class AssignmentController extends Controller
      * @author Brell Sanwouo
      */
 
-    public function delete ($id){
+    public function delete($id){
         $assignment = Assignment::find($id);
         if(!$assignment){
             $unauthorized = new APIError;
@@ -28,7 +31,7 @@ class AssignmentController extends Controller
 
             return response()->json($unauthorized, 404);
         }
-
+        $assignment ->delete($assignment);
         return response()->json(null);
     }
 
@@ -58,6 +61,7 @@ class AssignmentController extends Controller
         $s = $req->s;
         $page = $req->page;
         $limit = null;
+        $datas = [];
 
         if ($req->limit && $req->limit > 0) {
             $limit = $req->limit;
@@ -65,19 +69,36 @@ class AssignmentController extends Controller
 
         if ($s) {
             if ($limit || $page) {
-                $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->paginate($limit);
+                $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->with('assignmentType')->paginate($limit);
             } else {
-                $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->get();
+                $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->with('assignmentType')->get();
             }
         } else {
             if ($limit || $page) {
-                $assignments = Assignment::paginate($limit);
+                $assignments = Assignment::with('assignmentType')->paginate($limit);
             } else {
-                $assignments = Assignment::all();
+                $assignments = Assignment::with('assignmentType')->get();
             }
         }
-
-        return response()->json($assignments);
+        
+        foreach ($assignments as $assignment) {
+            $user = User::whereId($assignment->user_id)->first();
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            
+            foreach ($user_infos as $user_info) {
+                if($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+            
+            $assignment['user'] = $user;
+            array_push($datas, $assignment);
+        }
+        // foreach ($assignment_type as $assignment_type) {
+        //     $assignments['assignment_type'] = $assignment_type->name;
+        // }
+        return response()->json($datas);
     }
 
      /**
@@ -85,13 +106,13 @@ class AssignmentController extends Controller
      * @author daveChimba
      */
     public function create(Request $request){
-
+        $now = Carbon::now(); 
         $this->validate($request->all(), [
             'user_id' => 'required',
             'assignment_type_id' => 'required',
             'destination' => 'required',
             'signature_date' => 'required',
-            'installation_date' => 'required',
+            'installation_date' => 'required|date|after:'.$now,
             'raison' => 'required'
         ]);
 
