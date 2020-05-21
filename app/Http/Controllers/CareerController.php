@@ -88,7 +88,7 @@ class CareerController extends Controller
 
 
         $data = $request->all();
-        $data['slug'] = str_replace(' ', '_', $request->user_id) . time();
+        //$data['slug'] = str_replace(' ', '_', $request->user_id) . time();
         $career = Career::create($data);
         return response()->json($career);
     }
@@ -110,7 +110,7 @@ class CareerController extends Controller
             'pro_situation_id' => 'required'
         ]);
 
-        if(isset($request->user_id))
+        /* if(isset($request->user_id))
         {
             if(Career::find($request->user_id) == null)
             {//user_id not existing in table Career
@@ -121,10 +121,10 @@ class CareerController extends Controller
 
                 return response()->json($apiError, 400);
             }
-        }
+        } */
 
         $data = $request->all();
-        $data['slug'] = str_replace(' ', '_', $request->user_id) . time();
+        //$data['slug'] = str_replace(' ', '_', $request->user_id) . time();
         $career->update($data);
         return response()->json($career);
     }

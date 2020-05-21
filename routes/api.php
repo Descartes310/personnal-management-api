@@ -236,7 +236,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/{id}', 'LicenseTypeController@update');
         Route::put('/{id}', 'LicenseTypeController@update');
     });
-/*});*/
+
 
     Route::group(['prefix' => 'licenses'], function () {
         Route::post('/','LicenseController@create');
@@ -256,11 +256,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::match(['post', 'put'], '/{id}', 'VacationController@update');
     });
 
-    Route::group(['prefix' => 'careers'], function () {
-        Route::post('/', 'CareerController@create');
-        Route::put('/{id}', 'CareerController@update');
-        //Route::delete('/{id}', 'CareerController@delete');
-    });
+
 
     Route::group(['prefix' => 'blog_comments'], function () {
         Route::post('/', 'BlogCommentController@create');
