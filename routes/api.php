@@ -264,6 +264,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 
-
-
-
+Route::group(['prefix' => 'LicenseType'], function () {
+    Route::post('/', 'LicenseTypeController@saveLicenseType');
+    Route::match(['post', 'put'], '/{id}', 'LicenseTypeController@updateLicenseType');
+});
