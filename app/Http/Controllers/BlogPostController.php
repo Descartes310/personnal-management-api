@@ -101,7 +101,7 @@ class BlogPostController extends Controller {
         $data = $request->only('title', 'content', 'blog_category_id');
         $data['user_id'] = $user->id;
         $data['views'] = 0;
-        //$data['slug'] = Str::slug($request->title) . time();
+        $data['slug'] = Str::slug($request->title) . time();
         $data['image'] = $this->uploadSingleFile($request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
 
         $blogPost = BlogPost::create($data);
@@ -147,6 +147,7 @@ class BlogPostController extends Controller {
         abort_unless($user->isAbleTo('update-blog-post', $blogPost->slug), 403);
 
         $data = $request->only(['title', 'content', 'blog_category_id']);
+        $data['slug'] = Str::slug($request->title) . time();
         $data['image'] = $this->uploadSingleFile(
             $request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
 

@@ -117,7 +117,7 @@ class ProfileController extends Controller{
             'max'  => $request->max,
             'step' => $request->step,
             'is_unique' => $request->is_unique,
-            'is_private' => $request->is_private,
+            //'is_private' => $request->is_private,
             'default' => $request->default,
             'description' => $request->description
         ]);
