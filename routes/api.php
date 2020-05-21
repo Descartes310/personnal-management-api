@@ -26,7 +26,8 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('permissions', 'AuthController@permissions');
         Route::get('roles', 'AuthController@roles');
         Route::get('teams', 'AuthController@teams');
-    });
+
+   });
 
 });
 
@@ -45,7 +46,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'blog_categories'], function () {
         Route::delete('/{id}', 'BlogCategoryController@delete');
-        Route::get('/{id}', 'BlogCategoryController@find');
+        Route::get('/{id}', 'BlogCategoryController@find2');
         Route::get('/', 'BlogCategoryController@get');
         Route::post('/', 'BlogCategoryController@create');
         Route::post('/{id}', 'BlogCategoryController@update');
@@ -258,6 +259,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'SubmissionController@find');
         Route::post('submissions', 'SubmissionController@create');
         Route::match(['put', 'post'], 'submissions/{id}', 'SubmissionController@update');
+    });
+
+    Route::group(['prefix' => 'blog_comments'], function () {
+        Route::post('/', 'BlogCommentController@create');
+        Route::delete('/{id}', 'BlogCommentController@delete');
     });
 
 });
