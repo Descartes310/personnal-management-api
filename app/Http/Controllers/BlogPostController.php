@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Team;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Permission;
 
 
 class BlogPostController extends Controller {
@@ -19,6 +20,9 @@ class BlogPostController extends Controller {
         $s = $request->s;
         $page = $request->page;
         $limit = null;
+
+
+       // 'name' => $blogPost->slug
 
         if ($request->limit && $request->limit > 0) {
             $limit = $request->limit;
@@ -59,6 +63,8 @@ class BlogPostController extends Controller {
 
     public function delete($id){
 
+
+       // 'name' => $blogPost->slug,
         $blogPost = BlogPost::find($id);
         abort_if($blogPost == null, 404, "BlogPost not found.");
         $user = Auth::user();
@@ -127,7 +133,8 @@ class BlogPostController extends Controller {
         abort_unless($user->isAbleTo('update-blog-post', $blogPost->slug), 403);
 
         $data = $request->only(['title', 'content', 'blog_category_id']);
-        $data['image'] = $this->uploadSingleFile($request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
+        $data['image'] = $this->uploadSingleFile(
+            $request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
 
         if ($data['image']) {
             @unlink(public_path($blogPost->image));

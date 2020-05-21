@@ -126,7 +126,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('{id}', 'BlogPostController@delete');
         Route::get('{id}', 'BlogPostController@find');
         Route::post('/', 'BlogPostController@create')->middleware('has-permission:create-blog-post');
-        Route::match(['post','put'], '/{id}', 'BlogPostController@update');
+        Route::match(['post','put'], '/{id}', 'BlogPostController@update')->middleware('has-permission:update-blog-post');
     });
 
 
