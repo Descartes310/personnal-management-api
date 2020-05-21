@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Submission;
 use App\APIError;
+use App\User;
+use App\UserProfile;
 
 class SubmissionController extends Controller
 {
@@ -33,6 +35,7 @@ class SubmissionController extends Controller
         $s = $req->s;
         $page = $req->page;
         $limit = null;
+        $data = [];
 
         if ($req->limit && $req->limit > 0) {
             $limit = $req->limit;
@@ -51,8 +54,29 @@ class SubmissionController extends Controller
                 $submissions = Submission::all();
             }
         }
+        foreach ($submissions as $key => $submission) {
+            $user = User::whereId($submission->user_id)->first();
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+            $submission['sender'] = $user;
+            $user = User::whereId($submission->dest_user_id)->first();
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+            $submission['receiver'] = $user;
+            array_push($data, $submission);
+        }
 
-        return response()->json($submissions);
+        return response()->json($data);
     }
 
     /**

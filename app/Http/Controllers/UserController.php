@@ -376,8 +376,10 @@ class UserController extends Controller
         return response()->json($cities);
     }
 
-    
-    public function getCountries(){
+    public function get(Request $request){
 
+        $users = User::All();
+
+        return response()->json($users);
     }
 }
