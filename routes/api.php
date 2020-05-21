@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::pattern('id', '[0-9]+');
 
-Route::group(['prefix' => 'auth'], function () {
+Route::group(['prefix' => 'auth'], function () { 
 
-    Route::post('token', 'AuthController@login');
+    Route::post('/token', 'AuthController@login');
 
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'AuthController@user');
@@ -71,6 +71,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::group(['prefix' => 'contracts'], function () {
+        Route::post('/', 'ContractController@create');
+        Route::post('/{id}', 'ContractController@update');
         Route::get('/{id}', 'ContractController@find');
         Route::get('/', 'ContractController@get');
         Route::delete('/{id}', 'ContractController@delete');
@@ -80,7 +82,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('/', 'DivisionController@create');
-        Route::put('/{id}', 'DivisionController@update');
+        Route::post('/{id}', 'DivisionController@update');
         Route::get('/', 'DivisionController@get');
         Route::get('/{id}', 'DivisionController@find');
         Route::delete('/{id}', 'DivisionController@delete');
@@ -163,6 +165,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::group(['prefix' => 'trainings'], function () {
+        Route::post('/', 'TrainingController@create');
+        Route::match(['put', 'post'], '/{id}', 'TrainingController@update');
         Route::get('/', 'TrainingController@get');
         Route::get('/{id}', 'TrainingController@find');
         Route::delete('/{id}', 'TrainingController@delete');
@@ -250,12 +254,15 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::match(['post', 'put'], '/{id}', 'VacationController@update');
     });
 
-    Route::group(['prefix' => 'submissions'], function () {
-        Route::get('/', 'SubmissionController@get');
-        Route::delete('/{id}', 'SubmissionController@delete');
-        Route::get('/{id}', 'SubmissionController@find');
-        Route::post('submissions', 'SubmissionController@create');
-        Route::match(['put', 'post'], 'submissions/{id}', 'SubmissionController@update');
+    Route::group(['prefix' => 'careers'], function () {
+        Route::post('/', 'CareerController@create');
+        Route::put('/{id}', 'CareerController@update');
+        //Route::delete('/{id}', 'CareerController@delete');
     });
 
 });
+
+
+
+
+
