@@ -182,6 +182,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'roles'], function () {
         Route::get('/', 'RoleController@get');
+        Route::get('/getRolesWithPermissions', 'RoleController@getRolesWithPermissions');
         Route::post('/', 'RoleController@store');
         Route::post('/{id}', 'RoleController@update');
         Route::delete('/{id}', 'RoleController@delete');
