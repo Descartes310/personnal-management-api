@@ -42,6 +42,9 @@ class UserController extends Controller
             }
         }
 
+        $user->roles;
+        $user['permissions'] = $user->allPermissions();
+
         return response()->json($user);
     }
 
@@ -154,7 +157,6 @@ class UserController extends Controller
     public function delete(User $user) {
         $user->delete(); //No need to delete user field in user profile because this is only a soft delete
     }
-
 
     /**
      * @author Armel Nya

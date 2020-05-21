@@ -74,4 +74,8 @@ class User extends Authenticatable
 
         return parent::__call($method, $parameters);
     }
+
+    public function roles() {
+        return $this->belongsToMany('App\Role');
+    }
 }
