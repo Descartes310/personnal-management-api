@@ -278,8 +278,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'SubmissionController@get');
         Route::delete('/{id}', 'SubmissionController@delete');
         Route::get('/{id}', 'SubmissionController@find');
-        Route::post('submissions', 'SubmissionController@create');
-        Route::match(['put', 'post'], 'submissions/{id}', 'SubmissionController@update');
+        Route::match(['put', 'post'],'/', 'SubmissionController@create');
+        Route::match(['put', 'post'], '/{id}', 'SubmissionController@update');
     });
 
+     Route::group(['prefix' => 'cities'], function () {
+        Route::get('/', 'UserController@getCities');
+    });
 });

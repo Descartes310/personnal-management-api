@@ -13,7 +13,7 @@ use App\User;
 use Auth;
 use App\APIError;
 use App\ChatDiscussion;
-
+use App\City;
 
 class UserController extends Controller
 {
@@ -369,5 +369,15 @@ class UserController extends Controller
         }
 
         return response()->json($user);
+    }
+
+    public function getCities(){
+        $cities = City::all();
+        return response()->json($cities);
+    }
+
+    
+    public function getCountries(){
+
     }
 }

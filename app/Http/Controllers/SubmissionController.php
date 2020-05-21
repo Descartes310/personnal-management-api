@@ -88,6 +88,7 @@ class SubmissionController extends Controller
         $submission = Submission::create($data);
         $submission->files = json_decode($submission->files);
         return response()->json($submission);
+        
     }
 
     public function update(Request $request, $id){
