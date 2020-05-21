@@ -78,7 +78,13 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'ContractController@delete');
     });
 
-
+    Route::group(['prefix' => 'submissions'], function () {
+        Route::post('/', 'SubmissionController@create');
+        Route::post('/{id}', 'SubmissionController@update');
+        Route::get('/', 'SubmissionController@get');
+        Route::get('/{id}', 'SubmissionController@find');
+        Route::delete('/{id}', 'SubmissionController@delete');
+    });
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('/', 'DivisionController@create');
