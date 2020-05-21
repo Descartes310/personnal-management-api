@@ -92,6 +92,8 @@ class AssignmentTypeController extends Controller {
 
     /**
      * Find an existing  AssignmentType
+     * @author Warren TABA
+     * @email fotiewarren50@gmail.com
      */
     public function find($id)
     {
@@ -110,6 +112,8 @@ class AssignmentTypeController extends Controller {
 
     /**
      * Get All the AssignmentType
+     * @author Warren TABA
+     * @email fotiewarren50@gmail.com
      */
     public function get(Request $req)
     {
@@ -140,6 +144,8 @@ class AssignmentTypeController extends Controller {
 
     /**
      * Delete the choosen AssignmentType
+     * @author Warren TABA
+     * @email fotiewarren50@gmail.com
      */
     public function delete($id)
     {

@@ -13,16 +13,18 @@ class DivisionController extends Controller
 
     public function create (Request $request){
         $this->validate($request->all(), [
-            'name' => 'required'
+            'name' => 'required|unique:divisions| string '
         ]);
+    
 
         $data = $request->only([
-            'name',
-            'description'
+            'name' ,
+            'description' 
         ]);
-
-        if($request->parent_id)
-        {
+       
+            
+         if (isset($request->parent_id)){
+        
             if(Division::find($request->parent_id) == null)
             {//parent_id not existing in table division
                 $apiError = new APIError;
@@ -34,7 +36,7 @@ class DivisionController extends Controller
             } else {
                 $data['parent_id'] = $request->parent_id;
             }
-        }
+          }
 
         $data['slug'] = Str::slug($request->name) . time();
         $division = Division::create($data);
@@ -44,39 +46,41 @@ class DivisionController extends Controller
 
 
     public function update(Request $request, $id){
-        $division = Division::find($id);
-        if($division == null){
-            $apiError = new APIError;
-            $apiError->setStatus("404");
-            $apiError->setCode("DIVISION_ID_NOT_EXISTING");
-            $apiError->setErrors(['id' => 'division id not existing']);
+            $this->validate($request->all(), [
+                'name' => 'required| string'
+            ]); 
 
-            return response()->json($apiError, 404);
-        }
-
-        $this->validate($request->all(), [
-            'name' => 'required'
-        ]);
-
-        $data = $request->only([
-            'name',
-            'description'
-        ]);
-
-        if($request->parent_id)
-        {
-            if(Division::find($request->parent_id) == null)
-            {//parent_id not existing in table division
+            $division = Division::find($id);
+    
+            if($division == null) {
+                $apiError = new APIError;
+                $apiError->setStatus("404");
+                $apiError->setCode("DIVISION_NOT_FOUND");
+                $apiError->setMessage("Division with id " . $id . " not found");
+    
+                return response()->json($apiError,404);
+            }
+    
+            $name = $request->name;
+    
+            $foundDivision = Division::whereName($name)->first();
+    
+            if($foundDivision != null && $foundDivision != $division ) {
+    
                 $apiError = new APIError;
                 $apiError->setStatus("400");
-                $apiError->setCode("DIVISION_PARENT_ID_NOT_FOUND");
-                $apiError->setErrors(['parent_id' => 'parent_id not existing']);
+                $apiError->setCode("Division_NAME_ALREADY_EXIST");
+                $apiError->setMessage("Division with name " . $name . " already exist");
+    
+                return response()->json($apiError,400);
 
-                return response()->json($apiError, 400);
-            } else {
-                $data['parent_id'] = $request->parent_id;
             }
-        }
+    
+            $data = $request->only([
+                    'name',
+                    'description',
+                    'parent_id'
+                ]);
 
         $division->update($data);
         return response()->json($division);
@@ -93,15 +97,15 @@ class DivisionController extends Controller
 
         if ($s) {
             if ($limit || $page) {
-                $divisions = Division::where('name', 'LIKE', '%' . $s . '%')->paginate($limit);
+                $divisions = Division::where('name', 'LIKE', '%' . $s . '%')->with('division')->paginate($limit);
             } else {
-                $divisions = Division::where('name', 'LIKE', '%' . $s . '%')->get();
+                $divisions = Division::where('name', 'LIKE', '%' . $s . '%')->with('division')->get();
             }
         } else {
             if ($limit || $page) {
-                $divisions = Division::paginate($limit);
+                $divisions = Division::with('division')->paginate($limit);
             } else {
-                $divisions = Division::all();
+                $divisions = Division::with('division')->get();
             }
         }
 
@@ -117,6 +121,7 @@ class DivisionController extends Controller
             $unauthorized->setMessage("No division found with id $id");
             return response()->json($unauthorized, 404);
         }
+        $division->division;
         return response()->json($division);
     }
 

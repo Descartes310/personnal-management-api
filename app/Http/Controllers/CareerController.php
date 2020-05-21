@@ -88,13 +88,13 @@ class CareerController extends Controller
 
 
         $data = $request->all();
-
+        $data['slug'] = str_replace(' ', '_', $request->user_id) . time();
         $career = Career::create($data);
         return response()->json($career);
     }
 
 
-
+    
     public function update(Request $request, $id){
         $career = Career::find($id);
         if($career == null){
@@ -105,11 +105,9 @@ class CareerController extends Controller
 
             return response()->json($apiError, 404);
         }
-
+        
         $request->validate([
-            'pro_situation_id' => 'required',
-            'user_id' => 'required',
-            'effective_date' => 'nullable'
+            'pro_situation_id' => 'required'
         ]);
 
         if(isset($request->user_id))
@@ -126,6 +124,7 @@ class CareerController extends Controller
         }
 
         $data = $request->all();
+        $data['slug'] = str_replace(' ', '_', $request->user_id) . time();
         $career->update($data);
         return response()->json($career);
     }
