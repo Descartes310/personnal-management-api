@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\APIError;
 use Illuminate\Http\Request;
 use App\BlogPost;
+use App\User;
+use App\BlogComment;
 use App\Http\Controllers\Controller;
 use App\Team;
 use Illuminate\Support\Facades\Auth;
@@ -15,36 +17,22 @@ use App\Permission;
 class BlogPostController extends Controller {
 
 
-    public function get(Request $request){
-
-        $s = $request->s;
-        $page = $request->page;
+    public function get(Request $req){
+        $page = $req->page;
         $limit = null;
 
-
-       // 'name' => $blogPost->slug
-
-        if ($request->limit && $request->limit > 0) {
-            $limit = $request->limit;
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
         }
 
-        $user = Auth::user();
-
-        if ($s) {
-            if ($limit || $page) {
-                return $user->getPermittedBlogPost('read-blog-post')->where('title', 'like', "%$s%")->orWhere('content', 'like', "%$s%")->paginate($limit);
-            } else {
-                return $user->getPermittedBlogPost('read-blog-post')->where('title', 'like', "%$s%")->orWhere('content', 'like', "%$s%")->get();
-            }
+        if ($limit || $page) {
+            $blogPost = BlogPost::paginate($limit);
         } else {
-            if ($limit || $page) {
-                return $user->getPermittedBlogPost('read-blog-post')->paginate($limit);
-            } else {
-                return $user->getPermittedBlogPost('read-blog-post')->get();
-            }
+            $blogPost = BlogPost::all();
         }
-    }
+        return response()->json($blogPost, 200);
 
+    }
     public function find($id){
         $blogPost = BlogPost::find($id);
         if($blogPost == null) {
@@ -55,20 +43,46 @@ class BlogPostController extends Controller {
 
             return response()->json($unauthorized, 404);
         }
+
         $user = Auth::user();
-        abort_unless($user->isAbleTo('read-blog-post', $blogPost->slug), 403);
+        //abort_unless($user->isAbleTo('read-blog-post', $blogPost->slug), 403);
+        //recuperation du users qui a fait le post 
+        $userPost = User::find($blogPost->user_id);
+        //$blog_comments =BlogComment::where('blog_post_id','=',$blogPost->id); 
+        $blog_comments =BlogComment::where('blog_post_id','=',$blogPost->id)->get();
         $blogPost->increment('views');
-        return response()->json($blogPost);
+        return response()->json([
+            'blog_post' => [
+                    'id' => $blogPost->id,
+                    'title' => $blogPost->title,
+                    'content' => $blogPost->content,
+                    'views' => $blogPost->views,
+                    'image' => url($blogPost->image),
+                    'user_id' => $blogPost->user_id,
+                    'blog_category_id' => $blogPost->blog_category_id,
+                    'create_at' => $blogPost->create_at,
+                    'update_at' => $blogPost->update_at,
+                    'user_post' => $userPost,
+                     'bog_comments' =>$blog_comments
+                ],
+            
+        ]);
     }
 
-    public function delete($id){
+    public function delete(Request $request,$id){
 
 
        // 'name' => $blogPost->slug,
         $blogPost = BlogPost::find($id);
-        abort_if($blogPost == null, 404, "BlogPost not found.");
+        if(!$blogPost){
+            $apiError = new APIError;
+            $apiError->setStatus("404");
+            $apiError->setCode("BlogPOst_NOT_FOUND");
+            $apiError->setMessage("no blogPost found with id $request->$id");
+            $apiError->setErrors(['blog_post_id' => ["this value is not exist"]]);
+            return response()->json($apiError, 404);
+        }
         $user = Auth::user();
-        abort_unless($user->isAbleTo('delete-blog-post', $blogPost->slug), 403);
         $blogPost->delete();
         return response(null);
     }
@@ -87,7 +101,7 @@ class BlogPostController extends Controller {
         $data = $request->only('title', 'content', 'blog_category_id');
         $data['user_id'] = $user->id;
         $data['views'] = 0;
-        $data['slug'] = Str::slug($request->title) . time();
+        //$data['slug'] = Str::slug($request->title) . time();
         $data['image'] = $this->uploadSingleFile($request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
 
         $blogPost = BlogPost::create($data);

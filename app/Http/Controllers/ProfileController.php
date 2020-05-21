@@ -45,13 +45,12 @@ class ProfileController extends Controller{
      */
     public function getProfiles(Request $req){
         $profiles = Profile::all();
-        $i = 0;
         
         foreach ($profiles as $profile) {
 
-            if($profile->type == "select") {
+            if($profile->type == 'select') {
                 $options = SelectOption::whereProfileId($profile->id)->get();
-                $profile["options"] = $options;
+                $profile['options'] = $options;
             }
         }
 

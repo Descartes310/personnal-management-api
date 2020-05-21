@@ -106,6 +106,7 @@ class TrainingController extends Controller
             'start_date' => $request->start_date,
             'duration' => $request->duration,
             'location' =>$request->location,
+            'is_online' =>$request->is_online
         ]);
 
         return response()->json($training, $this->createStatus);
@@ -126,7 +127,8 @@ class TrainingController extends Controller
             'description' => 'string',
             'start_date' => 'string',
             'duration' => 'string',
-            'location' => 'string'
+            'location' => 'string',
+            'is_online' => 'Boolean',
         ]);
 
         $training = Training::find($id);
@@ -147,7 +149,8 @@ class TrainingController extends Controller
                 'description',
                 'start_date',
                 'duration',
-                'location'
+                'location',
+                'is_online'
             ])
         );
 
