@@ -52,6 +52,7 @@ class DisciplinaryBoardController extends Controller
             $unauthorized->setMessage("No disciplinary board found with id $id");
             return response()->json($unauthorized, 404);
         }
+        $disciplinary_board->user;
         return response()->json($disciplinary_board);
     }
 

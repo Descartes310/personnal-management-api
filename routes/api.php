@@ -109,7 +109,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'DisciplinaryBoardController@find');
         Route::delete('/{id}', 'DisciplinaryBoardController@delete');
         Route::post('/', 'DisciplinaryBoardController@create');
-        Route::put('/{id}', 'DisciplinaryBoardController@update');
+        Route::match(['post','put'], '/{id}', 'DisciplinaryBoardController@update');
     });
 
 
@@ -121,12 +121,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::match(['post','put'], '/{id}', 'BlogPostController@update');
     });
 
-
-    Route::group(['prefix' => 'disciplinary_teams'], function () {
-        Route::get('/{id}', 'DisciplinaryTeamController@find');
-        Route::get('/', 'DisciplinaryTeamController@get');
-        Route::delete('/{id}', 'DisciplinaryTeamController@delete');
-    });
 
     
     Route::group(['prefix' => 'templates'], function () {
