@@ -72,8 +72,8 @@ class CareerController extends Controller
             'user_id' => 'required',
             'effective_date' => 'nullable'
         ]);
-
-        if(isset($request->user_id))
+            
+        /* if(isset($request->user_id))
         {
             if(Career::find($request->user_id) == null)
             {//user_id not existing in table Career
@@ -84,7 +84,8 @@ class CareerController extends Controller
 
                 return response()->json($apiError, 400);
             }
-        }
+        } */
+
 
         $data = $request->all();
 
