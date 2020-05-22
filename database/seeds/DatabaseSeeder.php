@@ -18,10 +18,8 @@ class DatabaseSeeder extends Seeder
         // $this->call(CityAndCountrySeeder::class);
         $this->call(SettingSeeder::class);
         $this->call(LaratrustSeeder::class);
-        $this->call(AssignmentSeeder::class);
 
         Schema::enableForeignKeyConstraints();
         Model::reguard();
-        $this->call(DivisionSeeder::class);
     }
 }

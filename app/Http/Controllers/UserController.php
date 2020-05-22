@@ -10,7 +10,9 @@ use App\Profile;
 use App\UserProfile;
 use App\SelectOption;
 use App\User;
+use Auth;
 use App\APIError;
+use App\ChatDiscussion;
 
 
 class UserController extends Controller
@@ -41,6 +43,116 @@ class UserController extends Controller
         }
 
         return response()->json($user);
+    }
+
+    public function getUsers(Request $req) {
+        $connected_user = Auth::user();
+
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($limit || $page) {
+            $users = User::paginate($limit);
+        } else {
+            $users = User::all();
+        }
+
+        foreach ($users as $key => $user) {
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+            $discussion = ChatDiscussion::whereUser1IdAndUser2Id($connected_user->id, $user->id)->first();
+            if($discussion == null) {
+                $discussion = ChatDiscussion::whereUser2IdAndUser1Id($connected_user->id, $user->id)->first();
+                if($discussion != null) {
+                    $user['chat_discussion_id'] = $discussion->id;
+                    $user['chat_last_message'] = $discussion->last_message;
+                    $user['chat_last_date'] = $discussion->updated_at;
+                } else {
+                    $user['chat_discussion_id'] = null;
+                    $user['chat_last_message'] = null;
+                    $user['chat_last_date'] = null;
+                }
+            } else {
+                $user['chat_discussion_id'] = $discussion->id;
+                $user['chat_last_message'] = $discussion->last_message;
+                $user['chat_last_date'] = $discussion->updated_at;
+            }
+
+            // The empty user field must be present in response, with null value
+            $profiles = Profile::all();
+            foreach ($profiles as $profile) {
+                if ( ! isset($user[$profile->slug]) ) {
+                    $user[$profile->slug] = null;
+                }
+            }
+            $users[$key] = $user;
+        }
+
+        return response()->json($users);
+    }
+
+
+
+    public function search(Request $req) {
+        $queries = $req->except('limit', 'page');
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        $ids = [];
+        foreach ($queries as $slug => $value) {
+            $profileId = Profile::where('slug', $slug)->value('id');
+            if ($profileId) {
+                $tmpIds = UserProfile::where('profile_id', $profileId)->where('value', 'like', "%$value%")->pluck('user_id')->toArray();
+                $ids = array_merge($ids, $tmpIds);
+            }
+        }
+
+        if ($limit || $page) {
+            $users = User::whereIn('id', $ids)->paginate($limit);
+        } else {
+            $users = User::whereIn('id', $ids)->get();
+        }
+
+        foreach ($users as $key => $user) {
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if ($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+
+            // The empty user field must be present in response, with null value
+            $profiles = Profile::all();
+            foreach ($profiles as $profile) {
+                if (!isset($user[$profile->slug])) {
+                    $user[$profile->slug] = null;
+                }
+            }
+        }
+
+        return response()->json($users);
+    }
+
+
+    /**
+     * Delete user
+     */
+    public function delete(User $user) {
+        $user->delete(); //No need to delete user field in user profile because this is only a soft delete
     }
 
 
@@ -257,5 +369,12 @@ class UserController extends Controller
         }
 
         return response()->json($user);
+    }
+
+    public function get(Request $request){
+
+        $users = User::All();
+
+        return response()->json($users);
     }
 }

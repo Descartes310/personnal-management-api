@@ -24,7 +24,7 @@ class CreateProfilesTable extends Migration
             $table->double('min')->nullable();
             $table->double('max')->nullable();
             $table->double('step')->nullable();
-            $table->boolean('is_unique')->default(false);;
+            $table->boolean('is_unique')->default(false);
             $table->string('default')->nullable();
             $table->string('description', 255)->nullable();
             $table->timestamps();
