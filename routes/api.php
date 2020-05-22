@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::pattern('id', '[0-9]+');
 
-Route::group(['prefix' => 'auth'], function () { 
+Route::group(['prefix' => 'auth'], function () {
 
-    Route::post('/token', 'AuthController@login');
+    Route::post('token', 'AuthController@login');
 
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'AuthController@user');
@@ -73,11 +73,12 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::group(['prefix' => 'contracts'], function () {
-        Route::post('/', 'ContractController@create');
+        Route::post('', 'ContractController@create');
         Route::post('/{id}', 'ContractController@update');
         Route::get('/{id}', 'ContractController@find');
-        Route::get('/', 'ContractController@get');
+        Route::get('', 'ContractController@get');
         Route::delete('/{id}', 'ContractController@delete');
+        Route::get('/print-pdf/{id}','ContractController@printPDF');
     });
 
     Route::group(['prefix' => 'submissions'], function () {
@@ -90,7 +91,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('/', 'DivisionController@create');
-        Route::post('/{id}', 'DivisionController@update');
+        Route::put('/{id}', 'DivisionController@update');
         Route::get('/', 'DivisionController@get');
         Route::get('/{id}', 'DivisionController@find');
         Route::delete('/{id}', 'DivisionController@delete');
@@ -121,12 +122,21 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
 
+    Route::group(['prefix' => 'licenses'], function () {
+        Route::get('/', 'LicenseController@get');
+        Route::delete('{id}', 'LicenseController@delete');
+        Route::get('{id}', 'LicenseController@find');
+        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
+    });
+
+
+
     Route::group(['prefix' => 'blog_posts'], function () {
         Route::get('/', 'BlogPostController@get');
         Route::delete('{id}', 'BlogPostController@delete');
         Route::get('{id}', 'BlogPostController@find');
         Route::post('/', 'BlogPostController@create')->middleware('has-permission:create-blog-post');
-        Route::match(['post','put'], '/{id}', 'BlogPostController@update');
+        Route::match(['post','put'], '/{id}', 'BlogPostController@update')->middleware('has-permission:update-blog-post');
     });
 
 
@@ -136,7 +146,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
-    
+
     Route::group(['prefix' => 'templates'], function () {
         Route::get('/', 'TemplateController@get');
         Route::delete('{id}', 'TemplateController@delete');
@@ -148,7 +158,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     //il s'agit des routes pour read et delete profile
     Route::group(['prefix' => 'profiles'], function () {
         Route::get('/', 'ProfileController@get');
-        Route::get('/getProfiles', 'ProfileController@getProfiles');
         Route::get('/{id}', 'ProfileController@find');
         Route::delete('/{id}', 'ProfileController@delete');
         Route::post('/', 'ProfileController@create');
@@ -160,6 +169,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/{id}', 'SanctionController@update');
         Route::get('/', 'SanctionController@get');
         Route::get('/{id}', 'SanctionController@find');
+        Route::get('/sanctions_day', 'SanctionController@countSantionsDay');
         Route::delete('/{id}', 'SanctionController@delete');
     });
 
@@ -171,10 +181,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::match(['put', 'post'], '/{id}', 'CareerController@update');
     });
 
-
     Route::group(['prefix' => 'trainings'], function () {
-        Route::post('/', 'TrainingController@create');
-        Route::match(['put', 'post'], '/{id}', 'TrainingController@update');
         Route::get('/', 'TrainingController@get');
         Route::get('/{id}', 'TrainingController@find');
         Route::delete('/{id}', 'TrainingController@delete');
@@ -191,7 +198,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'roles'], function () {
         Route::get('/', 'RoleController@get');
-        Route::get('/getRolesWithPermissions', 'RoleController@getRolesWithPermissions');
         Route::post('/', 'RoleController@store');
         Route::post('/{id}', 'RoleController@update');
         Route::delete('/{id}', 'RoleController@delete');
@@ -235,6 +241,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/{id}', 'AssignmentTypeController@update');
     });
 
+
     Route::group(['prefix' => 'license_types'], function () {
         Route::get('/', 'LicenseTypeController@get');
         Route::delete('/{id}', 'LicenseTypeController@delete');
@@ -243,11 +250,10 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/{id}', 'LicenseTypeController@update');
         Route::put('/{id}', 'LicenseTypeController@update');
     });
-/*});*/
 
     Route::group(['prefix' => 'licenses'], function () {
         Route::post('/','LicenseController@create');
-        Route::match(['post', 'put'],'/{id}','LicenseController@update');
+        Route::post('/{id}','LicenseController@update');
         Route::get('/', 'LicenseController@get');
         Route::delete('{id}', 'LicenseController@delete');
         Route::get('{id}', 'LicenseController@find');
@@ -259,14 +265,17 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'VacationController@get');
         Route::delete('/{id}', 'VacationController@delete');
         Route::get('/{id}', 'VacationController@find');
+        Route::get('/status/{status}', 'VacationController@findByStatus');
         Route::post('/', 'VacationController@create');
         Route::match(['post', 'put'], '/{id}', 'VacationController@update');
     });
 
-    Route::group(['prefix' => 'careers'], function () {
-        Route::post('/', 'CareerController@create');
-        Route::put('/{id}', 'CareerController@update');
-        //Route::delete('/{id}', 'CareerController@delete');
+    Route::group(['prefix' => 'submissions'], function () {
+        Route::get('/', 'SubmissionController@get');
+        Route::delete('/{id}', 'SubmissionController@delete');
+        Route::get('/{id}', 'SubmissionController@find');
+        Route::post('submissions', 'SubmissionController@create');
+        Route::match(['put', 'post'], 'submissions/{id}', 'SubmissionController@update');
     });
 
     Route::group(['prefix' => 'blog_comments'], function () {
@@ -274,9 +283,17 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'BlogCommentController@delete');
     });
 
+    Route::group(['prefix' => 'settings'], function () {
+        Route::get('/', 'SettingController@get');
+        Route::delete('/{id}', 'SettingController@delete');
+        Route::get('/{id}', 'SettingController@find');
+        Route::post('/', 'SettingController@create');
+        Route::put('/{id}', 'SettingController@update');
+        Route::post('/{id}', 'SettingController@update');
+    });
+    
+    Route::group(['prefix' => 'statistics'], function () {
+        Route::get('/career/{id}', 'StatitisqueController@getDataSetUser');
+        Route::get('/prosituation/{id}', 'StatitisqueController@getDataProSituationUser');
+    });
 });
-
-
-
-
-
