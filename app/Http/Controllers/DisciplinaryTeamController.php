@@ -114,7 +114,9 @@ class DisciplinaryTeamController extends Controller
 
         $s = $req->s;
         $page = $req->page; 
-        $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate($limit);
+        $limit = $req->limit;
+        
+        $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate( $limit != null ? $limit:15);
         if($disciplinaryteam==null){
            $error_isempty = new APIError;
            $error_isempty->setStatus("404");

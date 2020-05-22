@@ -142,6 +142,11 @@ Route::group(['prefix' => 'auth'], function () {
         Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
+    Route::group(['prefix' =>'disciplinary_team_user'], function () {
+        Route::get('/{user_id}','DisciplinaryTeamUserController@find');
+        Route::get('/','DisciplinaryTeamUserController@get');
+    });
+
     Route::group(['prefix' => 'templates'], function () {
         Route::post('/', 'TemplateController@create');
         Route::put('/{id}', 'TemplateController@update');
