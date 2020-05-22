@@ -174,7 +174,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::match(['put', 'post'], '/{id}', 'CareerController@update');
     });
 
-
     Route::group(['prefix' => 'trainings'], function () {
         Route::post('/', 'TrainingController@create');
         Route::match(['put', 'post'], '/{id}', 'TrainingController@update');
@@ -276,6 +275,15 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'blog_comments'], function () {
         Route::post('/', 'BlogCommentController@create');
         Route::delete('/{id}', 'BlogCommentController@delete');
+    });
+
+    Route::group(['prefix' => 'settings'], function () {
+        Route::get('/', 'SettingController@get');
+        Route::delete('/{id}', 'SettingController@delete');
+        Route::get('/{id}', 'SettingController@find');
+        Route::post('/', 'SettingController@create');
+        Route::put('/{id}', 'SettingController@update');
+        Route::post('/{id}', 'SettingController@update');
     });
 
 });
