@@ -32,7 +32,7 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 
-Route::group(['middleware' => 'auth:api'], function () {
+/*Route::group(['middleware' => 'auth:api'], function () {*/
 
     Route::group(['prefix' => 'users'], function () {
         Route::get('/{id}', 'UserController@getUserInfo');
@@ -126,18 +126,15 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'disciplinary_teams'], function () {
         Route::get('/{id}', 'DisciplinaryTeamController@find');
         Route::get('/', 'DisciplinaryTeamController@get');
+        Route::get('/getDisciplinaryTeamsWithUsers', 'DisciplinaryTeamController@getDisciplinaryTeamWithUsers');
         Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
-<<<<<<< HEAD
     Route::group(['prefix' =>'disciplinary_team_user'], function () {
         Route::get('/{user_id}','DisciplinaryTeamUserController@find');
         Route::get('/','DisciplinaryTeamUserController@get');
     });
-
-=======
     
->>>>>>> 2700f85bc3222190254f192f5d5484db82a89ce0
     Route::group(['prefix' => 'templates'], function () {
         Route::get('/', 'TemplateController@get');
         Route::delete('{id}', 'TemplateController@delete');
@@ -275,7 +272,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'BlogCommentController@delete');
     });
 
-});
+/*});*/
 
 
 

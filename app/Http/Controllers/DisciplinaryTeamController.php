@@ -149,6 +149,15 @@ class DisciplinaryTeamController extends Controller
         return response()->json($disciplinaryteams);
     }
 
+    public function getDisciplinaryTeamWithUsers(Request $request){
+     
+        $disciplinaryteams = DisciplinaryTeam::all();
+        foreach ($disciplinaryteams as $disciplinaryteam) {
+            $disciplinaryteam->users;
+        }
+        return response()->json($disciplinaryteams);
+    }
+
      /**
       * Delete the choosen DisciplinaryTeam
       *@author Warren TABA

@@ -8,4 +8,8 @@ class DisciplinaryTeamUser extends Model
 {
     protected $guarded = [];
     protected $table = 'disciplinary_team_user';
+
+    public function users() {
+        return $this->belongsToMany('App\User');
+    }
 }
