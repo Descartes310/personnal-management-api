@@ -13,7 +13,9 @@ use App\User;
 use Auth;
 use App\APIError;
 use App\ChatDiscussion;
-
+use App\City;
+use App\Career;
+use App\ProSituation;
 
 class UserController extends Controller
 {
@@ -41,6 +43,16 @@ class UserController extends Controller
                 $user[$profile->slug] = null;
             }
         }
+
+        $career = Career::whereUserId($id)->orderBy('updated_at', 'desc')->first();
+        
+        if($career) {
+            $proSituation = ProSituation::find($career->pro_situation_id);
+            $user['pro_situation'] = $proSituation->name;
+        }
+
+        $user->roles;
+        $user['permissions'] = $user->allPermissions();
 
         return response()->json($user);
     }
@@ -155,7 +167,6 @@ class UserController extends Controller
         $user->delete(); //No need to delete user field in user profile because this is only a soft delete
     }
 
-
     /**
      * @author Armel Nya
      */
@@ -164,6 +175,7 @@ class UserController extends Controller
         $rules = [
             'login' => ['required', 'alpha_num', 'unique:App\User'],
             'password' => ['required'],
+            'city' => ['required'],
         ];
         // La boucle de validation
         foreach ($profiles as $profile) {
@@ -223,6 +235,7 @@ class UserController extends Controller
         // si la validation est ok on cree le user
         $user = User::create([
             'login' => $request->login,
+            'city' => $request->city,
             'password' => bcrypt($request->password)
         ]);
 
@@ -259,6 +272,8 @@ class UserController extends Controller
 
     public function update(Request $request, $id) {
         $user = User::find($id);
+        $result = User::find($id);
+
         if($user == null){
             $unauthorized = new APIError;
             $unauthorized->setStatus("404");
@@ -268,16 +283,13 @@ class UserController extends Controller
         }
         $profiles = Profile::get();
         $rules = [
-            'login' => ['required', 'alpha_num', Rule::unique('users')->ignore($id,'id')],
+            'login' => ['alpha_num', Rule::unique('users')->ignore($id,'id')],
         ];
         // boucle de validation
         foreach ($profiles as $profile) {
             $rule = [];
-            if ($profile->is_required) {
-                $rule[] = 'required';
-            } else {
-                $rule[] = 'nullable';
-            }
+
+            $rule[] = 'nullable';
 
             if ($profile->is_unique) {
                 $rule[] = function ($attribute, $value, $fail) use ($profile, $user) {
@@ -365,10 +377,20 @@ class UserController extends Controller
                 }
                 $value = null;
             }
-            $user[ $profile->slug ] = $value;
+            $result[ $profile->slug ] = $value;
         }
 
-        return response()->json($user);
+        if($request->city) {
+            $user->city = $request->city;
+        }
+        $user->save();
+
+        return response()->json($result);
+    }
+
+    public function getCities(){
+        $cities = City::all();
+        return response()->json($cities);
     }
 
     public function get(Request $request){
