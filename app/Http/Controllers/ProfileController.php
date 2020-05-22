@@ -3,17 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-<<<<<<< HEAD
-use App\APIError;
-use App\Profile;
-
-class ProfileController extends Controller
-{
-
-    public function create(Request $request){
-        $request->validate([
-            'name' => 'required',
-=======
 use App\Profile;
 use App\SelectOption;
 use App\APIError;
@@ -115,7 +104,6 @@ class ProfileController extends Controller{
     public function create(Request $request){
         $request->validate([
             'name' => 'required|unique:profiles',
->>>>>>> 26ab1d3575a6f48aca079c18fb2cdf69084046bb
             'type' => 'required',
             'is_required' => 'required',
             'is_updatable' => 'required',
@@ -201,11 +189,5 @@ class ProfileController extends Controller{
 
             return response()->json($errorcode, 401);
         }
-<<<<<<< HEAD
-    }
-
-    
-=======
     }    
->>>>>>> 26ab1d3575a6f48aca079c18fb2cdf69084046bb
 }
