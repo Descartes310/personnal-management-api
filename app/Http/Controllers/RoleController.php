@@ -96,7 +96,15 @@ class RoleController extends Controller
         $page = $request->page;
         $roles = Role::where('name', 'LIKE', '%'.$s.'%')
                                   ->paginate($limit);
+        return response()->json($roles);
+    }
 
+    public function getRolesWithPermissions(Request $request){
+     
+        $roles = Role::all();
+        foreach ($roles as $role) {
+            $role->permissions;
+        }
         return response()->json($roles);
     }
 
