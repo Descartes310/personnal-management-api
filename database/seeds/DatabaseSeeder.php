@@ -21,7 +21,5 @@ class DatabaseSeeder extends Seeder
 
         Schema::enableForeignKeyConstraints();
         Model::reguard();
-        $this->call(DivisionSeeder::class);
-        
     }
 }

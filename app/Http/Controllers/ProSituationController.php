@@ -6,26 +6,28 @@ use Illuminate\Http\Request;
 
 use App\APIError;
 use App\ProSituation;
-    
+
 class ProSituationController extends Controller {
 
     protected $successStatus = 200;
     protected $createStatus = 201;
     protected $notFoundStatus = 404;
+    protected $badRequestStatus = 400;
 
     /**
      * find one submission with id
      * @author adamu aliyu
+     * adamualiyu199@gmail.com
      */
     public function find($id){
         $prosituation = ProSituation::find($id);
         if($prosituation == null) {
-            $unauthorized = new APIError;
-            $unauthorized->setStatus("404");
-            $unauthorized->setCode("PRO_SITUATION_NOT_FOUND");
-            $unauthorized->setMessage("pro_situation id not found");
+            $notFoundError = new APIError;
+            $notFoundError->setStatus("404");
+            $notFoundError->setCode("PRO_SITUATION_NOT_FOUND");
+            $notFoundError->setMessage("pro_situation id not found");
 
-            return response()->json($unauthorized, 404); 
+            return response()->json($notFoundError, 404);
         }
         return response()->json($prosituation);
     }
@@ -33,31 +35,50 @@ class ProSituationController extends Controller {
     /**
      * get all pro situations with specific parameters
      * @author adamu aliyu
+     * adamualiyu199@gmail.com
      */
-    public function get(Request $request){
-      $limit = $request->limit;
-      $s = $request->s; 
-      $page = $request->page; 
-      $prosituations = ProSituation::where('name','LIKE','%'.$s.'%')
-                                     ->paginate($limit); 
-      return response()->json($prosituations);
+    public function get(Request $req){
+        $s = $req->s;
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($s) {
+            if ($limit || $page) {
+                $proSituations = ProSituation::where('name', 'LIKE', '%' . $s . '%')->paginate($limit);
+            } else {
+                $proSituations = ProSituation::where('name', 'LIKE', '%' . $s . '%')->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $proSituations = ProSituation::paginate($limit);
+            } else {
+                $proSituations = ProSituation::all();
+            }
+        }
+
+        return response()->json($proSituations);
     }
 
     /**
      * delete one pro situation with id
      * @author adamu aliyu
+     * adamualiyu199@gmail.com
      */
     public function delete($id){
         $prosituation = ProSituation::find($id);
         if($prosituation == null) {
-            $unauthorized = new APIError;
-            $unauthorized->setStatus("404");
-            $unauthorized->setCode("PRO_SITUATION_NOT_FOUND");
-            $unauthorized->setMessage("pro_situation id not found");
+            $notFoundError = new APIError;
+            $notFoundError->setStatus("404");
+            $notFoundError->setCode("PRO_SITUATION_NOT_FOUND");
+            $notFoundError->setMessage("pro_situation id not found");
 
-            return response()->json($unauthorized, 404); 
+            return response()->json($notFoundError, 404);
         }
-        $prosituation->delete($prosituation);
+        $prosituation->delete();
         return response(null);
     }
 
@@ -69,8 +90,7 @@ class ProSituationController extends Controller {
     public function create(Request $request) {
 
         $this->validate($request->all(), [
-            'name' => 'required|string',
-            'description' => 'string',
+            'name' => 'required|string|unique:pro_situations',
             'weight' => 'required|integer|min:1|max:100'
         ]);
 
@@ -93,7 +113,7 @@ class ProSituationController extends Controller {
 
         $this->validate($request->all(), [
             'name' => 'string',
-            'description' => 'string',
+            'description' => 'nullable|string',
             'weight' => 'integer|min:1|max:100'
         ]);
 
@@ -108,10 +128,25 @@ class ProSituationController extends Controller {
             return response()->json($notFoundError, $this->notFoundStatus);
         }
 
+        $name = $request->name;
+
+        $foundProSituation = ProSituation::whereName($name)->first();
+
+		if($foundProSituation != null && $foundProSituation != $proSituation) {
+
+			$badRequestError = new APIError;
+            $badRequestError->setStatus("400");
+            $badRequestError->setCode("PROSITUATION_NAME_ALREADY_EXIST");
+            $badRequestError->setMessage("Pro situation with name " . $name . " already exist");
+
+            return response()->json($badRequestError, $this->badRequestStatus);
+
+		}
+
         $proSituation->update(
-            $request->only([ 
-                'name', 
-                'description', 
+            $request->only([
+                'name',
+                'description',
                 'weight'
             ])
         );

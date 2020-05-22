@@ -4,8 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SelectOption extends Model
+class PermissionRole extends Model
 {
+    protected $table = 'permission_role';
     protected $guarded = [];
-    public $timestamps = false;
 }
