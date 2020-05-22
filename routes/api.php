@@ -261,5 +261,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/', 'BlogCommentController@create');
         Route::delete('/{id}', 'BlogCommentController@delete');
     });
-
+    
+   
+});
+Route::group(['prefix' => 'statistics'], function () {
+    Route::get('/career/{id}', 'StatitisqueController@getDataSetUser');
 });
