@@ -105,7 +105,7 @@ class ProfileController extends Controller{
             'is_updatable' => 'required',
             'is_unique' => 'required',
         ]);
-
+ 
         $profile = Profile::create([
             'name' => $request->name,
             'type' => $request->type,
