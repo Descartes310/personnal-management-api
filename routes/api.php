@@ -150,6 +150,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/{id}', 'SanctionController@update');
         Route::get('/', 'SanctionController@get');
         Route::get('/{id}', 'SanctionController@find');
+        Route::get('/sanctions_day', 'SanctionController@countSantionsDay');
         Route::delete('/{id}', 'SanctionController@delete');
     });
 
@@ -245,6 +246,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'VacationController@get');
         Route::delete('/{id}', 'VacationController@delete');
         Route::get('/{id}', 'VacationController@find');
+        Route::get('/status/{status}', 'VacationController@findByStatus');
         Route::post('/', 'VacationController@create');
         Route::match(['post', 'put'], '/{id}', 'VacationController@update');
     });
