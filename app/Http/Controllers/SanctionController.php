@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\APIError;
 use App\User;
-
+use Carbon\Carbon;
+use App\Sanction;
 class SanctionController extends Controller
 {
     //methode create
@@ -191,5 +192,23 @@ class SanctionController extends Controller
             }
         }
         return false;
+    }
+
+    //total des sanctions en cour 
+     //recuperation de toutes les vacation en cours
+     function countSantionsDay(){
+        //recuperation de la date du jour
+        $date = date('Y-m-d');
+        //$date = Carbon::now();
+        $countSanctions = Sanction::where('created_at',$date)->count('*');
+        if($countSanctions){
+            $apiError = new APIError;
+            $apiError->setStatus("400");
+            $apiError->setCode("SANCTION_NOT_FOUND");
+            $apiError->setErrors(['user_id' => 'user_id not existing']);
+
+        }
+
+        return response()->json($countSanctions,200);
     }
 }

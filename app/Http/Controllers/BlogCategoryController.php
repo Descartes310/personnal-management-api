@@ -56,7 +56,7 @@ class BlogCategoryController extends Controller
 
     /**
      * delete a blog Category
-     * @author Brell Sanwouo
+    
      */
     public function delete ($id){
         $blogCategory = BlogCategory::find($id);
