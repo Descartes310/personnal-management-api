@@ -108,7 +108,6 @@ class DivisionController extends Controller
                 $divisions = Division::with('division')->get();
             }
         }
-
         return response()->json($divisions);
     }
 

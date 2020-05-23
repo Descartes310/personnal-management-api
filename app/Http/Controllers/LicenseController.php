@@ -116,8 +116,7 @@ class LicenseController extends Controller {
           'is_active',
           'status'
         ]);
-
-        if(User::find($request->user_id) == null){
+         if(User::find($request->user_id) == null){
             $apiError = new APIError;
             $apiError->setStatus("400");
             $apiError->setCode("USER_ID_NOT_FOUND");
