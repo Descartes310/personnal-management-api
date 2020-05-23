@@ -100,7 +100,45 @@ class UserController extends Controller
         return response()->json($users);
     }
 
+    public function getProfileUsers(Request $req) {
+        
+        $connected_user = Auth::user();
 
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($limit || $page) {
+            $users = User::paginate($limit);
+        } else {
+            $users = User::all();
+        }
+
+        foreach ($users as $key => $user) {
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+            
+
+            // The empty user field must be present in response, with null value
+            $profiles = Profile::all();
+            foreach ($profiles as $profile) {
+                if ( ! isset($user[$profile->slug]) ) {
+                    $user[$profile->slug] = null;
+                }
+            }
+            $users[$key] = $user;
+        }
+
+        return response()->json($users);
+    }
 
     public function search(Request $req) {
         $queries = $req->except('limit', 'page');

@@ -20,7 +20,8 @@ class DisciplinaryTeamController extends Controller
      */
     public function create(Request $request) {
         $this->validate($request->all(), [
-            'name' => 'required|string'
+            'name' => 'required|string',
+            'users'=>'required'
         ]);
 
         $disciplinaryTeam1= DisciplinaryTeam::whereName($request['name'])->first();
@@ -36,6 +37,8 @@ class DisciplinaryTeamController extends Controller
         $disciplinaryTeam = DisciplinaryTeam::create([
             'name' => $request->name
         ]);
+
+        $disciplinaryTeam->users()->sync($request->users);
 
         return response()->json($disciplinaryTeam, $this->createStatus);
 
@@ -82,6 +85,9 @@ class DisciplinaryTeamController extends Controller
             ])
         );
 
+        $disciplinaryTeam->users()->sync($request->users);
+
+
         return response()->json($disciplinaryTeam, $this->successStatus);
 
     }
@@ -101,6 +107,9 @@ class DisciplinaryTeamController extends Controller
 
             return response()->json($notexist,404);
         }
+
+        $disciplinaryteam->users;
+
         return response()->json($disciplinaryteam);
     }
 

@@ -37,6 +37,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'users'], function () {
         Route::get('/{id}', 'UserController@getUserInfo');
         Route::get('', 'UserController@getUsers');
+        Route::get('/profiles', 'UserController@getProfileUsers');
         Route::get('/search', 'UserController@search');
         Route::post('/', 'UserController@create');
         Route::delete('/{user}', 'UserController@delete')->where('user', '[0-9]+');
@@ -268,8 +269,3 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
 });
-
-
-
-
-
