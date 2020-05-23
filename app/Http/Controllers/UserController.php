@@ -360,6 +360,9 @@ class UserController extends Controller
                         $destinationPath = public_path($relativeDestination);
                         $safeName = Str::slug($user->login) . time() . '.' . $extension;
                         $file->move($destinationPath, $safeName);
+                        if ($value) {
+                            @unlink(public_path($value));   // delete old file
+                        }
                         $value = "$relativeDestination/$safeName";
                     }
                 } else {
