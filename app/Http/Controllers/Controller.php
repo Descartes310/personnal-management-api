@@ -10,6 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use App\APIError;
+use App\User;
 
 class Controller extends BaseController
 {
@@ -113,5 +114,35 @@ class Controller extends BaseController
         }
 
         return $savedFilePath;
+    }
+
+     public function syncAbilities(Request $req, $id) {
+        $req->validate([
+            'roles' => 'required|json',
+            'permissions' => 'required|json'
+        ]);
+        $user = User::find($id);
+        abort_if($user == null, 404, "User not found !");
+        $roles = json_decode($req->roles);
+        $permissions = json_decode($req->permissions);
+        abort_unless(is_array($roles) && is_array($permissions), 400, "Roles and permissions must be both json array of id");
+
+        foreach ($roles as $roleId) {
+            abort_if(Role::find($roleId) == null, 404, "Role of id $roleId not found !");
+        }
+
+        foreach ($permissions as $permissionId) {
+            abort_if(Permission::find($permissionId) == null, 404, "Permission of id $permissionId not found !");
+        }
+
+        $user->syncPermissions([]);
+        $user->syncRoles($roles);
+        $user->syncPermissionsWithoutDetaching($permissions);
+        $data = [
+            'roles' => $user->roles,
+            'permissions' => $user->allPermissions()
+        ];
+
+        return response()->json($data);
     }
 }

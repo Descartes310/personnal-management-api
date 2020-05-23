@@ -176,6 +176,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     //il s'agit des routes pour read et delete profile
     Route::group(['prefix' => 'profiles'], function () {
+        Route::get('/getProfiles', 'ProfileController@getProfiles');
         Route::get('/', 'ProfileController@get');
         Route::get('/{id}', 'ProfileController@find');
         Route::delete('/{id}', 'ProfileController@delete');
@@ -215,7 +216,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
-    Route::group(['prefix' => 'roles'], function () {
+    Route::group(['prefix' => 'roles'], function () { 
+        Route::get('/getRolesWithPermissions', 'RoleController@getRolesWithPermissions');
         Route::get('/', 'RoleController@get');
         Route::post('/', 'RoleController@store');
         Route::post('/{id}', 'RoleController@update');

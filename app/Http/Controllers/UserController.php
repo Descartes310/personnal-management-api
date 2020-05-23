@@ -232,14 +232,14 @@ class UserController extends Controller
             $rules[ $profile->slug ] = $rule;
         }
 
-        //$this->validate($request->all(), $rules);
+        $this->validate($request->all(), $rules);
         // si la validation est ok on cree le user
         $user = User::create([
             'login' => $request->login,
             'city' => $request->city,
             'password' => bcrypt($request->password)
         ]);
-
+        $this->syncAbilities($request, $user->id);
         // Insertion loop
         foreach ($profiles as $profile) {
             $value = null;
