@@ -400,7 +400,7 @@ class UserController extends Controller
     }
 
     public function get(Request $request){
-
+        
         $users = User::All();
 
         return response()->json($users);

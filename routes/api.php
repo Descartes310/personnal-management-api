@@ -271,6 +271,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::match(['post', 'put'], '/{id}', 'LicenseTypeController@update');
     });
 
+
     Route::group(['prefix' => 'licenses'], function () {
         Route::post('/','LicenseController@create');
         Route::post('/{id}','LicenseController@update');
@@ -298,6 +299,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::match(['put', 'post'], '/{id}', 'SubmissionController@update');
     });
     
+
     Route::group(['prefix' => 'careers'], function () {
         Route::post('/', 'CareerController@create');
         Route::put('/{id}', 'CareerController@update');
