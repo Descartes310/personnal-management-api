@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use App\APIError;
 use Illuminate\Http\Request;
 use App\License;
@@ -13,10 +12,10 @@ use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 
 
-class LicenseController extends Controller{
+class LicenseController extends Controller {
 
 
-    public function get(Request $request){
+    public function get(Request $request) {
 
 
         $s = $request->s;
@@ -94,7 +93,7 @@ class LicenseController extends Controller{
 
 
      public function create (Request $request){
-        $now = Carbon::now(); 
+        $now = Carbon::now();
         $request->validate([
            'user_id' => 'required',
            'license_type_id' => 'required',

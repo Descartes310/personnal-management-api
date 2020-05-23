@@ -3,18 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-<<<<<<< HEAD
-use App\APIError;
 use App\Profile;
-
-class ProfileController extends Controller
-{
-
-    public function create(Request $request){
-        $request->validate([
-            'name' => 'required',
-=======
-use App\Profile;
+use App\SelectOption;
 use App\APIError;
 
 
@@ -45,9 +35,28 @@ class ProfileController extends Controller{
                 $profiles = Profile::all();
             }
         }
-
         return response() ->json($profiles);
     }
+
+    /**
+     *
+     * @author Arléon Zemtsop
+     * @email arleonzemtsop@gmail.com
+     */
+    public function getProfiles(Request $req){
+        $profiles = Profile::all();
+        
+        foreach ($profiles as $profile) {
+
+            if($profile->type == 'select') {
+                $options = SelectOption::whereProfileId($profile->id)->get();
+                $profile['options'] = $options;
+            }
+        }
+
+        return response()->json($profiles, 200);
+    }
+
     /**
      *
      * @author jiozangtheophane@gmail.com
@@ -91,7 +100,6 @@ class ProfileController extends Controller{
     public function create(Request $request){
         $request->validate([
             'name' => 'required|unique:profiles',
->>>>>>> 26ab1d3575a6f48aca079c18fb2cdf69084046bb
             'type' => 'required',
             'is_required' => 'required',
             'is_updatable' => 'required',
@@ -109,6 +117,7 @@ class ProfileController extends Controller{
             'max'  => $request->max,
             'step' => $request->step,
             'is_unique' => $request->is_unique,
+            'is_private' => $request->is_private,
             'default' => $request->default,
             'description' => $request->description
         ]);
@@ -149,11 +158,5 @@ class ProfileController extends Controller{
 
             return response()->json($errorcode, 401);
         }
-<<<<<<< HEAD
-    }
-
-    
-=======
     }    
->>>>>>> 26ab1d3575a6f48aca079c18fb2cdf69084046bb
 }
