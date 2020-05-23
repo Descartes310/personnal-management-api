@@ -58,7 +58,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'AssignmentController@find');
         Route::get('/', 'AssignmentController@get');
         Route::post('/', 'AssignmentController@create');
-        Route::put('/{id}', 'AssignmentController@update');
+        Route::match(['post', 'put'],'/{id}', 'AssignmentController@update');
     });
 
 

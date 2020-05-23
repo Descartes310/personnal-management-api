@@ -80,7 +80,8 @@ class AssignmentController extends Controller
             'destination' => 'required',
             'signature_date' => 'required',
             'installation_date' => 'required',
-            'raison' => 'required'
+            'raison' => 'required',
+            'description' => 'nullable'
         ]);
 
         $user = User::find($request->user_id);
@@ -111,7 +112,8 @@ class AssignmentController extends Controller
             'destination' => $request->destination,
             'signature_date' => $request->signature_date,
             'installation_date' => $request->installation_date,
-            'raison' => $request->raison
+            'raison' => $request->raison,
+            'description' => $request->description
         ]);
 
         return response()->json($assignment, 201);
@@ -126,7 +128,8 @@ class AssignmentController extends Controller
             'destination' => 'required',
             'signature_date' => 'required',
             'installation_date' => 'required',
-            'raison' => 'required'
+            'raison' => 'required',
+            'description' => 'nullable'
         ]);
 
         $assignment = Assignment::find($id);
@@ -168,7 +171,8 @@ class AssignmentController extends Controller
             'destination' => $request->destination,
             'signature_date' => $request->signature_date,
             'installation_date' => $request->installation_date,
-            'raison' => $request->raison
+            'raison' => $request->raison,
+            'description' => $request->description
         ]);
 
         return response()->json($assignment, 200);
