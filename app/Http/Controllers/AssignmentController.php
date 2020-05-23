@@ -71,7 +71,7 @@ class AssignmentController extends Controller
             if ($limit || $page) {
                 $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->with('assignmentType')->paginate($limit);
             } else {
-                $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->with('assignmentType')->get();
+                $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->with('assignmentType')-get();
             }
         } else {
             if ($limit || $page) {

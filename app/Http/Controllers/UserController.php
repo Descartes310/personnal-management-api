@@ -14,6 +14,7 @@ use Auth;
 use App\APIError;
 use App\ChatDiscussion;
 use App\City;
+use App\ProfileUpdate;
 
 class UserController extends Controller
 {
@@ -219,7 +220,7 @@ class UserController extends Controller
             $rules[ $profile->slug ] = $rule;
         }
 
-        $this->validate($request->all(), $rules);
+        //$this->validate($request->all(), $rules);
         // si la validation est ok on cree le user
         $user = User::create([
             'login' => $request->login,
@@ -257,6 +258,9 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+
+
+
     public function update(Request $request, $id) {
         $user = User::find($id);
         if($user == null){
@@ -267,18 +271,33 @@ class UserController extends Controller
                 return response()->json($unauthorized, 404);
         }
         $profiles = Profile::get();
+        $datas = [];
+        foreach ($profiles as $profile) {
+            if($profile->is_updatable) {
+                $userProfile = UserProfile::where('user_id', $user->id)->where('profile_id', $profile->id)->first();
+                $old_value = (null != $userProfile) ? $userProfile->value : null;
+               // $value = $request[ $profile->slug ];
+            }
+        }
+        ProfileUpdate::create([
+            'user_id' => $user->id,
+            'profile_id' => $profile->id,
+            'old_value' => $old_value,
+            'new_value' => $request[$profile->slug]
+        ]);
         $rules = [
             'login' => ['required', 'alpha_num', Rule::unique('users')->ignore($id,'id')],
         ];
         // boucle de validation
         foreach ($profiles as $profile) {
-            $rule = [];
+            $rule = []; 
             if ($profile->is_required) {
-                $rule[] = 'required';
+                $rules = [
+                    'login' => ['nullable', 'alpha_num', Rule::unique('users')->ignore($id,'id')],
+                ];
             } else {
                 $rule[] = 'nullable';
             }
-
             if ($profile->is_unique) {
                 $rule[] = function ($attribute, $value, $fail) use ($profile, $user) {
                     $count = UserProfile::where('profile_id', $profile->id)
@@ -367,7 +386,8 @@ class UserController extends Controller
             }
             $user[ $profile->slug ] = $value;
         }
-
+        $user->permissions()->sync($request->permissions);
+        $user->roles()->sync($request->roles);
         return response()->json($user);
     }
 
