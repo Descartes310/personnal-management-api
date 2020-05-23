@@ -232,14 +232,14 @@ class UserController extends Controller
             $rules[ $profile->slug ] = $rule;
         }
 
-        //$this->validate($request->all(), $rules);
+        $this->validate($request->all(), $rules);
         // si la validation est ok on cree le user
         $user = User::create([
             'login' => $request->login,
             'city' => $request->city,
             'password' => bcrypt($request->password)
         ]);
-
+        $this->syncAbilities($request, $user->id);
         // Insertion loop
         foreach ($profiles as $profile) {
             $value = null;
@@ -276,7 +276,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id) {
         $user = User::find($id);
-        $result = User::find($id);
+        // $result = User::find($id);
 
         if($user == null){
             $unauthorized = new APIError;
@@ -410,9 +410,9 @@ class UserController extends Controller
         }
         $user->save();
 
-        return response()->json($result);
-        $user->permissions()->sync($request->permissions);
-        $user->roles()->sync($request->roles);
+        // return response()->json($result);
+        // $user->permissions()->sync($request->permissions);
+        // $user->roles()->sync($request->roles);
         return response()->json($user);
     }
 
