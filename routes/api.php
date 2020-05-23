@@ -198,6 +198,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::get('/permissions', 'RoleController@getPermissions');
+    Route::match(['patch', 'post', 'put'], '/sync_user_abilities/{id}', 'RoleController@syncAbilities');
 
 
     Route::group(['prefix' => 'profile_updates'], function () {
@@ -284,7 +285,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/{id}', 'SettingController@update');
         Route::post('/{id}', 'SettingController@update');
     });
-    
+
     Route::group(['prefix' => 'statistics'], function () {
         Route::get('/career/{id}', 'StatitisqueController@getDataSetUser');
         Route::get('/prosituation/{id}', 'StatitisqueController@getDataProSituationUser');
