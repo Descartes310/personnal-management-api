@@ -229,10 +229,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'assignment_types'], function () {
         Route::post('/', 'AssignmentTypeController@create');
-        Route::post('/{id}', 'AssignmentTypeController@update');
+        Route::match(['post', 'put'], '/{id}', 'AssignmentTypeController@update');
         Route::get('/{id}', 'AssignmentTypeController@find');
-        Route::post('/', 'AssignmentTypeController@create');
-        Route::put('/{id}', 'AssignmentTypeController@update');
+        Route::get('/', 'AssignmentTypeController@get');
+        Route::delete('/{id}', 'AssignmentTypeController@delete');
+        Route::get('/{id}', 'AssignmentTypeController@find');
     });
 
 
@@ -241,8 +242,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'LicenseTypeController@delete');
         Route::get('/{id}', 'LicenseTypeController@find');
         Route::post('/', 'LicenseTypeController@add');
-        Route::post('/{id}', 'LicenseTypeController@update');
-        Route::put('/{id}', 'LicenseTypeController@update');
+        Route::match(['post', 'put'], '/{id}', 'LicenseTypeController@update');
     });
 
     Route::group(['prefix' => 'licenses'], function () {
