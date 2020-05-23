@@ -256,4 +256,19 @@ class VacationController extends Controller
         $vacation->update($data);
         return response()->json($vacation);
     }
+
+    //recuperation de toutes les vacation en cours
+    function findByStatus($status){
+        
+        $vacation = Vacation::whereStatus($status)->count('*');
+        if($vacation){
+            $apiError = new APIError;
+            $apiError->setStatus("400");
+            $apiError->setCode("VACATION_STATUS_NOT_FOUND");
+            $apiError->setErrors(['user_id' => 'user_id not existing']);
+
+        }
+
+        return response()->json($vacation);
+    }
 }

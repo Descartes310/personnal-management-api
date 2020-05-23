@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\License;
 use App\LicenseType;
 use App\User;
+use App\UserProfile;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 
@@ -20,6 +21,8 @@ class LicenseController extends Controller {
         $s = $request->s;
         $page = $request->page;
         $limit = null;
+        $datas = [];
+        $licenses = [];
 
         if ($request->limit && $request->limit > 0) {
             $limit = $request->limit;
@@ -27,24 +30,45 @@ class LicenseController extends Controller {
 
         if ($s) {
             if ($limit || $page) {
-                return License::where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->paginate($limit);
+                $licenses = License::where('raison', 'like', "%$s%")->with('license_type')->orWhere('description', 'like', "%$s%")->paginate($limit);
             } else {
-                return License::where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->get();
+                $licenses = License::where('raison', 'like', "%$s%")->with('license_type')->orWhere('description', 'like', "%$s%")->get();
             }
         } else {
             if ($limit || $page) {
-                return License::paginate($limit);
+                $licenses = License::with('license_type')->paginate($limit);
             } else {
-                return License::all();
+                $licenses = License::with('license_type')->get();
             }
         }
+
+        foreach ($licenses as $key => $license) {
+            $user = User::whereId($license->user_id)->first();
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+            $license['user'] = $user;
+            array_push($datas, $license);
+        }
+        return response()->json($datas);
     }
 
 
 
     public function find($id){
 
-        $license = License::find($id);
+
+        $license1 = License::find($id);
+        $user = User::whereId($license1->user_id)->first();
+        $license_type = LicenseType:: whereId($license1->license_type_id)->first();
+        $license1['user_id'] = $user;
+        $license1['license_type_id'] = $license_type;
+        $license = $license1;
+       
         abort_if($license == null, 404, "license not found.");
         return response()->json($license);
     }
@@ -77,7 +101,8 @@ class LicenseController extends Controller {
            'requested_days' => 'required|numeric|min:0',
            'is_active' => 'required|boolean',
            'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'
-        ]);
+         ]);
+
         $data = $request->only([
           'user_id',
           'license_type_id',
@@ -99,7 +124,7 @@ class LicenseController extends Controller {
             $apiError->setErrors(['user_id' => 'user_id not existing']);
 
             return response()->json($apiError, 400);
-        }
+         }
 
          if(LicenseType::find($request->license_type_id) == null){
             $apiError = new APIError;
@@ -108,7 +133,7 @@ class LicenseController extends Controller {
             $apiError->setErrors(['license_type_id' => 'license_type_id not existing']);
 
             return response()->json($apiError, 400);
-        }
+         }
 
         if($data['requested_days'] <= 0){
             $apiError = new APIError;
@@ -145,7 +170,10 @@ class LicenseController extends Controller {
                 $path = "$relativeDestination/$safeName";
             }
             $data['file'] = $path;
+
         }
+
+
 
         $license = License::create($data);
         return response()->json($license);
@@ -160,12 +188,13 @@ class LicenseController extends Controller {
             $apiError->setErrors(['id' => 'license id not existing']);
 
             return response()->json($apiError, 404);
-        }
+         }
 
+        $now = Carbon::now();
         $request->validate([
             'user_id' => 'required',
             'license_type_id' => 'required',
-            'requested_start_date' => 'required|date',
+            'requested_start_date' => 'required|date|after:'.$now,
             'requested_days' => 'required|numeric|min:0',
             'is_active' => 'required|boolean',
             'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'

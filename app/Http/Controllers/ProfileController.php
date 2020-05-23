@@ -45,7 +45,7 @@ class ProfileController extends Controller{
      */
     public function getProfiles(Request $req){
         $profiles = Profile::all();
-        
+
         foreach ($profiles as $profile) {
 
             if($profile->type == 'select') {
@@ -117,7 +117,7 @@ class ProfileController extends Controller{
             'max'  => $request->max,
             'step' => $request->step,
             'is_unique' => $request->is_unique,
-            'is_private' => $request->is_private,
+            //'is_private' => $request->is_private,
             'default' => $request->default,
             'description' => $request->description
         ]);
@@ -126,14 +126,14 @@ class ProfileController extends Controller{
     }
 
     public function update(Request $request, $id){
-        
+
         $request->validate([
             'name' => 'required',
             'type' => 'required',
         ]);
         $Profile = Profile::find($id);
         if($Profile != null){
-            
+
             $Profile->update($request->only([
                 'name',
                 'type',
@@ -148,7 +148,7 @@ class ProfileController extends Controller{
                 'default',
                 'description'
             ]));
-  
+
           return response()->json($Profile);
         } else {
             $errorcode = new APIError;
@@ -158,5 +158,5 @@ class ProfileController extends Controller{
 
             return response()->json($errorcode, 401);
         }
-    }    
+    }
 }
