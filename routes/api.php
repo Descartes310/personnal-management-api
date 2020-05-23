@@ -261,10 +261,13 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'BlogCommentController@delete');
     });
 
+    Route::group(['prefix' => 'user_note_criteria'], function () {
+        Route::post('/', 'UserNoteCriteriaController@save');
+        Route::match(['post', 'put'], '/{id}', 'UserNoteCriteriaController@update');
+        Route::get('/', 'UserNoteCriteriaController@get');
+        Route::get('/{id}', 'UserNoteCriteriaController@find');
+        Route::delete('/{id}', 'UserNoteCriteriaController@delete');
+    });
+
 });
 
-
-Route::group(['prefix' => 'LicenseType'], function () {
-    Route::post('/', 'LicenseTypeController@saveLicenseType');
-    Route::match(['post', 'put'], '/{id}', 'LicenseTypeController@updateLicenseType');
-});
