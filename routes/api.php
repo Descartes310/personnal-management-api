@@ -267,5 +267,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'statistics'], function () {
         Route::get('/career/{id}', 'StatitisqueController@getDataSetUser');
         Route::get('/prosituation/{id}', 'StatitisqueController@getDataProSituationUser');
+        Route::get('/assignment_by_month', 'StatitisqueController@getAssignByMonth');
     });
 });
