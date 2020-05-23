@@ -46,7 +46,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'blog_categories'], function () {
         Route::delete('/{id}', 'BlogCategoryController@delete');
-        Route::get('/{id}', 'BlogCategoryController@find2');
+        Route::get('/{id}', 'BlogCategoryController@find');
         Route::get('/', 'BlogCategoryController@get');
         Route::post('/', 'BlogCategoryController@create');
         Route::post('/{id}', 'BlogCategoryController@update');
