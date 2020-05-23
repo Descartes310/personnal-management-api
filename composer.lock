@@ -3430,7 +3430,8 @@
             "version": "v5.0.8",
             "source": {
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "600a52c29afc0d1caa74acbec8d3095ca7e9910d"
+                "reference": "600a52c29afc0d1caa74acbec8d3095ca7e9910d",
+                "type":"git"
             },
             "dist": {
                 "type": "zip",
