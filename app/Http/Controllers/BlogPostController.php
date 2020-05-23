@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Team;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Permission;
 
 
 class BlogPostController extends Controller {
@@ -68,8 +69,10 @@ class BlogPostController extends Controller {
         ]);
     }
 
-    public function delete($id){
+    public function delete(Request $request,$id){
 
+
+       // 'name' => $blogPost->slug,
         $blogPost = BlogPost::find($id);
         if(!$blogPost){
             $apiError = new APIError;
@@ -98,7 +101,7 @@ class BlogPostController extends Controller {
         $data = $request->only('title', 'content', 'blog_category_id');
         $data['user_id'] = $user->id;
         $data['views'] = 0;
-        //$data['slug'] = Str::slug($request->title) . time();
+        $data['slug'] = Str::slug($request->title) . time();
         $data['image'] = $this->uploadSingleFile($request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
 
         $blogPost = BlogPost::create($data);
@@ -144,7 +147,9 @@ class BlogPostController extends Controller {
         abort_unless($user->isAbleTo('update-blog-post', $blogPost->slug), 403);
 
         $data = $request->only(['title', 'content', 'blog_category_id']);
-        $data['image'] = $this->uploadSingleFile($request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
+        $data['slug'] = Str::slug($request->title) . time();
+        $data['image'] = $this->uploadSingleFile(
+            $request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
 
         if ($data['image']) {
             @unlink(public_path($blogPost->image));

@@ -6,17 +6,9 @@ use Illuminate\Http\Request;
 use App\Assignment;
 use App\AssignmentType;
 use App\APIError;
-
+use App\User;
 class AssignmentController extends Controller
 {
-    protected $succesStatus = 200;
-    protected $notFoundStatus = 404;
-    protected $badRequest = 200;
-
-    /**
-     * delete an assignement
-     * @author Brell Sanwouo
-     */
 
     public function delete ($id){
         $assignment = Assignment::find($id);
@@ -32,12 +24,8 @@ class AssignmentController extends Controller
         return response()->json(null);
     }
 
-    /**
-     * find a spacific assignement
-     * @author Brell Sanwouo
-     */
     public function find($id){
-        $assignment = Assignment::find($id);
+        $assignment = Assignment::with('user')->with('assignmentType')->whereId($id)->first();
         if($assignment == null){
             $unauthorized = new APIError;
             $unauthorized->setStatus("404");
@@ -65,15 +53,15 @@ class AssignmentController extends Controller
 
         if ($s) {
             if ($limit || $page) {
-                $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->paginate($limit);
+                $assignments = Assignment::with('user')->with('assignmentType')->where('raison', 'LIKE', '%' . $s . '%')->paginate($limit);
             } else {
-                $assignments = Assignment::where('raison', 'LIKE', '%' . $s . '%')->get();
+                $assignments = Assignment::with('user')->with('assignmentType')->where('raison', 'LIKE', '%' . $s . '%')->get();
             }
         } else {
             if ($limit || $page) {
-                $assignments = Assignment::paginate($limit);
+                $assignments = Assignment::with('user')->with('assignmentType')->paginate($limit);
             } else {
-                $assignments = Assignment::all();
+                $assignments = Assignment::with('user')->with('assignmentType')->get();
             }
         }
 
@@ -92,7 +80,8 @@ class AssignmentController extends Controller
             'destination' => 'required',
             'signature_date' => 'required',
             'installation_date' => 'required',
-            'raison' => 'required'
+            'raison' => 'required',
+            'description' => 'nullable'
         ]);
 
         $user = User::find($request->user_id);
@@ -123,7 +112,8 @@ class AssignmentController extends Controller
             'destination' => $request->destination,
             'signature_date' => $request->signature_date,
             'installation_date' => $request->installation_date,
-            'raison' => $request->raison
+            'raison' => $request->raison,
+            'description' => $request->description
         ]);
 
         return response()->json($assignment, 201);
@@ -138,7 +128,8 @@ class AssignmentController extends Controller
             'destination' => 'required',
             'signature_date' => 'required',
             'installation_date' => 'required',
-            'raison' => 'required'
+            'raison' => 'required',
+            'description' => 'nullable'
         ]);
 
         $assignment = Assignment::find($id);
@@ -180,7 +171,8 @@ class AssignmentController extends Controller
             'destination' => $request->destination,
             'signature_date' => $request->signature_date,
             'installation_date' => $request->installation_date,
-            'raison' => $request->raison
+            'raison' => $request->raison,
+            'description' => $request->description
         ]);
 
         return response()->json($assignment, 200);

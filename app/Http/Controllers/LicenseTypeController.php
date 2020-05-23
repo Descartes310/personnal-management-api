@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\APIError;
+use App\LicenseType;
 use App\License;
+use App\APIError;
+use App\Http\Controllers\Controller;
+
 /**
  * 
  * @author whitney houston
  * 
  */
+
 class LicenseTypeController extends Controller
 {
 
@@ -71,6 +75,20 @@ class LicenseTypeController extends Controller
         return response()->json($licensetype);
 	}
 
+    public function delete($id){
+        $licensetype = LicenseType::find($id);
+        if($licensetype == null) {
+            $notFoundError = new APIError;
+            $notFoundError->setStatus("404");
+            $notFoundError->setCode("LICENSE_TYPE_NOT_FOUND");
+            $notFoundError->setMessage("license_type id not found");
+
+            return response()->json($notFoundError, 404);
+        }
+        
+        $licensetype->delete();
+        return response(null);
+    }
 
     public function add(Request $request){
         $this->validate($request->al(), [
