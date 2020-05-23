@@ -45,7 +45,7 @@ class ProfileController extends Controller{
      */
     public function getProfiles(Request $req){
         $profiles = Profile::all();
-        
+
         foreach ($profiles as $profile) {
 
             if($profile->type == 'select') {
@@ -140,7 +140,7 @@ class ProfileController extends Controller{
     }
 
     public function update(Request $request, $id){
-        
+
         $request->validate([
             'name' => 'required',
             'type' => 'required',
