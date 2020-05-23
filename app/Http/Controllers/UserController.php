@@ -267,6 +267,15 @@ class UserController extends Controller
             $user[ $profile->slug ] = $value;
         }
 
+        //$roles = $user->roles();
+        //$roles->permissions()->sync($request->permissions);
+        for ($i=0; $i < $request->roles.length; $i++) { 
+             $user->attachRole($request->roles[i]);
+             $user->attachPermissions($request->permissions[i]);
+        } 
+       // $user->attachPermissions($request->permissions);
+       // $user->attachRole($request->roles);
+
         return response()->json($user);
     }
 
