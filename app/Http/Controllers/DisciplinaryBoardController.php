@@ -7,43 +7,13 @@ use App\DisciplinaryBoard;
 use App\APIError;
 use App\DisciplinaryTeam;
 use App\User;
-
-
+use App\UserProfile;
 class DisciplinaryBoardController extends Controller
 {
 
-
-    public function get(Request $request)
-    {
-        $limit = $request->limit;
-        $page = $request->page;
-        $s = $request->s;
-        if ($s) {
-            if ($limit || $page) {
-                $disciplinary_boards = DisciplinaryBoard::where('raison', 'LIKE', '%' . $s . '%')
-                    ->orWhere('decision', 'LIKE', '%' . $s . '%')
-                    ->orWhere('location', 'LIKE', '%' . $s . '%')
-                    ->paginate($limit);
-            } else {
-                $disciplinary_boards = DisciplinaryBoard::where('raison', 'LIKE', '%' . $s . '%')
-                    ->orWhere('decision', 'LIKE', '%' . $s . '%')
-                    ->orWhere('location', 'LIKE', '%' . $s . '%')
-                    ->get();
-            }
-        } else {
-            if ($limit || $page) {
-                $disciplinary_boards = DisciplinaryBoard::paginate($limit);
-            } else {
-                $disciplinary_boards = DisciplinaryBoard::all();
-            }
-        }
-
-        return response()->json($disciplinary_boards);
-    }
-
-
     public function find($id)
     {
+        //$datas = [];
         $disciplinary_board = DisciplinaryBoard::find($id);
         if ($disciplinary_board == null) {
             $unauthorized = new APIError;
@@ -52,6 +22,66 @@ class DisciplinaryBoardController extends Controller
             $unauthorized->setMessage("No disciplinary board found with id $id");
             return response()->json($unauthorized, 404);
         }
+        $team = DisciplinaryTeam::whereId($disciplinary_board->user_id)->first();
+        $disciplinary_board['disciplinaryteam'] = $team;
+
+        //foreach ($disciplinary_boards as $key => $disciplinary_board) {
+            $user = User::whereId($disciplinary_board->user_id)->first();
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+            $disciplinary_board['user'] = $user;
+           // array_push($datas, $disciplinary_board);
+        //}
+       // return response()->json($datas);
+        return response()->json($disciplinary_board);
+    }
+
+    public function get(Request $request)
+    {
+        $limit = $request->limit;
+        $page = $request->page;
+        $s = $request->s;
+        $datas = [];
+
+        if ($s) {
+            if ($limit || $page) {
+                $disciplinary_boards = DisciplinaryBoard::where('raison', 'LIKE', '%' . $s . '%')
+                    ->with('disciplinaryteam')
+                    ->orWhere('decision', 'LIKE', '%' . $s . '%')
+                    ->orWhere('location', 'LIKE', '%' . $s . '%')
+                    ->paginate($limit);
+            } else {
+                $disciplinary_boards = DisciplinaryBoard::where('raison', 'LIKE', '%' . $s . '%')
+                    ->with('disciplinaryteam')
+                    ->orWhere('decision', 'LIKE', '%' . $s . '%')
+                    ->orWhere('location', 'LIKE', '%' . $s . '%')
+                    ->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $disciplinary_boards = DisciplinaryBoard::with('disciplinaryteam')->paginate($limit);
+            } else {
+                $disciplinary_boards = DisciplinaryBoard::with('disciplinaryteam')->get();
+            }
+        }
+        foreach ($disciplinary_boards as $key => $disciplinary_board) {
+            $user = User::whereId($disciplinary_board->user_id)->first();
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+            $disciplinary_board['user'] = $user;
+            array_push($datas, $disciplinary_board);
+        }
+        $disciplinary_board->user;
         return response()->json($disciplinary_board);
     }
 

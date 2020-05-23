@@ -13,7 +13,7 @@ class CreateUserNoteCriteriaTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_note_criteria', function (Blueprint $table) {
+        Schema::create('user_note_criterias', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('note_criteria_id');

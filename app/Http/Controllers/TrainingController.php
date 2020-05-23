@@ -9,8 +9,7 @@ use App\Training;
 
 class TrainingController extends Controller
 {
-    protected $successStatus = 200;
-    protected $createStatus = 201;
+
     /**
      * find one training with id
      * @author aubin soh
@@ -97,19 +96,19 @@ class TrainingController extends Controller
             'duration' => 'required|integer|min:1|max:100',
             'location' => 'string'
         ]);
-        
+
         $training = Training::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name) . '_' .time(),
-            'trainer' =>$request->trainer,
+            'trainer' => $request->trainer,
             'description' => $request->description,
             'start_date' => $request->start_date,
             'duration' => $request->duration,
-            'location' =>$request->location,
-            'is_online' =>$request->is_online
+            'location' => $request->location,
+            'is_online' => $request->is_online
         ]);
 
-        return response()->json($training, $this->createStatus);
+        return response()->json($training, 201);
 
     }
 
@@ -139,7 +138,7 @@ class TrainingController extends Controller
             $notFoundError->setCode("NOT_FOUND_TRAINING_ID");
             $notFoundError->setMessage("Training with id " . $id . " not found");
 
-            return response()->json($notFoundError, $this->notFoundStatus);
+            return response()->json($notFoundError, 404);
         }
 
         $training->update(
@@ -154,7 +153,7 @@ class TrainingController extends Controller
             ])
         );
 
-        return response()->json($training, $this->successStatus);
+        return response()->json($training, 200);
 
     }
 

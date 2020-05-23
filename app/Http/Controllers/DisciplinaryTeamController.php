@@ -111,16 +111,20 @@ class DisciplinaryTeamController extends Controller
      */
 
     public function get(Request $req){
-
+        $limit = $req->limit;
         $s = $req->s;
-        $page = $req->page; 
+        // $page = $req->page; 
+        // $limit = $req->limit;
+        
+        // $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate( $limit != null ? $limit:15);
+        $page = $req->page;
         $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate($limit);
         if($disciplinaryteam==null){
            $error_isempty = new APIError;
            $error_isempty->setStatus("404");
            $error_isempty->setCode("DISCIPLINARYTEAM_IS_EMPTY");
            $error_isempty->setMessage("DisciplinaryTeam is empty in Database.");
-           
+
            return response()->json($error_isempty,404);
         }
         $page = $req->page;
@@ -144,6 +148,15 @@ class DisciplinaryTeamController extends Controller
             }
         }
 
+        return response()->json($disciplinaryteams);
+    }
+
+    public function getDisciplinaryTeamWithUsers(Request $request){
+     
+        $disciplinaryteams = DisciplinaryTeam::all();
+        foreach ($disciplinaryteams as $disciplinaryteam) {
+            $disciplinaryteam->users;
+        }
         return response()->json($disciplinaryteams);
     }
 

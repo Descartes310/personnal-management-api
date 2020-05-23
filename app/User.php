@@ -34,7 +34,12 @@ class User extends Authenticatable
         'password', 'remember_token', 'deleted_at'
     ];
 
-
+    public function permissions(){
+        return $this->belongsToMany('App\Permission');
+    }
+    public function roles(){
+        return $this->belongsToMany('App\Role');
+    }
     /**
      *  Get query of permitted model for user
      * @param string $model the full model class name
@@ -75,11 +80,4 @@ class User extends Authenticatable
         return parent::__call($method, $parameters);
     }
 
-    public function roles() {
-        return $this->belongsToMany('App\Role');
-    }
-
-    public function permissions() {
-        return $this->belongsToMany('App\Permission');
-    }
 }
