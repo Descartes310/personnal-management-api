@@ -32,7 +32,7 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 
-/*Route::group(['middleware' => 'auth:api'], function () {*/
+Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'users'], function () {
         Route::get('/{id}', 'UserController@getUserInfo');
@@ -272,7 +272,7 @@ Route::group(['prefix' => 'auth'], function () {
         Route::delete('/{id}', 'BlogCommentController@delete');
     });
 
-/*});*/
+});
 
 
 
