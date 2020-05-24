@@ -121,23 +121,19 @@ class VacationController extends Controller
             }
         }
 
-
-        if(isset($request->file))
-        {
+        if(isset($request->file)){
             $file = $request->file('file');
             $path = null;
-            if($file != null)
-            {
+            if($file != null){
                 $extension = $file->getClientOriginalExtension();
-                $relativeDestination = "uploads/document";
+                $relativeDestination = "uploads/permissions";
                 $destinationPath = public_path($relativeDestination);
                 $safeName = "document".time().'.'.$extension;
                 $file->move($destinationPath, $safeName);
                 $path = "$relativeDestination/$safeName";
             }
-
+            $data['file'] = $path;
         }
-        $data['file'] = $path;
 
         $vacation = Vacation::create($data);
         return response()->json($vacation);
@@ -254,6 +250,21 @@ class VacationController extends Controller
         }
 
         $vacation->update($data);
+        return response()->json($vacation);
+    }
+
+    //recuperation de toutes les vacation en cours
+    function findByStatus($status){
+        
+        $vacation = Vacation::whereStatus($status)->count('*');
+        if($vacation){
+            $apiError = new APIError;
+            $apiError->setStatus("400");
+            $apiError->setCode("VACATION_STATUS_NOT_FOUND");
+            $apiError->setErrors(['user_id' => 'user_id not existing']);
+
+        }
+
         return response()->json($vacation);
     }
 }

@@ -101,7 +101,8 @@ class LicenseController extends Controller {
            'requested_days' => 'required|numeric|min:0',
            'is_active' => 'required|boolean',
            'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'
-        ]);
+         ]);
+
         $data = $request->only([
           'user_id',
           'license_type_id',
@@ -123,7 +124,7 @@ class LicenseController extends Controller {
             $apiError->setErrors(['user_id' => 'user_id not existing']);
 
             return response()->json($apiError, 400);
-        }
+         }
 
          if(LicenseType::find($request->license_type_id) == null){
             $apiError = new APIError;
@@ -132,7 +133,7 @@ class LicenseController extends Controller {
             $apiError->setErrors(['license_type_id' => 'license_type_id not existing']);
 
             return response()->json($apiError, 400);
-        }
+         }
 
         if($data['requested_days'] <= 0){
             $apiError = new APIError;
@@ -169,7 +170,10 @@ class LicenseController extends Controller {
                 $path = "$relativeDestination/$safeName";
             }
             $data['file'] = $path;
+
         }
+
+
 
         $license = License::create($data);
         return response()->json($license);
@@ -184,12 +188,13 @@ class LicenseController extends Controller {
             $apiError->setErrors(['id' => 'license id not existing']);
 
             return response()->json($apiError, 404);
-        }
+         }
 
+        $now = Carbon::now();
         $request->validate([
             'user_id' => 'required',
             'license_type_id' => 'required',
-            'requested_start_date' => 'required|date',
+            'requested_start_date' => 'required|date|after:'.$now,
             'requested_days' => 'required|numeric|min:0',
             'is_active' => 'required|boolean',
             'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'

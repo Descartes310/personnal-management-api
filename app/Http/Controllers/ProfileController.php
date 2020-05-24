@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Profile;
 use App\SelectOption;
 use App\APIError;
-
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller{
     /**
@@ -45,7 +45,7 @@ class ProfileController extends Controller{
      */
     public function getProfiles(Request $req){
         $profiles = Profile::all();
-        
+
         foreach ($profiles as $profile) {
 
             if($profile->type == 'select') {
@@ -73,6 +73,10 @@ class ProfileController extends Controller{
             return response()->json($unauthorized, 404);
 
         }
+        if($profile->type == 'select') {
+            $options = SelectOption::whereProfileId($profile->id)->get();
+            $profile['options'] = $options;
+        }
         return response()->json($profile);
     }
     /**
@@ -96,7 +100,7 @@ class ProfileController extends Controller{
         return response(null);
     }
 
-
+   
     public function create(Request $request){
         $request->validate([
             'name' => 'required|unique:profiles',
@@ -105,7 +109,6 @@ class ProfileController extends Controller{
             'is_updatable' => 'required',
             'is_unique' => 'required',
         ]);
-
         $profile = Profile::create([
             'name' => $request->name,
             'type' => $request->type,
@@ -122,34 +125,62 @@ class ProfileController extends Controller{
             'description' => $request->description
         ]);
 
+        if($request->type == 'select') {
+            $options = $request->only((['options']));
+            foreach (current($options) as $option) {
+                SelectOption::create([
+                    'profile_id' => $profile->id,
+                    'value' => $option,
+                    'key' => $option
+                ]);
+            }
+        }
+
         return response()->json($profile);
     }
 
     public function update(Request $request, $id){
-        
+
         $request->validate([
             'name' => 'required',
             'type' => 'required',
         ]);
-        $Profile = Profile::find($id);
-        if($Profile != null){
-            
-            $Profile->update($request->only([
+        $profile = Profile::find($id);
+        if($profile != null){
+            $data = $request->only([
                 'name',
                 'type',
                 'placeholder',
                 'is_required',
                 'is_updatable',
-                'slug',
                 'min',
                 'max',
                 'step',
                 'is_unique',
+                'is_private',
                 'default',
                 'description'
-            ]));
+                ]);
+                $data['slug'] = Str::slug($request->name) . time();
+
+            $profile->update($data);
+
+            if($request->type == 'select') {
+                $options = SelectOption::whereProfileId($profile->id)->get();
+                foreach ($options as $option) {
+                    $option->delete();
+                }
+                $options = $request->only((['options']));
+                foreach (current($options) as $option) {
+                    SelectOption::create([
+                        'profile_id' => $profile->id,
+                        'value' => $option,
+                        'key' => $option
+                    ]);
+                }
+            }
   
-          return response()->json($Profile);
+          return response()->json($profile);
         } else {
             $errorcode = new APIError;
             $errorcode->setStatus("401");

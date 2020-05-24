@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDisciplinaryTeamUserTable extends Migration
+class CreateUserDivisionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateDisciplinaryTeamUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('disciplinary_team_user', function (Blueprint $table) {
+        Schema::create('user_divisions', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('disciplinary_team_id');
+            $table->unsignedInteger('division_id');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('disciplinary_team_id')->references('id')->on('disciplinary_teams')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('division_id')->references('id')->on('divisions');
         });
     }
 
@@ -31,6 +31,6 @@ class CreateDisciplinaryTeamUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('disciplinary_team_user');
+        Schema::dropIfExists('user_divisions');
     }
 }
