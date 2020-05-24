@@ -16,8 +16,8 @@ class CreateDisciplinaryTeamUserTable extends Migration
         Schema::create('disciplinary_team_user', function (Blueprint $table) {
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('disciplinary_team_id');
-            $table->timestamps();
 
+            $table->primary(['user_id', 'disciplinary_team_id']);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('disciplinary_team_id')->references('id')->on('disciplinary_teams')->onDelete('cascade');
         });
