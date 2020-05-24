@@ -50,6 +50,12 @@ class User extends Authenticatable
     }
 
 
+    public function permissions(){
+        return $this->belongsToMany('App\Permission');
+    }
+    public function roles(){
+        return $this->belongsToMany('App\Role');
+    }
     /**
      *  Get query of permitted model for user
      * @param string $model the full model class name
@@ -89,4 +95,5 @@ class User extends Authenticatable
 
         return parent::__call($method, $parameters);
     }
+
 }

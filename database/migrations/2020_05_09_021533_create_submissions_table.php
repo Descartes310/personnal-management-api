@@ -23,6 +23,7 @@ class CreateSubmissionsTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('dest_user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

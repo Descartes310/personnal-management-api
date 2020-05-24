@@ -14,6 +14,7 @@ class CreateDisciplinaryTeamUserTable extends Migration
     public function up()
     {
         Schema::create('disciplinary_team_user', function (Blueprint $table) {
+            $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('disciplinary_team_id');
 
