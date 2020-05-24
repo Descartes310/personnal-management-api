@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\APIError;
 use App\DisciplinaryTeam;
+use App\User;
 use Illuminate\Http\Request;
 
 class DisciplinaryTeamController extends Controller
@@ -20,7 +21,8 @@ class DisciplinaryTeamController extends Controller
      */
     public function create(Request $request) {
         $this->validate($request->all(), [
-            'name' => 'required|string'
+            'name' => 'required|string',
+            'users' => 'json|nullable'
         ]);
 
         $disciplinaryTeam1= DisciplinaryTeam::whereName($request['name'])->first();
@@ -33,9 +35,15 @@ class DisciplinaryTeamController extends Controller
             return response()->json($existError, $this->badRequestStatus);
         }
 
-        $disciplinaryTeam = DisciplinaryTeam::create([
-            'name' => $request->name
-        ]);
+        $disciplinaryTeam = DisciplinaryTeam::create(['name' => $request->name]);
+
+        if ($request->users) {
+            $users = json_decode($request->users);
+            foreach ($users as $userId) {
+                abort_if(User::find($userId) == null, 404, "Can't find user of id $userId");
+            }
+            $disciplinaryTeam->users()->sync($users);
+        }
 
         return response()->json($disciplinaryTeam, $this->createStatus);
 
@@ -113,14 +121,14 @@ class DisciplinaryTeamController extends Controller
     public function get(Request $req){
 
         $s = $req->s;
-        $page = $req->page; 
+        $page = $req->page;
         $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate($limit);
         if($disciplinaryteam==null){
            $error_isempty = new APIError;
            $error_isempty->setStatus("404");
            $error_isempty->setCode("DISCIPLINARYTEAM_IS_EMPTY");
            $error_isempty->setMessage("DisciplinaryTeam is empty in Database.");
-           
+
            return response()->json($error_isempty,404);
         }
         $page = $req->page;
