@@ -56,7 +56,7 @@ class BlogCategoryController extends Controller
 
     /**
      * delete a blog Category
-    
+
      */
     public function delete ($id){
         $blogCategory = BlogCategory::find($id);
@@ -90,6 +90,7 @@ class BlogCategoryController extends Controller
         }
         return response()->json($blogCategory);
     }
+
     public function find2($id){
         $blogCategory = BlogCategory::find($id);
         if($blogCategory == null){
@@ -107,7 +108,7 @@ class BlogCategoryController extends Controller
                     'title' => $blogCategory->title,
                     'blog_posts' => $blogposts
                 ],
-            
+
         ]);
     }
 
@@ -126,5 +127,5 @@ class BlogCategoryController extends Controller
         return response()->json($blogcats);
     }
 
-    
+
 }

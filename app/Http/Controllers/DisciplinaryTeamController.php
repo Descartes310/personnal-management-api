@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\APIError;
 use App\DisciplinaryTeam;
+use App\User;
 use Illuminate\Http\Request;
 
 class DisciplinaryTeamController extends Controller
@@ -20,7 +21,8 @@ class DisciplinaryTeamController extends Controller
      */
     public function create(Request $request) {
         $this->validate($request->all(), [
-            'name' => 'required|string'
+            'name' => 'required|string',
+            'users' => 'json|nullable'
         ]);
 
         $disciplinaryTeam1= DisciplinaryTeam::whereName($request['name'])->first();
@@ -33,9 +35,15 @@ class DisciplinaryTeamController extends Controller
             return response()->json($existError, $this->badRequestStatus);
         }
 
-        $disciplinaryTeam = DisciplinaryTeam::create([
-            'name' => $request->name
-        ]);
+        $disciplinaryTeam = DisciplinaryTeam::create(['name' => $request->name]);
+
+        if ($request->users) {
+            $users = json_decode($request->users);
+            foreach ($users as $userId) {
+                abort_if(User::find($userId) == null, 404, "Can't find user of id $userId");
+            }
+            $disciplinaryTeam->users()->sync($users);
+        }
 
         return response()->json($disciplinaryTeam, $this->createStatus);
 
@@ -48,10 +56,11 @@ class DisciplinaryTeamController extends Controller
      */
     public function update(Request $request, $id) {
         $this->validate($request->all(), [
-            'name' => 'required|string'
+            'name' => 'required|string',
+            'users' => 'json|nullable'
         ]);
 
-        $disciplinaryTeam  = DisciplinaryTeam::find($id);
+        $disciplinaryTeam = DisciplinaryTeam::find($id);
 
         if($disciplinaryTeam == null) {
             $notFoundError = new APIError;
@@ -63,24 +72,26 @@ class DisciplinaryTeamController extends Controller
         }
 
         if ($request['name']!=$disciplinaryTeam->name){
-          $disciplinaryTeam1= DisciplinaryTeam::whereName($request['name'])->first();
-          if ($disciplinaryTeam1 != null) {
-            $existError = new APIError;
-            $existError->setStatus("400");
-            $existError->setCode("DISCIPLINARY_TEAM_EXIST");
-            $existError->setMessage("Disciplinary Team with name " . $request['name'] . " is duplicated");
+            $disciplinaryTeam1= DisciplinaryTeam::whereName($request['name'])->first();
+            if ($disciplinaryTeam1 != null) {
+                $existError = new APIError;
+                $existError->setStatus("400");
+                $existError->setCode("DISCIPLINARY_TEAM_EXIST");
+                $existError->setMessage("Disciplinary Team with name " . $request['name'] . " is duplicated");
 
-            return response()->json($existError, $this->badRequestStatus);
-          }
+                return response()->json($existError, $this->badRequestStatus);
+            }
         }
 
+        $disciplinaryTeam->update(['name' => $request->name]);
 
-
-        $disciplinaryTeam->update(
-            $request->only([
-                'name'
-            ])
-        );
+        if ($request->users) {
+            $users = json_decode($request->users);
+            foreach ($users as $userId) {
+                abort_if(User::find($userId) == null, 404, "Can't find user of id $userId");
+            }
+            $disciplinaryTeam->users()->sync($users);
+        }
 
         return response()->json($disciplinaryTeam, $this->successStatus);
 
@@ -92,7 +103,7 @@ class DisciplinaryTeamController extends Controller
      * @author Warren TABA
      */
     public function find($id){
-        $disciplinaryteam = DisciplinaryTeam::find($id);
+        $disciplinaryteam = DisciplinaryTeam::with('users')->whereId($id)->first();
         if($disciplinaryteam == null){
             $notexist = new APIError;
             $notexist->setStatus("404");
@@ -101,6 +112,7 @@ class DisciplinaryTeamController extends Controller
 
             return response()->json($notexist,404);
         }
+
         return response()->json($disciplinaryteam);
     }
 
@@ -111,16 +123,16 @@ class DisciplinaryTeamController extends Controller
      */
 
     public function get(Request $req){
-
+        $limit = $req->limit;
         $s = $req->s;
-        $page = $req->page; 
+        $page = $req->page;
         $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate($limit);
         if($disciplinaryteam==null){
            $error_isempty = new APIError;
            $error_isempty->setStatus("404");
            $error_isempty->setCode("DISCIPLINARYTEAM_IS_EMPTY");
            $error_isempty->setMessage("DisciplinaryTeam is empty in Database.");
-           
+
            return response()->json($error_isempty,404);
         }
         $page = $req->page;
