@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
 
         // $this->call(CityAndCountrySeeder::class);
+        $this->call(ProfileSeeder::class);
         $this->call(SettingSeeder::class);
         $this->call(LaratrustSeeder::class);
 
