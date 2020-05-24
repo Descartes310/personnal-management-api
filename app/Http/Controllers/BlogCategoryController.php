@@ -78,20 +78,9 @@ class BlogCategoryController extends Controller
      * find a specific blog Category
      * @author Brell Sanwouo
      */
+
+
     public function find($id){
-        $blogCategory = BlogCategory::find($id);
-        if($blogCategory == null){
-            $notFound = new APIError;
-            $notFound->setStatus("404");
-            $notFound->setCode("BLOG_CATEGORY_NOT_FOUND");
-            $notFound->setMessage("blog Category id not found in database.");
-
-            return response()->json($notFound, 404);
-        }
-        return response()->json($blogCategory);
-    }
-
-    public function find2($id){
         $blogCategory = BlogCategory::find($id);
         if($blogCategory == null){
             $notFound = new APIError;
