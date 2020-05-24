@@ -7,7 +7,7 @@ use App\DisciplinaryBoard;
 use App\APIError;
 use App\DisciplinaryTeam;
 use App\User;
-use App\UserProfile;
+
 class DisciplinaryBoardController extends Controller
 {
 
@@ -23,20 +23,8 @@ class DisciplinaryBoardController extends Controller
             return response()->json($unauthorized, 404);
         }
 
+        $disciplinary_board['user'] = User::findWithProfile($disciplinary_board->user_id);
 
-        //foreach ($disciplinary_boards as $key => $disciplinary_board) {
-            $user = User::whereId($disciplinary_board->user_id)->first();
-            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
-            foreach ($user_infos as $user_info) {
-                if($user_info->profile->type == 'file')
-                    $user[$user_info->profile->slug] = url($user_info->value);
-                else
-                    $user[$user_info->profile->slug] = $user_info->value;
-            }
-            $disciplinary_board['user'] = $user;
-           // array_push($datas, $disciplinary_board);
-        //}
-       // return response()->json($datas);
         return response()->json($disciplinary_board);
     }
 
@@ -45,7 +33,6 @@ class DisciplinaryBoardController extends Controller
         $limit = $request->limit;
         $page = $request->page;
         $s = $request->s;
-        $datas = [];
 
         if ($s) {
             if ($limit || $page) {
@@ -68,19 +55,10 @@ class DisciplinaryBoardController extends Controller
                 $disciplinary_boards = DisciplinaryBoard::with('disciplinaryteam')->get();
             }
         }
-        foreach ($disciplinary_boards as $key => $disciplinary_board) {
-            $user = User::whereId($disciplinary_board->user_id)->first();
-            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
-            foreach ($user_infos as $user_info) {
-                if($user_info->profile->type == 'file')
-                    $user[$user_info->profile->slug] = url($user_info->value);
-                else
-                    $user[$user_info->profile->slug] = $user_info->value;
-            }
-            $disciplinary_board['user'] = $user;
-            array_push($datas, $disciplinary_board);
+        foreach ($disciplinary_boards as $disciplinary_board) {
+            $disciplinary_board->user = User::findWithProfile($disciplinary_board->user_id);
         }
-        return response()->json($datas);
+        return response()->json($disciplinary_boards);
     }
 
 
