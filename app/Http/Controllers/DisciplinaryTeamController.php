@@ -123,7 +123,7 @@ class DisciplinaryTeamController extends Controller
      */
 
     public function get(Request $req){
-
+        $limit = $req->limit;
         $s = $req->s;
         $page = $req->page;
         $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate($limit);
