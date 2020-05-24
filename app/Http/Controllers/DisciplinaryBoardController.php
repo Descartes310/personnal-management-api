@@ -14,7 +14,7 @@ class DisciplinaryBoardController extends Controller
     public function find($id)
     {
         //$datas = [];
-        $disciplinary_board = DisciplinaryBoard::find($id);
+        $disciplinary_board = DisciplinaryBoard::with('disciplinaryteam')->whereId($id)->first();
         if ($disciplinary_board == null) {
             $unauthorized = new APIError;
             $unauthorized->setStatus("404");
@@ -22,8 +22,7 @@ class DisciplinaryBoardController extends Controller
             $unauthorized->setMessage("No disciplinary board found with id $id");
             return response()->json($unauthorized, 404);
         }
-        $team = DisciplinaryTeam::whereId($disciplinary_board->user_id)->first();
-        $disciplinary_board['disciplinaryteam'] = $team;
+
 
         //foreach ($disciplinary_boards as $key => $disciplinary_board) {
             $user = User::whereId($disciplinary_board->user_id)->first();
