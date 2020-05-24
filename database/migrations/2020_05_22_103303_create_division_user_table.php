@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProfileUpdatesTable extends Migration
+class CreateDivisionUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,14 @@ class CreateProfileUpdatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('profile_updates' , function (Blueprint $table) {
+        Schema::create('division_user', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('division_id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('profile_id');
-            $table->text('old_value', 255)->nullable();
-            $table->text('new_value', 255)->nullable();
-            $table->boolean('is_accepted')->default(0);
-            $table->text('raison')->nullable();
             $table->timestamps();
 
+            $table->foreign('division_id')->references('id')->on('divisions')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('profile_id')->references('id')->on('profiles')->onDelete('cascade');
         });
     }
 
@@ -35,6 +31,6 @@ class CreateProfileUpdatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profile_updates');
+        Schema::dropIfExists('division_user');
     }
 }

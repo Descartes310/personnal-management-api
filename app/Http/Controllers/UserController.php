@@ -10,8 +10,13 @@ use App\Profile;
 use App\UserProfile;
 use App\SelectOption;
 use App\User;
+use Auth;
 use App\APIError;
-
+use App\ChatDiscussion;
+use App\City;
+use App\Career;
+use App\ProSituation;
+use App\ProfileUpdate;
 
 class UserController extends Controller
 {
@@ -40,9 +45,128 @@ class UserController extends Controller
             }
         }
 
+        $career = Career::whereUserId($id)->orderBy('updated_at', 'desc')->first();
+        
+        if($career) {
+            $proSituation = ProSituation::find($career->pro_situation_id);
+            $user['pro_situation'] = $proSituation->name;
+        }
+
+        $user->roles;
+        $user['permissions'] = $user->allPermissions();
+
         return response()->json($user);
     }
 
+    public function getUsers(Request $req) {
+        $connected_user = Auth::user();
+
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        if ($limit || $page) {
+            $users = User::paginate($limit);
+        } else {
+            $users = User::all();
+        }
+
+        foreach ($users as $key => $user) {
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+            $discussion = ChatDiscussion::whereUser1IdAndUser2Id($connected_user->id, $user->id)->first();
+            if($discussion == null) {
+                $discussion = ChatDiscussion::whereUser2IdAndUser1Id($connected_user->id, $user->id)->first();
+                if($discussion != null) {
+                    $user['chat_discussion_id'] = $discussion->id;
+                    $user['chat_last_message'] = $discussion->last_message;
+                    $user['chat_last_date'] = $discussion->updated_at;
+                } else {
+                    $user['chat_discussion_id'] = null;
+                    $user['chat_last_message'] = null;
+                    $user['chat_last_date'] = null;
+                }
+            } else {
+                $user['chat_discussion_id'] = $discussion->id;
+                $user['chat_last_message'] = $discussion->last_message;
+                $user['chat_last_date'] = $discussion->updated_at;
+            }
+
+            // The empty user field must be present in response, with null value
+            $profiles = Profile::all();
+            foreach ($profiles as $profile) {
+                if ( ! isset($user[$profile->slug]) ) {
+                    $user[$profile->slug] = null;
+                }
+            }
+            $users[$key] = $user;
+        }
+
+        return response()->json($users);
+    }
+
+
+
+    public function search(Request $req) {
+        $queries = $req->except('limit', 'page');
+        $page = $req->page;
+        $limit = null;
+
+        if ($req->limit && $req->limit > 0) {
+            $limit = $req->limit;
+        }
+
+        $ids = [];
+        foreach ($queries as $slug => $value) {
+            $profileId = Profile::where('slug', $slug)->value('id');
+            if ($profileId) {
+                $tmpIds = UserProfile::where('profile_id', $profileId)->where('value', 'like', "%$value%")->pluck('user_id')->toArray();
+                $ids = array_merge($ids, $tmpIds);
+            }
+        }
+
+        if ($limit || $page) {
+            $users = User::whereIn('id', $ids)->paginate($limit);
+        } else {
+            $users = User::whereIn('id', $ids)->get();
+        }
+
+        foreach ($users as $key => $user) {
+            $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+            foreach ($user_infos as $user_info) {
+                if ($user_info->profile->type == 'file')
+                    $user[$user_info->profile->slug] = url($user_info->value);
+                else
+                    $user[$user_info->profile->slug] = $user_info->value;
+            }
+
+            // The empty user field must be present in response, with null value
+            $profiles = Profile::all();
+            foreach ($profiles as $profile) {
+                if (!isset($user[$profile->slug])) {
+                    $user[$profile->slug] = null;
+                }
+            }
+        }
+
+        return response()->json($users);
+    }
+
+
+    /**
+     * Delete user
+     */
+    public function delete(User $user) {
+        $user->delete(); //No need to delete user field in user profile because this is only a soft delete
+    }
 
     /**
      * @author Armel Nya
@@ -52,6 +176,7 @@ class UserController extends Controller
         $rules = [
             'login' => ['required', 'alpha_num', 'unique:App\User'],
             'password' => ['required'],
+            'city' => ['required'],
         ];
         // La boucle de validation
         foreach ($profiles as $profile) {
@@ -111,9 +236,10 @@ class UserController extends Controller
         // si la validation est ok on cree le user
         $user = User::create([
             'login' => $request->login,
+            'city' => $request->city,
             'password' => bcrypt($request->password)
         ]);
-
+        $this->syncAbilities($request, $user->id);
         // Insertion loop
         foreach ($profiles as $profile) {
             $value = null;
@@ -145,8 +271,13 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+
+
+
     public function update(Request $request, $id) {
         $user = User::find($id);
+        // $result = User::find($id);
+
         if($user == null){
             $unauthorized = new APIError;
             $unauthorized->setStatus("404");
@@ -155,18 +286,33 @@ class UserController extends Controller
                 return response()->json($unauthorized, 404);
         }
         $profiles = Profile::get();
+        $datas = [];
+        foreach ($profiles as $profile) {
+            if($profile->is_updatable) {
+                $userProfile = UserProfile::where('user_id', $user->id)->where('profile_id', $profile->id)->first();
+                $old_value = (null != $userProfile) ? $userProfile->value : null;
+               // $value = $request[ $profile->slug ];
+            }
+        }
+        ProfileUpdate::create([
+            'user_id' => $user->id,
+            'profile_id' => $profile->id,
+            'old_value' => $old_value,
+            'new_value' => $request[$profile->slug]
+        ]);
         $rules = [
-            'login' => ['required', 'alpha_num', Rule::unique('users')->ignore($id,'id')],
+            'login' => ['alpha_num', Rule::unique('users')->ignore($id,'id')],
         ];
         // boucle de validation
         foreach ($profiles as $profile) {
-            $rule = [];
+            $rule = []; 
             if ($profile->is_required) {
-                $rule[] = 'required';
+                $rules = [
+                    'login' => ['nullable', 'alpha_num', Rule::unique('users')->ignore($id,'id')],
+                ];
             } else {
                 $rule[] = 'nullable';
             }
-
             if ($profile->is_unique) {
                 $rule[] = function ($attribute, $value, $fail) use ($profile, $user) {
                     $count = UserProfile::where('profile_id', $profile->id)
@@ -229,6 +375,9 @@ class UserController extends Controller
                         $destinationPath = public_path($relativeDestination);
                         $safeName = Str::slug($user->login) . time() . '.' . $extension;
                         $file->move($destinationPath, $safeName);
+                        if ($value) {
+                            @unlink(public_path($value));   // delete old file
+                        }
                         $value = "$relativeDestination/$safeName";
                     }
                 } else {
@@ -253,14 +402,27 @@ class UserController extends Controller
                 }
                 $value = null;
             }
-            $user[ $profile->slug ] = $value;
+            $result[ $profile->slug ] = $value;
         }
 
+        if($request->city) {
+            $user->city = $request->city;
+        }
+        $user->save();
+
+        // return response()->json($result);
+        // $user->permissions()->sync($request->permissions);
+        // $user->roles()->sync($request->roles);
         return response()->json($user);
     }
 
-    public function get(Request $request){
+    public function getCities(){
+        $cities = City::all();
+        return response()->json($cities);
+    }
 
+    public function get(Request $request){
+        
         $users = User::All();
 
         return response()->json($users);

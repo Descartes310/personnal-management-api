@@ -60,6 +60,32 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Reset password using the old password
+     */
+
+    public function updatePassword(Request $request)
+    {
+        $this->validate($request->all(), [
+            'oldpassword'     => 'required',
+            'newpassword'     => 'required',
+            'confirmpassword' => 'required|same:newpassword',
+        ]);
+        $user = Auth::user();
+        $usertmp = User::wherePasswordAndId(bcrypt($request->oldpassword), $user->id)->first();
+        if ($usertmp == $user) {
+            $unauthorized = new APIError;
+            $unauthorized->setStatus("400");
+            $unauthorized->setCode("BAD_PASSWORD");
+            $unauthorized->setMessage("Your password is inscorrect.");
+            return response()->json($unauthorized, 400);
+        } else {
+            $user->update([
+                'password' => bcrypt($request->newpassword)
+            ]);
+        }
+    }
+
 
 
     /**

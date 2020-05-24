@@ -18,9 +18,10 @@ class CreateBlogPostsTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('blog_category_id');
 			$table->string('title', 255);
-			$table->text('content');
+            $table->string('slug')->unique();
+            $table->string('content');
 			$table->string('image')->nullable();
-			$table->unsignedInteger('views');
+			$table->unsignedInteger('views')->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

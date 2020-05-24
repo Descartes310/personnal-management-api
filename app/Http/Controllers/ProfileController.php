@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Profile;
+use App\SelectOption;
 use App\APIError;
-
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller{
     /**
@@ -34,9 +35,28 @@ class ProfileController extends Controller{
                 $profiles = Profile::all();
             }
         }
-
         return response() ->json($profiles);
     }
+
+    /**
+     *
+     * @author Arléon Zemtsop
+     * @email arleonzemtsop@gmail.com
+     */
+    public function getProfiles(Request $req){
+        $profiles = Profile::all();
+
+        foreach ($profiles as $profile) {
+
+            if($profile->type == 'select') {
+                $options = SelectOption::whereProfileId($profile->id)->get();
+                $profile['options'] = $options;
+            }
+        }
+
+        return response()->json($profiles, 200);
+    }
+
     /**
      *
      * @author jiozangtheophane@gmail.com
@@ -52,6 +72,10 @@ class ProfileController extends Controller{
 
             return response()->json($unauthorized, 404);
 
+        }
+        if($profile->type == 'select') {
+            $options = SelectOption::whereProfileId($profile->id)->get();
+            $profile['options'] = $options;
         }
         return response()->json($profile);
     }
@@ -75,4 +99,95 @@ class ProfileController extends Controller{
 
         return response(null);
     }
+
+   
+    public function create(Request $request){
+        $request->validate([
+            'name' => 'required|unique:profiles',
+            'type' => 'required',
+            'is_required' => 'required',
+            'is_updatable' => 'required',
+            'is_unique' => 'required',
+        ]);
+        $profile = Profile::create([
+            'name' => $request->name,
+            'type' => $request->type,
+            'placeholder' => $request->placeholder,
+            'is_required' => $request->is_required,
+            'is_updatable' => $request->is_updatable,
+            'slug' => $request->name.''.time(),
+            'min' => $request->min,
+            'max'  => $request->max,
+            'step' => $request->step,
+            'is_unique' => $request->is_unique,
+            'is_private' => $request->is_private,
+            'default' => $request->default,
+            'description' => $request->description
+        ]);
+
+        if($request->type == 'select') {
+            $options = $request->only((['options']));
+            foreach (current($options) as $option) {
+                SelectOption::create([
+                    'profile_id' => $profile->id,
+                    'value' => $option,
+                    'key' => $option
+                ]);
+            }
+        }
+
+        return response()->json($profile);
+    }
+
+    public function update(Request $request, $id){
+
+        $request->validate([
+            'name' => 'required',
+            'type' => 'required',
+        ]);
+        $profile = Profile::find($id);
+        if($profile != null){
+            $data = $request->only([
+                'name',
+                'type',
+                'placeholder',
+                'is_required',
+                'is_updatable',
+                'min',
+                'max',
+                'step',
+                'is_unique',
+                'is_private',
+                'default',
+                'description'
+                ]);
+                $data['slug'] = Str::slug($request->name) . time();
+
+            $profile->update($data);
+
+            if($request->type == 'select') {
+                $options = SelectOption::whereProfileId($profile->id)->get();
+                foreach ($options as $option) {
+                    $option->delete();
+                }
+                $options = $request->only((['options']));
+                foreach (current($options) as $option) {
+                    SelectOption::create([
+                        'profile_id' => $profile->id,
+                        'value' => $option,
+                        'key' => $option
+                    ]);
+                }
+            }
+  
+          return response()->json($profile);
+        } else {
+            $errorcode = new APIError;
+            $errorcode->setStatus("401");
+            $errorcode->setCode("PRO_ERROR");
+            $errorcode->setMessage("The profile with id ".$id." does not exist");
+
+            return response()->json($errorcode, 401);
+        }
+    }    
 }
