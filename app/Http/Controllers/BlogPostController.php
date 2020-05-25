@@ -82,7 +82,6 @@ class BlogPostController extends Controller {
             $apiError->setErrors(['blog_post_id' => ["this value is not exist"]]);
             return response()->json($apiError, 404);
         }
-        $user = Auth::user();
         $blogPost->delete();
         return response(null);
     }
@@ -117,7 +116,9 @@ class BlogPostController extends Controller {
             'delete-blog-post'
         ];
 
-        $user->attachPermissions($blogPostPermissions, $team);
+        $blogPostPermissionsIds = Permission::whereIn('name', $blogPostPermissions)->pluck('id')->toArray();
+
+        $user->attachPermission($blogPostPermissionsIds, $team);
 
         return response()->json($blogPost, 201);
     }
@@ -147,7 +148,6 @@ class BlogPostController extends Controller {
         abort_unless($user->isAbleTo('update-blog-post', $blogPost->slug), 403);
 
         $data = $request->only(['title', 'content', 'blog_category_id']);
-        $data['slug'] = Str::slug($request->title) . time();
         $data['image'] = $this->uploadSingleFile(
             $request, 'image', 'blogs', ['image', 'mimes:jpeg,png,jpg']);
 

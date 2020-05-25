@@ -17,6 +17,7 @@ class CreateChatDiscussionsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user1_id');
             $table->unsignedInteger('user2_id');
+            $table->string('file')->nullable();
             $table->string('last_message');
             $table->timestamps();
         });
