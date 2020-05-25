@@ -18,14 +18,35 @@ class VacationController extends Controller
         return response()->json($vacat);
 	}
     public function get(Request $request){
-        $limit = $request->limit;
         $s = $request->s;
         $page = $request->page;
-        $vacations = Vacation::where('raison', 'LIKE', '%'.$s.'%')
-                                  ->paginate($limit);
+        $limit = null;
+
+        if ($request->limit && $request->limit > 0) {
+            $limit = $request->limit;
+        }
+
+        if ($s) {
+            if ($limit || $page) {
+                $vacations = Vacation::where('raison', 'LIKE', '%' . $s . '%')
+                    ->orWhere('description', 'LIKE', '%' . $s . '%')
+                    ->paginate($limit);
+            } else {
+                $vacations =Vacation::where('raison', 'LIKE', '%' . $s . '%')
+                    ->orWhere('description', 'LIKE', '%' . $s . '%')
+                    ->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $vacations =Vacation::paginate($limit);
+            } else {
+                $vacations =Vacation::all();
+            }
+        }
 
         return response()->json($vacations);
     }
+    
 
 
 	public function delete($id){
