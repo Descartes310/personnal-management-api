@@ -172,6 +172,7 @@ class UserController extends Controller
      * @author Armel Nya
      */
     public function create(Request $request) {
+//        public function create(Request $request) {
         $profiles = Profile::get();
         $rules = [
             'login' => ['required', 'alpha_num', 'unique:App\User'],
@@ -239,7 +240,7 @@ class UserController extends Controller
             'city' => $request->city,
             'password' => bcrypt($request->password)
         ]);
-        $this->syncAbilities($request, $user->id);
+
         // Insertion loop
         foreach ($profiles as $profile) {
             $value = null;
@@ -267,8 +268,9 @@ class UserController extends Controller
             }
             $user[ $profile->slug ] = $value;
         }
-
+        
         return response()->json($user);
+   
     }
 
 
@@ -421,10 +423,10 @@ class UserController extends Controller
         return response()->json($cities);
     }
 
-    public function get(Request $request){
+    // public function get(Request $request){
         
-        $users = User::All();
-
-        return response()->json($users);
-    }
+    //     $users = UserProfile::all();
+    //     //$users = UserProfile::with('profile')->get();
+    //     return response()->json($users);
+    // }
 }

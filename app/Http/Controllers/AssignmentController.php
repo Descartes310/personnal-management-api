@@ -28,7 +28,7 @@ class AssignmentController extends Controller
     }
 
     public function find($id){
-        $assignment = Assignment::with('user')->with('assignmentType')->whereId($id)->first();
+        $assignment = Assignment::with('assignmentType')->whereId($id)->first();
         if($assignment == null){
             $unauthorized = new APIError;
             $unauthorized->setStatus("404");
@@ -37,6 +37,18 @@ class AssignmentController extends Controller
 
             return response()->json($unauthorized, 404);
         }
+        $datas = [];
+        $user = User::whereId($assignment->user_id)->first();
+        $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+
+        foreach ($user_infos as $user_info) {
+            if ($user_info->profile->type == 'file') {
+                    $user[$user_info->profile->slug] = url($user_info->value);
+            }else {
+                $user[$user_info->profile->slug] = $user_info->value;
+            }
+        }
+        $assignment['user'] = $user;
         return response()->json($assignment);
     }
 

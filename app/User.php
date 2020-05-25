@@ -34,28 +34,6 @@ class User extends Authenticatable
         'password', 'remember_token', 'deleted_at'
     ];
 
-
-
-    public static function findWithProfile(int $id) {
-        $user = User::find($id);
-        $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
-        foreach ($user_infos as $user_info) {
-            if ($user_info->profile->type == 'file')
-                $user[$user_info->profile->slug] = url($user_info->value);
-            else
-                $user[$user_info->profile->slug] = $user_info->value;
-        }
-
-        return $user;
-    }
-
-
-    public function permissions(){
-        return $this->belongsToMany('App\Permission');
-    }
-    public function roles(){
-        return $this->belongsToMany('App\Role');
-    }
     /**
      *  Get query of permitted model for user
      * @param string $model the full model class name

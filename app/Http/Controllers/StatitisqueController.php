@@ -26,7 +26,7 @@ class StatitisqueController extends Controller
             return response()->json($apiError, 400);
         }
 
-        $career = Career::where('user_id','=',2)->orderby('effective_date','asc')->get();
+        $career = Career::where('user_id','=',$id)->orderby('effective_date','asc')->get();
         return response()->json($career, 200);
 
     }
@@ -34,7 +34,7 @@ class StatitisqueController extends Controller
     //recuperation des la listes des affectations par mois dans la sructures.
 
     function getAssignByMonth(){
-        $assigment = DB:: table('assignments')->get()->groupBy(function($date) {
+        $assigment = DB:: table('assignments')->orderby('created_at','asc')->get()->groupBy(function($date) {
             return Carbon::parse($date->created_at)->format('m'); // grouping by years
             //return Carbon::parse($date->created_at)->format('m'); // grouping by months
         });

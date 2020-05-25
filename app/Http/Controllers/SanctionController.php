@@ -2,75 +2,95 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\APIError;
 use App\User;
 use Carbon\Carbon;
 use App\Sanction;
+
 class SanctionController extends Controller
 {
     //methode create
 
-    public function create(SanctionRequest $request)
+    public function create(Request $request)
     {
         $this->validate($request->all(), [
-            'user_id' => 'required',
-            'decision' => 'required',
-            'user_id' => 'integer|required',
-            'days' => 'integer|required',
-            'raison' => 'string',
-            'start_date' => 'date'
+            'user_id' => 'required|integer',
+            'start_date' => 'date',
+            'days' => 'integer'
         ]);
-       //les validations ce sont effectuees dans la classe SanctionRequest
+        $user = User::find($request->user_id);
 
+        if($user == null) {
+            $assignmentError = new APIError;
+            $assignmentError->setStatus("404");
+            $assignmentError->setCode("USER_NOT_FOUND");
+            $assignmentError->setMessage("No user found with id $request->user_id");
 
-        //test of user where user_id is...
-        $user=User::find($request->user_id);
-        //initialisation of subject
-        $motif_table = null;
-
-        if(!$user){
-            $apiError = new APIError;
-            $apiError->setStatus("400");
-            $apiError->setCode("SANCTION_USER");
-            $apiError->setMessage("no user found with id $request->user_id");
-            $apiError->setErrors(['user_id' => ["this value is not exist"]]);
-            return response()->json($apiError, 400);
+            return response()->json($assignmentError, 404);
         }
-
-        if($request->subject!=null){
-           // $table=strtoupper($request->subject);
-            $table=$request->subject;
-            if(!$this->istheTable($table)){
-                $apiError = new APIError;
-                $apiError->setStatus("400");
-                $apiError->setCode("SANCTION_SUBJECT_NOT_FOUND");
-                $apiError->setMessage("no subject found  with subject name $table ");
-                $apiError->setErrors(['subject' => ["this subject it is not a name of table in the database"]]);
-                return response()->json($apiError, 400);
-            }
-            else{
-
-                $lien="\\App\\".($table);
-                $table_class = new $lien();
-                $motif_table = $table_class->find($request->subject_id);
-                if(!$motif_table){
-                    $apiError = new APIError;
-                    $apiError->setStatus("406");
-                    $apiError->setCode("SUBJECT_NOT_FOUND");
-                    $apiError->setMessage("no subject_id ($request->subject_id)  was found  with subject name $table ");
-                    $apiError->setErrors(['subject_id' => [" subject_id ($request->subject_id)  does not exist in $table in the database"]]);
-                    return response()->json($apiError, 406);
-                }
-            }
-        }
-
-        $data=$request->all();
-        $sanction = Sanction::create($data);
-        return response()->json([
-            "sanctions" => $sanction,
-            "user" => $user,
-            "raison" => $motif_table
+        $sanction = Sanction::create([
+            'user_id' => $request->user_id,
+            'subject' => $request->subject,
+            'subject_id' => $request->subject_id,
+            'raison' => $request->raison,
+            'decision' => $request->decision,
+            'start_date' => $request->start_date,
+            'days' => $request->days
         ]);
+
+        return response()->json($sanction, 201);
+    //    //les validations ce sont effectuees dans la classe SanctionRequest
+
+
+    //     //test of user where user_id is...
+    //     $user=User::find($request->user_id);
+    //     //initialisation of subject
+    //     $motif_table = null;
+
+    //     if(!$user){
+    //         $apiError = new APIError;
+    //         $apiError->setStatus("400");
+    //         $apiError->setCode("SANCTION_USER");
+    //         $apiError->setMessage("no user found with id $request->user_id");
+    //         $apiError->setErrors(['user_id' => ["this value is not exist"]]);
+    //         return response()->json($apiError, 400);
+    //     }
+
+    //     if($request->subject!=null){
+    //        // $table=strtoupper($request->subject);
+    //         $table=$request->subject;
+    //         if(!$this->istheTable($table)){
+    //             $apiError = new APIError;
+    //             $apiError->setStatus("400");
+    //             $apiError->setCode("SANCTION_SUBJECT_NOT_FOUND");
+    //             $apiError->setMessage("no subject found  with subject name $table ");
+    //             $apiError->setErrors(['subject' => ["this subject it is not a name of table in the database"]]);
+    //             return response()->json($apiError, 400);
+    //         }
+    //         else{
+
+    //             $lien="\\App\\".($table);
+    //             $table_class = new $lien();
+    //             $motif_table = $table_class->find($request->subject_id);
+    //             if(!$motif_table){
+    //                 $apiError = new APIError;
+    //                 $apiError->setStatus("406");
+    //                 $apiError->setCode("SUBJECT_NOT_FOUND");
+    //                 $apiError->setMessage("no subject_id ($request->subject_id)  was found  with subject name $table ");
+    //                 $apiError->setErrors(['subject_id' => [" subject_id ($request->subject_id)  does not exist in $table in the database"]]);
+    //                 return response()->json($apiError, 406);
+    //             }
+    //         }
+    //     }
+
+    //     $data=$request->all();
+    //     $sanction = Sanction::create($data);
+    //     return response()->json([
+    //         "sanctions" => $sanction,
+    //         "user" => $user,
+    //         "raison" => $motif_table
+    //     ]);
     }
 
 
