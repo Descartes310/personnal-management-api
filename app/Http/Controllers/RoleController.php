@@ -47,7 +47,7 @@ class RoleController extends Controller
 
         $role_tmp = Role::whereName($request->name)->first();
 
-        if($role_tmp == $role) {
+        if($role_tmp != null && $role_tmp != $role) {
             $notFoundError = new APIError;
             $notFoundError->setStatus("400");
             $notFoundError->setCode("ROLE_ALREADY_EXISTS");
@@ -56,14 +56,6 @@ class RoleController extends Controller
         }
 
         $role_tmp = Role::whereName($request->display_name)->first();
-
-        if($role_tmp == $role) {
-            $notFoundError = new APIError;
-            $notFoundError->setStatus("400");
-            $notFoundError->setCode("ROLE_ALREADY_EXISTS");
-            $notFoundError->setMessage("Role aleady exists");
-            return response()->json($notFoundError, 400);
-        }
 
         $role->update([
             'name' => $request->name,

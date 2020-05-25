@@ -67,6 +67,10 @@ class LicenseTypeController extends Controller
             return response()->json($errorcode, 404);
         }
     }
+
+    public function get() {
+        return response()->json(LicenseType::get());
+    }
     
 // function find
     public function find($id){
@@ -91,7 +95,7 @@ class LicenseTypeController extends Controller
     }
 
     public function add(Request $request){
-        $this->validate($request->al(), [
+        $this->validate($request->all(), [
             'name' => 'required',
             'slug' => 'required|unique:license_types'
         ]);
@@ -102,13 +106,30 @@ class LicenseTypeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request->al(), [
+        $this->validate($request->all(), [
             'name' => 'required',
-            'slug' => 'required|unique:license_types'
+            'slug' => 'required'
         ]);
+
         $licensetype = LicenseType::find($id);
 
-        abort_if($licensetype == null, 404, "license type not founded.");
+        if($licensetype == null) {
+            $notFoundError = new APIError;
+            $notFoundError->setStatus("404");
+            $notFoundError->setCode("LICENSE_TYPE_NOT_FOUND");
+            $notFoundError->setMessage("LICENSE_TYPE type with id " . $id . " not found");
+            return response()->json($notFoundError, 404);
+        }
+
+        $licensetype_tmp = LicenseType::whereName($request->name)->first();
+
+        if($licensetype_tmp != null && $licensetype_tmp != $licensetype) {
+            $notFoundError = new APIError;
+            $notFoundError->setStatus("400");
+            $notFoundError->setCode("LICENSE_TYPE_ALREADY_EXISTS");
+            $notFoundError->setMessage("Role aleady exists");
+            return response()->json($notFoundError, 400);
+        }
 
 
         $data = $request->only([

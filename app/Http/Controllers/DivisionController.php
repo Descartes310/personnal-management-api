@@ -76,13 +76,22 @@ class DivisionController extends Controller
 
             }
     
-            $data = $request->only([
-                    'name',
-                    'description',
-                    'parent_id'
+            if(isset($request->parent_id)) {
+                $division->update([
+                    'name' => $request->name,
+                    'description' => $request->description,
+                    'parent_id' => $request->parent_id,
+                    'slug' => $request->slug
                 ]);
-
-        $division->update($data);
+            } else {
+                $division->update([
+                    'name' => $request->name,
+                    'description' => $request->description,
+                    'parent_id' => null,
+                    'slug' => $request->slug
+                ]);
+            }
+            
         return response()->json($division);
     }
 

@@ -92,7 +92,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('/', 'DivisionController@create');
-        Route::put('/{id}', 'DivisionController@update');
+        Route::post('/{id}', 'DivisionController@update');
         Route::get('/', 'DivisionController@get');
         Route::get('/{id}', 'DivisionController@find');
         Route::delete('/{id}', 'DivisionController@delete');
@@ -100,7 +100,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'note_criterias'], function () {
         Route::post('/', 'NoteCriteriaController@create');
-        Route::put('/{id}', 'NoteCriteriaController@update');
+        Route::post('/{id}', 'NoteCriteriaController@update');
         Route::get('/{id}', 'NoteCriteriaController@find');
         Route::get('/', 'NoteCriteriaController@get');
         Route::delete('/{id}', 'NoteCriteriaController@delete');
@@ -141,22 +141,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
     });
 
-    Route::group(['prefix' => 'licenses'], function () {
-        Route::get('/', 'LicenseController@get');
-        Route::delete('{id}', 'LicenseController@delete');
-        Route::get('{id}', 'LicenseController@find');
-        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
-    });
-
-    Route::group(['prefix' => 'licenses'], function () {
-        Route::get('/', 'LicenseController@get');
-        Route::delete('{id}', 'LicenseController@delete');
-        Route::get('{id}', 'LicenseController@find');
-        Route::delete('lchangeStatus/{id}', 'LicenseController@changeStatus');
-    });
-
-
-
     Route::group(['prefix' => 'blog_posts'], function () {
         Route::get('/', 'BlogPostController@get');
         Route::delete('{id}', 'BlogPostController@delete');
@@ -175,7 +159,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('{id}', 'TemplateController@delete');
         Route::get('{id}', 'TemplateController@find');
         Route::post('/', 'TemplateController@create');
-        Route::put('/{id}', 'TemplateController@update');
+        Route::post('/{id}', 'TemplateController@update');
     });
 
     //il s'agit des routes pour read et delete profile
