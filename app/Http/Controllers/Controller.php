@@ -11,6 +11,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use App\APIError;
 use App\User;
+use App\Role;
 
 class Controller extends BaseController
 {
@@ -117,6 +118,9 @@ class Controller extends BaseController
     }
 
      public function syncAbilities(Request $req, $id) {
+
+        return response()->json('ok');
+
         $req->validate([
             'roles' => 'required|json',
             'permissions' => 'required|json'
