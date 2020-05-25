@@ -8,43 +8,13 @@ use App\APIError;
 use App\DisciplinaryTeam;
 use App\User;
 
-
 class DisciplinaryBoardController extends Controller
 {
 
-
-    public function get(Request $request)
-    {
-        $limit = $request->limit;
-        $page = $request->page;
-        $s = $request->s;
-        if ($s) {
-            if ($limit || $page) {
-                $disciplinary_boards = DisciplinaryBoard::where('raison', 'LIKE', '%' . $s . '%')
-                    ->orWhere('decision', 'LIKE', '%' . $s . '%')
-                    ->orWhere('location', 'LIKE', '%' . $s . '%')
-                    ->paginate($limit);
-            } else {
-                $disciplinary_boards = DisciplinaryBoard::where('raison', 'LIKE', '%' . $s . '%')
-                    ->orWhere('decision', 'LIKE', '%' . $s . '%')
-                    ->orWhere('location', 'LIKE', '%' . $s . '%')
-                    ->get();
-            }
-        } else {
-            if ($limit || $page) {
-                $disciplinary_boards = DisciplinaryBoard::paginate($limit);
-            } else {
-                $disciplinary_boards = DisciplinaryBoard::all();
-            }
-        }
-
-        return response()->json($disciplinary_boards);
-    }
-
-
     public function find($id)
     {
-        $disciplinary_board = DisciplinaryBoard::find($id);
+        //$datas = [];
+        $disciplinary_board = DisciplinaryBoard::with('disciplinaryteam')->whereId($id)->first();
         if ($disciplinary_board == null) {
             $unauthorized = new APIError;
             $unauthorized->setStatus("404");
@@ -52,7 +22,43 @@ class DisciplinaryBoardController extends Controller
             $unauthorized->setMessage("No disciplinary board found with id $id");
             return response()->json($unauthorized, 404);
         }
+
+        $disciplinary_board['user'] = User::findWithProfile($disciplinary_board->user_id);
+
         return response()->json($disciplinary_board);
+    }
+
+    public function get(Request $request)
+    {
+        $limit = $request->limit;
+        $page = $request->page;
+        $s = $request->s;
+
+        if ($s) {
+            if ($limit || $page) {
+                $disciplinary_boards = DisciplinaryBoard::where('raison', 'LIKE', '%' . $s . '%')
+                    ->with('disciplinaryteam')
+                    ->orWhere('decision', 'LIKE', '%' . $s . '%')
+                    ->orWhere('location', 'LIKE', '%' . $s . '%')
+                    ->paginate($limit);
+            } else {
+                $disciplinary_boards = DisciplinaryBoard::where('raison', 'LIKE', '%' . $s . '%')
+                    ->with('disciplinaryteam')
+                    ->orWhere('decision', 'LIKE', '%' . $s . '%')
+                    ->orWhere('location', 'LIKE', '%' . $s . '%')
+                    ->get();
+            }
+        } else {
+            if ($limit || $page) {
+                $disciplinary_boards = DisciplinaryBoard::with('disciplinaryteam')->paginate($limit);
+            } else {
+                $disciplinary_boards = DisciplinaryBoard::with('disciplinaryteam')->get();
+            }
+        }
+        foreach ($disciplinary_boards as $disciplinary_board) {
+            $disciplinary_board->user = User::findWithProfile($disciplinary_board->user_id);
+        }
+        return response()->json($disciplinary_boards);
     }
 
 

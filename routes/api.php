@@ -235,6 +235,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/{id}', 'RoleController@update');
         Route::delete('/{id}', 'RoleController@delete');
         Route::get('/{id}', 'RoleController@find');
+        Route::get('/getRolesWithPermissions', 'RoleController@getRolesWithPermissions');
     });
 
     Route::get('/permissions', 'RoleController@getPermissions');
@@ -346,3 +347,4 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 });
 
+Route::get('cities', 'CityAndCountryController@cities');
