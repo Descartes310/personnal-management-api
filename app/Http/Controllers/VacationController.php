@@ -13,9 +13,10 @@ use App\APIError;
 class VacationController extends Controller
 {
     public function find($id){
-		$vacat = Vacation::find($id);
-        abort_if($vacat == null, 404, "vacation not found.");
-        return response()->json($vacat);
+        $vacation = Vacation::with('vacationType')->whereId($id)->first();
+        $vacation->user = User::findWithProfile($vacation->user_id);
+        abort_if($vacation == null, 404, "vacation not found.");
+        return response()->json($vacation);
 	}
 
 
@@ -30,17 +31,23 @@ class VacationController extends Controller
 
         if ($s) {
             if ($limit || $page) {
-                return Vacation::where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->paginate($limit);
+                $vacations = Vacation::with('vacationType')->where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->paginate($limit);
             } else {
-                return Vacation::where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->get();
+                $vacations = Vacation::with('vacationType')->where('raison', 'like', "%$s%")->orWhere('description', 'like', "%$s%")->get();
             }
         } else {
             if ($limit || $page) {
-                return Vacation::paginate($limit);
+                $vacations = Vacation::with('vacationType')->paginate($limit);
             } else {
-                return Vacation::all();
+                $vacations = Vacation::with('vacationType')->get();
             }
         }
+
+        foreach ($vacations as $vacation) {
+            $vacation->user = User::findWithProfile($vacation->user_id);
+        }
+
+        return response()->json($vacations);
     }
 
 
@@ -121,23 +128,19 @@ class VacationController extends Controller
             }
         }
 
-
-        if(isset($request->file))
-        {
+        if(isset($request->file)){
             $file = $request->file('file');
             $path = null;
-            if($file != null)
-            {
+            if($file != null){
                 $extension = $file->getClientOriginalExtension();
-                $relativeDestination = "uploads/document";
+                $relativeDestination = "uploads/permissions";
                 $destinationPath = public_path($relativeDestination);
                 $safeName = "document".time().'.'.$extension;
                 $file->move($destinationPath, $safeName);
                 $path = "$relativeDestination/$safeName";
             }
-
+            $data['file'] = $path;
         }
-        $data['file'] = $path;
 
         $vacation = Vacation::create($data);
         return response()->json($vacation);
@@ -259,7 +262,7 @@ class VacationController extends Controller
 
     //recuperation de toutes les vacation en cours
     function findByStatus($status){
-        
+
         $vacation = Vacation::whereStatus($status)->count('*');
         if($vacation){
             $apiError = new APIError;

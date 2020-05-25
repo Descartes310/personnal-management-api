@@ -14,9 +14,9 @@ use Auth;
 use App\APIError;
 use App\ChatDiscussion;
 use App\City;
-
 use App\Career;
 use App\ProSituation;
+use App\ProfileUpdate;
 
 class UserController extends Controller
 {
@@ -278,7 +278,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id) {
         $user = User::find($id);
-        $result = User::find($id);
+        // $result = User::find($id);
 
         if($user == null){
             $unauthorized = new APIError;
@@ -412,7 +412,10 @@ class UserController extends Controller
         }
         $user->save();
 
-        return response()->json($result);
+        // return response()->json($result);
+        // $user->permissions()->sync($request->permissions);
+        // $user->roles()->sync($request->roles);
+        return response()->json($user);
     }
 
     public function getCities(){

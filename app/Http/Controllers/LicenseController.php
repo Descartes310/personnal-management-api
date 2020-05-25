@@ -117,6 +117,7 @@ class LicenseController extends Controller {
           'status'
         ]);
 
+
         if(User::find($request->user_id) == null){
             $apiError = new APIError;
             $apiError->setStatus("400");

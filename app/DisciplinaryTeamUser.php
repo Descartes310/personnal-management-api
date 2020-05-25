@@ -4,10 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserNoteCriteria extends Model
+class DisciplinaryTeamUser extends Model
 {
-    protected $tabke = 'user_note_criterias';
-
     protected $guarded = [];
+    protected $table = 'disciplinary_team_user';
 
 }
