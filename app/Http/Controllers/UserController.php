@@ -420,10 +420,10 @@ class UserController extends Controller
         return response()->json($cities);
     }
 
-    public function get(Request $request){
+    // public function get(Request $request){
         
-        $users = User::All();
-
-        return response()->json($users);
-    }
+    //     $users = UserProfile::all();
+    //     //$users = UserProfile::with('profile')->get();
+    //     return response()->json($users);
+    // }
 }
