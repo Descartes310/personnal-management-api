@@ -125,6 +125,10 @@ class DisciplinaryTeamController extends Controller
     public function get(Request $req){
         $limit = $req->limit;
         $s = $req->s;
+        // $page = $req->page; 
+        // $limit = $req->limit;
+        
+        // $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate( $limit != null ? $limit:15);
         $page = $req->page;
         $disciplinaryteam = DisciplinaryTeam::where('name','LIKE','%'.$s.'%')->paginate($limit);
         if($disciplinaryteam==null){

@@ -119,7 +119,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'DisciplinaryBoardController@find');
         Route::delete('/{id}', 'DisciplinaryBoardController@delete');
         Route::post('/', 'DisciplinaryBoardController@create');
-        Route::put('/{id}', 'DisciplinaryBoardController@update');
+        Route::match(['post','put'], '/{id}', 'DisciplinaryBoardController@update');
     });
 
     Route::group(['prefix' => 'assignments'], function () {
@@ -163,14 +163,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('{id}', 'BlogPostController@find');
         Route::post('/', 'BlogPostController@create')->middleware('has-permission:create-blog-post');
         Route::match(['post','put'], '/{id}', 'BlogPostController@update')->middleware('has-permission:update-blog-post');
-    });
-
-
-    Route::group(['prefix' => 'disciplinary_teams'], function () {
-        Route::get('/{id}', 'DisciplinaryTeamController@find');
-        Route::get('/', 'DisciplinaryTeamController@get');
-        Route::get('/getDisciplinaryTeamsWithUsers', 'DisciplinaryTeamController@getDisciplinaryTeamWithUsers');
-        Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
     Route::group(['prefix' => 'disciplinary_team_user'], function () {
@@ -225,6 +217,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::match(['put', 'post'], '/{id}', 'DisciplinaryTeamController@update');
         Route::get('/{id}', 'DisciplinaryTeamController@find');
         Route::get('/', 'DisciplinaryTeamController@get');
+        Route::get('/getDisciplinaryTeamsWithUsers', 'DisciplinaryTeamController@getDisciplinaryTeamWithUsers');
         Route::delete('/{id}', 'DisciplinaryTeamController@delete');
     });
 
@@ -325,6 +318,13 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'BlogCommentController@delete');
     });
 
+    Route::group(['prefix' => 'user_note_criteria'], function () {
+        Route::post('/', 'UserNoteCriteriaController@save');
+        Route::match(['post', 'put'], '/{id}', 'UserNoteCriteriaController@update');
+        Route::get('/', 'UserNoteCriteriaController@get');
+        Route::get('/{id}', 'UserNoteCriteriaController@find');
+        Route::delete('/{id}', 'UserNoteCriteriaController@delete');
+    });
     Route::group(['prefix' => 'cities'], function () {
         Route::get('/', 'UserController@getCities');
     });
@@ -341,10 +341,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'statistics'], function () {
         Route::get('/career/{id}', 'StatitisqueController@getDataSetUser');
         Route::get('/prosituation/{id}', 'StatitisqueController@getDataProSituationUser');
+        Route::get('/assignment_by_month', 'StatitisqueController@getAssignByMonth');
     });
     Route::group(['prefix' => 'cities'], function () {
         Route::get('/', 'UserController@getCities');
     });
+    Route::get('cities', 'CityAndCountryController@cities');
 });
-
-Route::get('cities', 'CityAndCountryController@cities');
