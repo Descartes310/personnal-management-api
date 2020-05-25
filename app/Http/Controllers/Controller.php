@@ -10,8 +10,6 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use App\APIError;
-use App\User;
-use App\Role;
 
 class Controller extends BaseController
 {

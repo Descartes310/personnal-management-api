@@ -38,7 +38,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'users'], function () {
         Route::post('/', 'UserController@create');
         Route::get('/{id}', 'UserController@getUserInfo');
-        Route::get('', 'UserController@getUsers');
+        Route::get('/', 'UserController@getUsers');
         Route::get('/search', 'UserController@search');
         Route::post('/', 'UserController@create');
         Route::delete('/{user}', 'UserController@delete')->where('user', '[0-9]+');
@@ -341,6 +341,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'statistics'], function () {
         Route::get('/career/{id}', 'StatitisqueController@getDataSetUser');
         Route::get('/prosituation/{id}', 'StatitisqueController@getDataProSituationUser');
+        Route::get('/assignment_by_month', 'StatitisqueController@getAssignByMonth');
     });
     Route::group(['prefix' => 'cities'], function () {
         Route::get('/', 'UserController@getCities');
