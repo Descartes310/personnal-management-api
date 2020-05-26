@@ -13,7 +13,7 @@ class CreateDivisionUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('division_user', function (Blueprint $table) {
+        Schema::create('user_divisions', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('division_id');
             $table->unsignedInteger('user_id');
@@ -31,6 +31,6 @@ class CreateDivisionUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('division_user');
+        Schema::dropIfExists('user_divisions');
     }
 }
