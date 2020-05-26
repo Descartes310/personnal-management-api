@@ -17,12 +17,12 @@ class CreateContractsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->string('type');
-            $table->string('name')->nullable();
+            $table->string('name');
             $table->string('title')->nullable();
             $table->text('terms')->nullable();
             $table->integer('free_days')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
             $table->boolean('is_active')->default(true);
             $table->string('file');
             $table->timestamps();
