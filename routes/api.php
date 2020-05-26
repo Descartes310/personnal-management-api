@@ -191,6 +191,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'trainings'], function () {
         Route::get('/', 'TrainingController@get');
+        Route::post('/', 'TrainingController@create');
+        Route::post('/{id}', 'TrainingController@update');
         Route::get('/{id}', 'TrainingController@find');
         Route::delete('/{id}', 'TrainingController@delete');
     });

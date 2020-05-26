@@ -49,7 +49,10 @@ class UserController extends Controller
         
         if($career) {
             $proSituation = ProSituation::find($career->pro_situation_id);
-            $user['pro_situation'] = $proSituation->name;
+            if($proSituation)
+                $user['pro_situation'] = $proSituation->name;
+            else
+                $user['pro_situation'] = null;
         }
 
         $user->roles;
