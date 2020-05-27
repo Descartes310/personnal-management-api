@@ -37,6 +37,7 @@ class BlogCommentController extends Controller
             $apiError->setErrors(['blog_post_id' => ["this value is not exist"]]);
             return response()->json($apiError, 404);
         }
+        //
 
         //tout est correct
         $blogComment =BlogComment::create($request->all());
