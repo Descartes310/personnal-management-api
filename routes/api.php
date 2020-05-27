@@ -40,7 +40,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', 'UserController@getUserInfo');
         Route::get('/', 'UserController@getUsers');
         Route::get('/search', 'UserController@search');
-        Route::post('/', 'UserController@create');
         Route::delete('/{user}', 'UserController@delete')->where('user', '[0-9]+');
         Route::match(['post', 'put'], '/{id}', 'UserController@update');
     });
