@@ -219,8 +219,8 @@ class LicenseController extends Controller {
                 $apiError = new APIError;
                 $apiError->setStatus("400");
                 $apiError->setCode("USER_ID_NOT_FOUND");
-                $apiError->setErrors(['user_id' => 'user_id not existing']);
-
+                $apiError->setErrors(['user_id' => 'user_id not existing '.$request->user_id]);
+ 
                 return response()->json($apiError, 400);
             }
         }
