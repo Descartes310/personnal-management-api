@@ -112,7 +112,7 @@ class BlogCategoryController extends Controller
         $page = $request->page;
         $blogcats = BlogCategory::where('title', 'LIKE', '%'.$s.'%')
                                   ->paginate($limit);
-
+//
         return response()->json($blogcats);
     }
 
