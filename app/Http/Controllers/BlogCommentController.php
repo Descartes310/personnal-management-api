@@ -17,7 +17,7 @@ class BlogCommentController extends Controller
             'user_id' => 'required',
             'blog_post_id' => 'required',
         ]);
-        //on verifie si l'utilisateur et le post existe
+        //on verifie si l'utilisateur et le post existe deja
         $user = User::find($request->user_id);
         if(!$user){
             $apiError = new APIError;
