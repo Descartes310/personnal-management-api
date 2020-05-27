@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\APIError;
 use App\UserNoteCriteria;
+use App\User;
+use App\NoteCriteria;
 
 class UserNoteCriteriaController extends Controller
 {
@@ -24,8 +26,16 @@ class UserNoteCriteriaController extends Controller
     }
 
     public function get(){
-        $UserNoteCriterias = UserNoteCriteria::all();
-        return response()->json($UserNoteCriterias);
+        $userNoteCriterias = UserNoteCriteria::all();
+        $datas = [];
+        foreach ($userNoteCriterias as $key => $userNote) {
+            $user = User::findWithProfile($userNote->user_id);
+            $noteCriteria = NoteCriteria::find($userNote->note_criteria_id);
+            $userNote['user'] = $user;
+            $userNote['note_criteria'] = $noteCriteria;
+            array_push($datas, $userNote);
+        }
+        return response()->json($datas);
     }
 
     public function delete($id){

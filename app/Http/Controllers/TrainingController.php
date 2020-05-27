@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\APIError;
+use App\DivisionTraining;
 use App\Training;
+use App\Division;
 
 class TrainingController extends Controller
 {
@@ -25,6 +27,8 @@ class TrainingController extends Controller
 
             return response()->json($notFound, 404);
         }
+        $division_training = DivisionTraining::whereTrainingId($training->id)->first();
+        $training['division'] = Division::find($division_training->division_id);
         return response()->json($training);
     }
 
@@ -106,6 +110,11 @@ class TrainingController extends Controller
             'duration' => $request->duration,
             'location' => $request->location,
             'is_online' => $request->is_online
+        ]);
+
+        $division_training = DivisionTraining::create([
+            'division_id' => $request->division_id,
+            'training_id' => $training->id
         ]);
 
         return response()->json($training, 201);
