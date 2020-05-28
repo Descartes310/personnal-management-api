@@ -84,7 +84,7 @@ class ProfileSeeder extends Seeder
         ];
 
         foreach ($profiles as $profile) {
-            Setting::create($profile);
+            Profile::create($profile);
         }
 
     }
