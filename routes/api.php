@@ -301,7 +301,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/{id}', 'SettingController@delete')->middleware('has-permission:delete-settings');
         Route::get('/{id}', 'SettingController@find')->middleware('has-permission:read-settings');
         Route::post('/', 'SettingController@create')->middleware('has-permission:create-settings');
-        Route::matxh(['put', 'post'], '/{id}', 'SettingController@update')->middleware('has-permission:update-settings');
+        Route::match(['put', 'post'], '/{id}', 'SettingController@update')->middleware('has-permission:update-settings');
     });
 
     Route::group(['prefix' => 'statistics', 'middleware' => 'has-permission:read-statistics'], function () {
