@@ -12,22 +12,42 @@ return [
     'truncate_tables' => true,
 
     'roles_structure' => [
-        'superadministrator' => [
-            'users' => 'c,r,u,d',
-            'blog-post' => 'c,r,u,d',
-            'profile' => 'r,u'
-        ],
         'administrator' => [
             'users' => 'c,r,u,d',
-            'blog-post' => 'c,r,u,d',
-            'profile' => 'r,u'
+            'blog-posts' => 'c,r,u,d',
+            'profile' => 'r,u',
+            'chat' => 'c,r,d',
+            'pro-situations' => 'c,r,u,d',
+            'profiles' => 'c,r,u,d',
+            'disciplinary-boards' => 'c,r,u,d',
+            'roles' => 'c,r,u,d',
+            'vacation-types' => 'c,r,u,d',
+            'vacations' => 'c,r,u,d',
+            'license-types' => 'c,r,u,d',
+            'licenses' => 'c,r,u,d',
+            'templates' => 'c,r,u,d',
+            'note-criterias' => 'c,r,u,d',
+            'document-viewer' => 'r',
+            'assignment-types' => 'c,r,u,d',
+            'assignments' => 'c,r,u,d',
+            'settings' => 'c,r,u,d',
+            'divisions' => 'c,r,u,d',
+            'submissions' => 'c,r,u,d',
+            'statistiques' => 'r',
+            'contacts' => 'c,r,u,d',
+            'trainings' => 'c,r,u,d',
+            'disciplinary-teams' => 'c,r,u,d',
+            'blog-categories' => 'c,r,u,d',
+            'contracts' => 'c,r,u,d',
+            'sanctions' => 'c,r,u,d',
+            'careers' => 'c,r,u,d',
         ],
         'user' => [
             'profile' => 'r,u',
         ],
         'blogger' => [
             'profile' => 'r,u',
-            'blog-post' => 'c',
+            'blog-posts' => 'c',
         ]
     ],
 
