@@ -13,7 +13,7 @@ class CreateDivisionUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_divisions', function (Blueprint $table) {
+        Schema::create('division_users', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('division_id');
             $table->unsignedInteger('user_id');
