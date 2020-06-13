@@ -18,9 +18,7 @@ class VacationController extends Controller
         abort_if($vacation == null, 404, "vacation not found.");
         return response()->json($vacation);
 	}
-
-
-	public function get(Request $request) {
+    public function get(Request $request){
         $s = $request->s;
         $page = $request->page;
         $limit = null;
@@ -47,8 +45,25 @@ class VacationController extends Controller
             $vacation->user = User::findWithProfile($vacation->user_id);
         }
 
+        //         $vacations = Vacation::where('raison', 'LIKE', '%' . $s . '%')
+        //             ->orWhere('description', 'LIKE', '%' . $s . '%')
+        //             ->paginate($limit);
+        //     } else {
+        //         $vacations =Vacation::where('raison', 'LIKE', '%' . $s . '%')
+        //             ->orWhere('description', 'LIKE', '%' . $s . '%')
+        //             ->get();
+        //     }
+        // } else {
+        //     if ($limit || $page) {
+        //         $vacations =Vacation::paginate($limit);
+        //     } else {
+        //         $vacations =Vacation::all();
+        //     }
+        // }
+
         return response()->json($vacations);
     }
+    
 
 
 	public function delete($id){
@@ -65,7 +80,6 @@ class VacationController extends Controller
             'vacation_type_id' => 'required',
             'requested_start_date' => 'required|date',
             'requested_days' => 'required|numeric|min:0',
-            'is_active' => 'required|boolean',
             'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'
         ]);
 
@@ -164,7 +178,6 @@ class VacationController extends Controller
             'vacation_type_id' => 'required',
             'requested_start_date' => 'required|date',
             'requested_days' => 'required|numeric|min:0',
-            'is_active' => 'required|boolean',
             'status' => 'in:PENDING,APPROVED,REJECTED,CANCELLED'
         ]);
 

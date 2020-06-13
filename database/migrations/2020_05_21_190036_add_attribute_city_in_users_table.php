@@ -14,7 +14,7 @@ class AddAttributeCityInUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('city');
+       //     $table->string('city');
         });
     }
 

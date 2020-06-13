@@ -85,7 +85,7 @@ class NoteCriteriaController extends Controller
 
     public function create(Request $request) {
         $this->validate($request->all(), [
-            'name' => 'string|required',
+            'name' => 'string|required|unique:note_criterias',
             'max_rate' => 'required|integer',
             'min_rate' => 'required|integer',
             'weight' => 'required|integer',
@@ -124,6 +124,17 @@ class NoteCriteriaController extends Controller
             $notFoundError->setMessage("note criteria with id " . $id . " not found");
 
             return response()->json($notFoundError, $this->notFoundStatus);
+        }
+
+        $noteCriteriatmp = NoteCriteria::find($id);
+
+        if($noteCriteriatmp != null && $noteCriteriatmp != $noteCriteria) {
+            $notFoundError = new APIError;
+            $notFoundError->setStatus("404");
+            $notFoundError->setCode("EXIST_NOTE_CRITERIA_ID");
+            $notFoundError->setMessage("note criteria with id " . $id . " not found");
+
+            return response()->json($notFoundError, 400);
         }
 
         $noteCriteria->update(

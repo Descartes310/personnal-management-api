@@ -112,7 +112,9 @@ class DisciplinaryTeamController extends Controller
 
             return response()->json($notexist,404);
         }
-
+        foreach ($disciplinaryteam->users as $key => $user) {
+            $disciplinaryteam->users[$key] = User::findWithProfile($user->id);
+        }
         return response()->json($disciplinaryteam);
     }
 

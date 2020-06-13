@@ -19,7 +19,10 @@ class ContractController extends Controller
         $request->validate([
             'user_id' => 'required|numeric',
             'type' => 'required',
-            'terms' => 'required'
+            'name' => 'required',
+            'free_days' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
            // 'file' => 'required',
         ]);
 
@@ -66,7 +69,10 @@ class ContractController extends Controller
         $request->validate([
             'user_id' => 'required|numeric',
             'type' => 'required',
-            'terms' => 'required',
+            'name' => 'required',
+            'free_days' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ]);
 
         $contract = Contract::find($id);

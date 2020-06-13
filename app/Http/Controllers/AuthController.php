@@ -39,7 +39,7 @@ class AuthController extends Controller
                 $token->expires_at = Carbon::now()->addMonth();
             }
             $token->save();
-
+            $user = User::findWithProfile($user->id);
             return response()->json([
                 'token' => [
                     'access_token' => $tokenResult->accessToken,

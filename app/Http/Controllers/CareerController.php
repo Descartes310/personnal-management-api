@@ -86,8 +86,10 @@ class CareerController extends Controller
 
         }
         $career =  Career:: where('user_id','=',$request->user_id)->orderby('effective_date','desc')->first();
+        $division_user = UserDivision::whereUserId($user->id)->first();
+
         if($career != null){
-            if($career->pro_situation_id == $request->pro_situation_id){
+            if($career->pro_situation_id == $request->pro_situation_id && $division_user->division_id == $request->division_id){
                 $apiError = new APIError;
                 $apiError->setStatus("400");
                 $apiError->setCode("USER_CONSUME_PROSITUATION");
@@ -103,22 +105,24 @@ class CareerController extends Controller
             'pro_situation_id'=> $request->pro_situation_id,
             'effective_date'=> $request->effective_date           
         ]);
+
         $division = UserDivision::where('user_id','=',$request->user_id)->first();
-        //dd($division);
-        if($division){
-            $apiError = new APIError;
-            $apiError->setStatus("400");
-            $apiError->setCode("USER_DIVISION_ALREADY_EXIST");
-            $apiError->setMessage("this user already belong to this division");
-            $apiError->setErrors(['user_id' => ["this value already exist"]]);
-            return response()->json($apiError, 400);
+        
+        if(!$division){
+            UserDivision::create([
+                'user_id'=> $request->user_id,
+                'division_id'=> $request->division_id,
+            ]);
+        } else {
+            if($division->division_id != $request->division_id) {
+                $division->update([
+                    'division_id'=> $request->division_id,
+                ]);
+            }
         }
 
-        UserDivision::create([
-            'user_id'=> $request->user_id,
-            'division_id'=> $request->division_id,
-            
-        ]);
+        
+
         return response()->json($career);
     }
 

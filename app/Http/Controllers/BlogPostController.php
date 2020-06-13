@@ -118,7 +118,8 @@ class BlogPostController extends Controller {
 
         $blogPostPermissionsIds = Permission::whereIn('name', $blogPostPermissions)->pluck('id')->toArray();
 
-        $user->attachPermission($blogPostPermissionsIds, $team);
+        $this->syncAbilities($blogPostPermissionsIds, $user->id);
+        //$user->attachPermission($blogPostPermissionsIds, $team);
 
         return response()->json($blogPost, 201);
     }
@@ -158,6 +159,20 @@ class BlogPostController extends Controller {
         $blogPost->update($data);
 
         return response()->json($blogPost, 200);
+
+    }
+
+    public function syncAbilities($permissions, $id) {
+
+        $user = User::find($id);
+        abort_if($user == null, 404, "User not found !");
+
+        foreach ($permissions as $permissionId) {
+            abort_if(Permission::find($permissionId) == null, 404, "Permission of id $permissionId not found !");
+        }
+
+        $user->syncPermissions([]);
+        $user->syncPermissionsWithoutDetaching($permissions);
 
     }
 }

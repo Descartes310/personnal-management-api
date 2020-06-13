@@ -17,7 +17,7 @@ class BlogCommentController extends Controller
             'user_id' => 'required',
             'blog_post_id' => 'required',
         ]);
-        //on verifie si l'utilisateur et le post existe
+        //on verifie si l'utilisateur et le post existe deja
         $user = User::find($request->user_id);
         if(!$user){
             $apiError = new APIError;
@@ -37,6 +37,7 @@ class BlogCommentController extends Controller
             $apiError->setErrors(['blog_post_id' => ["this value is not exist"]]);
             return response()->json($apiError, 404);
         }
+        //
 
         //tout est correct
         $blogComment =BlogComment::create($request->all());

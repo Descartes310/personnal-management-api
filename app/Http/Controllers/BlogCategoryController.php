@@ -14,7 +14,7 @@ class BlogCategoryController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'title' => 'required'
+            'title' => 'required|unique:blog_categories'
         ]);
 
         $data = $request->only([
@@ -38,6 +38,16 @@ class BlogCategoryController extends Controller
             $apiError->setErrors(['id' => 'blog category id not existing']);
 
             return response()->json($apiError, 404);
+        }
+
+        $blogcat_tmp = BlogCategory::whereTitle($request->title)->first();
+
+        if($blogcat_tmp != null && $blogcat_tmp != $blogcat) {
+            $notFoundError = new APIError;
+            $notFoundError->setStatus("400");
+            $notFoundError->setCode("BLOG_CAT_ALREADY_EXISTS");
+            $notFoundError->setMessage("blof cat aleady exists");
+            return response()->json($notFoundError, 400);
         }
 
         $request->validate([
@@ -90,15 +100,7 @@ class BlogCategoryController extends Controller
 
             return response()->json($notFound, 404);
         }
-        $blogposts=BlogPost::where('blog_category_id','=',$id)->get();
-        return response()->json([
-            'blog_categorie' => [
-                    'id' => $blogCategory->id,
-                    'title' => $blogCategory->title,
-                    'blog_posts' => $blogposts
-                ],
-
-        ]);
+        return response()->json($blogCategory);
     }
 
     /**
@@ -112,7 +114,7 @@ class BlogCategoryController extends Controller
         $page = $request->page;
         $blogcats = BlogCategory::where('title', 'LIKE', '%'.$s.'%')
                                   ->paginate($limit);
-
+//
         return response()->json($blogcats);
     }
 

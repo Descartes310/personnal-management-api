@@ -74,4 +74,17 @@ class User extends Authenticatable
         return parent::__call($method, $parameters);
     }
 
+    public static function findWithProfile(int $id) {
+        $user = User::find($id);
+        $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
+        foreach ($user_infos as $user_info) {
+            if ($user_info->profile->type == 'file')
+                $user[$user_info->profile->slug] = url($user_info->value);
+            else
+                $user[$user_info->profile->slug] = $user_info->value;
+        }
+
+        return $user;
+    }
+
 }

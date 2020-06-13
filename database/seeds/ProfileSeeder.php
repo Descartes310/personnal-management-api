@@ -23,7 +23,7 @@ class ProfileSeeder extends Seeder
                 'slug' => 'first_name',
                 'is_updatable' => '1',
                 'min' => '0',
-                'max' => '100',
+                'max' => '',
                 'step' => '0',
                 'is_unique' => '0',
                 'default' => '',
@@ -36,7 +36,7 @@ class ProfileSeeder extends Seeder
                 'slug' => 'last_name',
                 'is_updatable' => '1',
                 'min' => '0',
-                'max' => '100',
+                'max' => '',
                 'step' => '0',
                 'is_unique' => '0',
                 'default' => '',
@@ -49,7 +49,7 @@ class ProfileSeeder extends Seeder
                 'slug' => 'avatar',
                 'is_updatable' => '1',
                 'min' => '0',
-                'max' => '100',
+                'max' => '',
                 'step' => '0',
                 'is_unique' => '0',
                 'default' => '',
@@ -62,7 +62,7 @@ class ProfileSeeder extends Seeder
                 'slug' => 'email',
                 'is_updatable' => '1',
                 'min' => '0',
-                'max' => '100',
+                'max' => '',
                 'step' => '0',
                 'is_unique' => '0',
                 'default' => '',
@@ -75,7 +75,7 @@ class ProfileSeeder extends Seeder
                 'slug' => 'birth_date',
                 'is_updatable' => '0',
                 'min' => '0',
-                'max' => '100',
+                'max' => '',
                 'step' => '0',
                 'is_unique' => '0',
                 'default' => '',
@@ -84,7 +84,7 @@ class ProfileSeeder extends Seeder
         ];
 
         foreach ($profiles as $profile) {
-            Setting::create($profile);
+            Profile::create($profile);
         }
 
     }

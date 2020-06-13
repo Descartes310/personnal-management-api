@@ -10,6 +10,8 @@ use App\Profile;
 use App\UserProfile;
 use App\SelectOption;
 use App\User;
+use App\Division;
+use App\DivisionUser;
 use Auth;
 use App\APIError;
 use App\ChatDiscussion;
@@ -49,8 +51,19 @@ class UserController extends Controller
         
         if($career) {
             $proSituation = ProSituation::find($career->pro_situation_id);
-            $user['pro_situation'] = $proSituation->name;
+            if($proSituation)
+                $user['pro_situation'] = $proSituation->name;
+            else
+                $user['pro_situation'] = null;
         }
+
+        $division_user = DivisionUser::whereUserId($user->id)->first();
+
+        if($division_user)
+                $user['division'] = Division::find($division_user->division_id);
+        else
+            $user['division'] = null;
+
 
         $user->roles;
         $user['permissions'] = $user->allPermissions();
@@ -108,6 +121,23 @@ class UserController extends Controller
                 }
             }
             $users[$key] = $user;
+
+            $career = Career::whereUserId($user->id)->orderBy('updated_at', 'desc')->first();
+        
+            if($career) {
+                $proSituation = ProSituation::find($career->pro_situation_id);
+                if($proSituation)
+                    $user['pro_situation'] = $proSituation->name;
+                else
+                    $user['pro_situation'] = null;
+            }
+
+            $division_user = DivisionUser::whereUserId($user->id)->first();
+
+            if($division_user)
+                    $user['division'] = Division::find($division_user->division_id);
+            else
+                $user['division'] = null;
         }
 
         return response()->json($users);
@@ -239,6 +269,17 @@ class UserController extends Controller
             'login' => $request->login,
             'city' => $request->city,
             'password' => bcrypt($request->password)
+        ]);
+
+        $division_user = DivisionUser::create([
+            'user_id' => $user->id,
+            'division_id' => $request->division_id
+        ]);
+
+        $career = Career::create([
+            'user_id' => $user->id,
+            'pro_situation_id' => $request->pro_situation,
+            'effective_date' => $user->created_at
         ]);
 
         // Insertion loop
@@ -410,6 +451,16 @@ class UserController extends Controller
         if($request->city) {
             $user->city = $request->city;
         }
+
+        if($request->division_id) {
+            $division_user = DivisionUser::whereUserId($user->id)->first();
+            if($division_user) {
+                $division_user->update([
+                    'division_id' => $request->division_id
+                ]);
+            }
+        }
+
         $user->save();
 
         // return response()->json($result);
