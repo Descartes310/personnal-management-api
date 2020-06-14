@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
         Schema::disableForeignKeyConstraints();
-         $this->call(CityAndCountrySeeder::class);
-        // $this->call(ProfileSeeder::class);
-        // $this->call(SettingSeeder::class);
-        // $this->call(LaratrustSeeder::class);
+        $this->call(CityAndCountrySeeder::class);
+        $this->call(ProfileSeeder::class);
+        $this->call(SettingSeeder::class);
+        $this->call(LaratrustSeeder::class);
 
         Schema::enableForeignKeyConstraints();
         Model::reguard();
