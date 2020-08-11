@@ -34,16 +34,16 @@ class UserController extends Controller
         $user_infos = UserProfile::whereUserId($id)->with('profile')->get();
         foreach ($user_infos as $user_info) {
             if($user_info->profile->type == 'file')
-                $user[$user_info->profile->slug] = url($user_info->value);
+                $user[$user_info->profile->name] = url($user_info->value);
             else
-                $user[$user_info->profile->slug] = $user_info->value;
+                $user[$user_info->profile->name] = $user_info->value;
         }
 
         // The empty user field must be present in response, with null value
         $profiles = Profile::all();
         foreach ($profiles as $profile) {
-            if ( ! isset($user[$profile->slug]) ) {
-                $user[$profile->slug] = null;
+            if ( ! isset($user[$profile->name]) ) {
+                $user[$profile->name] = null;
             }
         }
 
@@ -91,9 +91,10 @@ class UserController extends Controller
             $user_infos = UserProfile::whereUserId($user->id)->with('profile')->get();
             foreach ($user_infos as $user_info) {
                 if($user_info->profile->type == 'file')
-                    $user[$user_info->profile->slug] = url($user_info->value);
+                    $user[$user_info->profile->name] = url($user_info->value);
                 else
-                    $user[$user_info->profile->slug] = $user_info->value;
+                    $user[$user_info->profile->name] = $user_info->value;
+                    
             }
             $discussion = ChatDiscussion::whereUser1IdAndUser2Id($connected_user->id, $user->id)->first();
             if($discussion == null) {
@@ -116,8 +117,8 @@ class UserController extends Controller
             // The empty user field must be present in response, with null value
             $profiles = Profile::all();
             foreach ($profiles as $profile) {
-                if ( ! isset($user[$profile->slug]) ) {
-                    $user[$profile->slug] = null;
+                if ( ! isset($user[$profile->name]) ) {
+                    $user[$profile->name] = $user->login;
                 }
             }
             $users[$key] = $user;

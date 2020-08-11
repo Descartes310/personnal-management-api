@@ -43,9 +43,9 @@ class AssignmentController extends Controller
 
         foreach ($user_infos as $user_info) {
             if ($user_info->profile->type == 'file') {
-                    $user[$user_info->profile->slug] = url($user_info->value);
+                    $user[$user_info->profile->name] = url($user_info->value);
             }else {
-                $user[$user_info->profile->slug] = $user_info->value;
+                $user[$user_info->profile->name] = $user_info->value;
             }
         }
         $assignment['user'] = $user;
@@ -87,9 +87,9 @@ class AssignmentController extends Controller
             
             foreach ($user_infos as $user_info) {
                 if($user_info->profile->type == 'file')
-                    $user[$user_info->profile->slug] = url($user_info->value);
+                    $user[$user_info->profile->name] = url($user_info->value);
                 else
-                    $user[$user_info->profile->slug] = $user_info->value;
+                    $user[$user_info->profile->name] = $user_info->value;
             }
             
             $assignment['user'] = $user;
